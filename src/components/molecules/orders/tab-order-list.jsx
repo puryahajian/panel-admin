@@ -1,17 +1,18 @@
 import React from 'react'
 import ListOrders from '../list-orders'
-import TitrGenaral from '../../../lib/lib-titr-general'
-import Title from '../../atoms/title'
 import Text from '../../atoms/text'
-import TextBold from '../../atoms/text-bold'
 
 function TabOrderList() {
   return (
     <div className=''>
-        <div className='flex justify-between my-4'>
-          {TitrGenaral.map((item) => (
-            <Title>{item.label}</Title>
-          ))}
+        <div className='grid grid-cols-7 my-4'>
+          <Text>ردیف</Text>
+          <Text className={`pr-4`}>سفارشات</Text>
+          <Text>توضیحات</Text>
+          <Text>هزینه</Text>
+          {/* <Text>آدرس</Text> */}
+          <Text>تاریخ</Text>
+          <Text className={`text-left pl-4 col-span-2`}>وضعیت سفارش</Text>
         </div>
         <div className='grid gap-2'>
           <ListOrders

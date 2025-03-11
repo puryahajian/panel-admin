@@ -20,6 +20,9 @@ function TabRightDetail() {
             <Text className={`mt-4`}>شماره فروشگاه</Text>
             <Input placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
 
+            <Text className={`mt-4`}>کد ملی صاحب</Text>
+            <Input placeholder={`۱۲۳۴۵۶۷۸۹`} className={`w-full mt-2 text-left`}/>
+
             <Text className={`mt-4`}>شماره پشتیبانی</Text>
             <Input placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
         </div>

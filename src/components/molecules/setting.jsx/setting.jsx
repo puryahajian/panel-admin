@@ -10,7 +10,7 @@ function Setting() {
 
     return (
         <div>
-            <div className='grid grid-cols-2 gap-5 mb-6'>
+            {/* <div className='grid grid-cols-2 gap-5 mb-6'>
                 <Uploader
                     textOne={'تصویر بنر اول'}
                     textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
@@ -20,11 +20,11 @@ function Setting() {
                     textOne={'تصوبر بنر دوم'}
                     textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
                 />
-            </div>
+            </div> */}
 
-            <hr className='w-[95%] m-auto'/>
+            {/* <hr className='w-[95%] m-auto'/> */}
 
-            <div className=' my-6 grid grid-cols-2 gap-4'>
+            <div className=' mb-6 grid grid-cols-2 gap-4'>
                 <TabRightDetail/>
                 <TabLeftMap/>
             </div>

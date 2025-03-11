@@ -8,6 +8,8 @@ import Products from '../molecules/products/products';
 import Management from '../molecules/management/management';
 import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
+import { FormControl, MenuItem, Select } from '@mui/material';
+import Ticket from '../molecules/ticket/ticket';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -26,6 +28,7 @@ function TabPanel({ children, step, index }) {
 function MolPanel() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
+    
 
     return (
         <>
@@ -50,12 +53,15 @@ function MolPanel() {
                     ))}
                     
                 </div>
+
+                <div className='grid gap-2'>
                     <button
                         className='border border-red-600 text-right p-4 rounded-lg'
                         onClick={() => setOpen(true)}
                     >
-                       <Text className={`text-red-500`}> خروج از حساب</Text>
+                        <Text className={`text-red-500`}> خروج از حساب</Text>
                     </button>
+                </div>
 
             </div>
             <div className=' max-[990px]:ml-0 max-[990px]:mt-4 grow'>
@@ -75,7 +81,7 @@ function MolPanel() {
                     <Setting/>
                 </TabPanel>
                 <TabPanel step={step} index={5}>
-                    6
+                    <Ticket/>
                 </TabPanel>
                 <TabPanel step={step} index={6}>
                     7

@@ -43,11 +43,11 @@ function Management() {
     
 
     const Buttons = [
-        {label: "ادمین ها" },
-        {label: "مشتریان" },
-        {label: "پیک ها" },
-        {label: "تنظیمات" },
-        {label: "پشتیبانی" },
+        // {label: "ادمین ها" },
+        // {label: "مشتریان" },
+        // {label: "پیک ها" },
+        // {label: "تنظیمات" },
+        // {label: "پشتیبانی" },
     ];
     return (
         <div>
@@ -70,21 +70,21 @@ function Management() {
                     ))}
                 </div>
 
-                {step === 0 && (
+                {/* {step === 0 && (
                     <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border border-blue-500 !text-blue-500`}>
                         افزودن ادمین
                     </ButtonGeneral>
-                )}
-                {step === 1 && (
+                )} */}
+                {step === 0 && (
                     <ButtonGeneral onClick={() => setOpenAddCustomer(true)} className={`border border-blue-500 !text-blue-500`}>
                         افزودن مشتری
                     </ButtonGeneral>
                 )}
-                {step === 2 && (
+                {/* {step === 1 && (
                     <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border border-blue-500 !text-blue-500`}>
                         افزودن پیک
                     </ButtonGeneral>
-                )}
+                )} */}
             </div>
 
             <TabManagement step={step} index={0}>

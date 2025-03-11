@@ -29,16 +29,16 @@ function TabReportList () {
         <div>
             <div className='flex justify-between my-6'>
                 <div className='flex gap-8'>
-                    <InputDate
+                    {/* <InputDate
                         textCalender={'از تاریخ'}
                     />
                     <InputDate
                         textCalender={'تا تاریخ'}
-                    />
+                    /> */}
                 </div>
-                <ButtonGeneral className={`border border-blue-500 !text-blue-500`}>خروجی فایل</ButtonGeneral>
+                <ButtonGeneral className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
             </div>
-            <div className='grid grid-cols-3 gap-6'>
+            {/* <div className='grid grid-cols-3 gap-6'>
                 <CardDiagram 
                     contentTitle={
                         'جمع فروش'
@@ -82,9 +82,9 @@ function TabReportList () {
                 >
                     <LinearProgressCom value={50}/>
                 </CardDiagram>
-            </div>
+            </div> */}
 
-            <div className='flex justify-between border-b border-grayTitle mt-6 items-center'>
+            {/* <div className='flex justify-between border-b border-grayTitle mt-6 items-center'>
                 <div>
                     <ul className='flex gap-2'>
                         <li className='py-4 px-2 border-b border-b-customBlue'>
@@ -124,11 +124,11 @@ function TabReportList () {
                     </div>
 
                 </div>
-            </div>
+            </div> */}
 
             <div className='grid grid-cols-3 pt-10 gap-8'>
                 <div className='col-span-2'>
-                    <Text>روند فروش فروشگاه ها</Text>
+                    <Text>فروش هفتگی</Text>
                     <ChartColumn 
                         colOne={1}
                         colTwo={2}
@@ -144,7 +144,7 @@ function TabReportList () {
                 </div>
             </div>
 
-            <div className='mt-8'>
+            {/* <div className='mt-8'>
                 <Text>فروش ها</Text>
                 <div className=' grid grid-cols-3 mt-6'>
                     <div>
@@ -179,9 +179,9 @@ function TabReportList () {
                         />
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-            <div className='mt-8'>
+            {/* <div className='mt-8'>
                 <Text>بالاترین جستجو آنلاین</Text>
                 <hr className='my-4'/>
 
@@ -211,9 +211,11 @@ function TabReportList () {
                         <ChartComponent/>
                     </CardDiagram>
                 </div>
-            </div>
+            </div> */}
 
-            <Stack spacing={2} style={{ direction: "rtl", alignItems: "center", marginTop: '-10px' }}>
+            <Text className={`mt-14`}>لیست تراکنش های قبلی</Text>
+
+            <Stack spacing={2} style={{ direction: "rtl", alignItems: "center", marginTop: '24px' }}>
 
                 <div variant="outlined" className=' w-full'>
                     <TitleListSearch/>

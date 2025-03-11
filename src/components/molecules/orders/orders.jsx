@@ -24,7 +24,7 @@ function Orders() {
 
     const Buttons = [
         {label: "لیست سفارشات" },
-        {label: "لیست گزارشات " },
+        {label: "کیف پول" },
     ];
 
     return (

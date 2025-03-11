@@ -90,12 +90,12 @@ function Products() {
                 open={open}
                 handleClose={() => setOpen(false)}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
-                actionText="بله"
+                actionText="ذخیره"
                 actionHandler={() => { setOpen(false); }}
             >
                 <div className='text-right'>
                     <Uploader
-                        textOne={`تصویر دسته بندی را آپلود کنید`}
+                        textOne={`عکس محصول را انتخاب کنید`}
                         textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     />
                     <div className='grid grid-cols-2 gap-4'>
@@ -128,6 +128,13 @@ function Products() {
                             <MenuItem value={30}>Thirty</MenuItem>
                         </Select>
                     </FormControl>
+
+                    <Text className={`mt-4`}>توضیحات</Text>
+                    <textarea 
+                        // value={description} 
+                        // onChange={(e) => setDescription(e.target.value)} 
+                        className='bg-bgInput placeholder:text-black text-sm resize-none w-full border !border-Custom mt-2 rounded outline-none p-2' 
+                    />
                 </div>
             </GeneralModal>
 
@@ -135,7 +142,7 @@ function Products() {
                 open={openAddProduct}
                 handleClose={() => setOpenAddProduct(false)}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="بله"
+                actionText="ذخیره"
                 actionHandler={() => { setOpenAddProduct(false); }}
             >
                 <div className=' text-right'>

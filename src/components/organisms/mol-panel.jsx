@@ -5,7 +5,7 @@ import Text from '../atoms/text';
 import GeneralModal from '../molecules/modal-general';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import Ticket from '../molecules/ticket/ticket';
-import RequestVisit from '../molecules/request-visit';
+import RequestVisit from '../molecules/request-visit/request-visit';
 
 function TabPanel({ children, step, index }) {
     return (

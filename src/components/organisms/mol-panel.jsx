@@ -1,15 +1,11 @@
 import React, { useState } from 'react'
 import MenuPanel from '../../lib/menu-panel';
 import Logo from '../../assets/image/logo.png'
-import Dashboard from '../molecules/dashboard/dashboard';
 import Text from '../atoms/text';
-import Orders from '../molecules/orders/orders'
-import Products from '../molecules/products/products';
-import Management from '../molecules/management/management';
-import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import Ticket from '../molecules/ticket/ticket';
+import RequestVisit from '../molecules/request-visit';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -66,19 +62,20 @@ function MolPanel() {
             </div>
             <div className=' max-[990px]:ml-0 max-[990px]:mt-4 grow'>
                 <TabPanel step={step} index={0}>
-                    <Dashboard/>
+                    {/* <Dashboard/> */}
+                    <RequestVisit/>
                 </TabPanel>
                 <TabPanel step={step} index={1}>
-                    <Orders/>
+                    {/* <Orders/> */}
                 </TabPanel>
                 <TabPanel step={step} index={2}>
-                    <Products/>
+                    {/* <Products/> */}
                 </TabPanel>
                 <TabPanel step={step} index={3}>
-                    <Management/>
+                    {/* <Management/> */}
                 </TabPanel>
                 <TabPanel step={step} index={4}>
-                    <Setting/>
+                    {/* <Setting/> */}
                 </TabPanel>
                 <TabPanel step={step} index={5}>
                     <Ticket/>

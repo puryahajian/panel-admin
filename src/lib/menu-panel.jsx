@@ -1,11 +1,9 @@
 
 const MenuPanel = [
-    { id : 1 ,label: "داشبورد" },
-    { id : 2 ,label: "سفارشات" },
-    { id : 3 ,label: "محصولات" },
-    { id : 4 ,label: "مدیریت" },
-    { id : 5 ,label: "تنظیمات" },
-    { id : 6 ,label: "تیکت ها" },
+    { id : 1 ,label: "درخواست ویزیت" },
+    { id : 2 ,label: "نسخه ها" },
+    { id : 3 ,label: "بیماران" },
+    { id : 4 ,label: "تیکت ها" },
 ];
 
 export default MenuPanel;

@@ -10,6 +10,9 @@ import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import Ticket from '../molecules/ticket/ticket';
+import TitleIconNotif from '../molecules/title-icon-notif';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import EmailIcon from '@mui/icons-material/Email';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -65,6 +68,22 @@ function MolPanel() {
 
             </div>
             <div className=' max-[990px]:ml-0 max-[990px]:mt-4 grow'>
+                <div className='mt-4 mx-8 flex justify-end'>
+                    <TitleIconNotif
+                        contentButton={
+                            <NotificationsIcon/>
+                        }
+                    >
+                        <div className='border-b flex gap-2 p-1 items-center'>
+                            <EmailIcon className='text-gray-300'/>
+                            <Text>sssss</Text>
+                        </div>
+                        <div className='border-b flex gap-2 p-1 items-center'>
+                            <EmailIcon className='text-gray-300'/>
+                            <Text>sssss</Text>
+                        </div>
+                    </TitleIconNotif>
+                </div>
                 <TabPanel step={step} index={0}>
                     <Dashboard/>
                 </TabPanel>
@@ -74,16 +93,16 @@ function MolPanel() {
                 <TabPanel step={step} index={2}>
                     <Products/>
                 </TabPanel>
-                <TabPanel step={step} index={3}>
+                {/* <TabPanel step={step} index={3}>
                     <Management/>
-                </TabPanel>
-                <TabPanel step={step} index={4}>
+                </TabPanel> */}
+                <TabPanel step={step} index={3}>
                     <Setting/>
                 </TabPanel>
-                <TabPanel step={step} index={5}>
+                <TabPanel step={step} index={4}>
                     <Ticket/>
                 </TabPanel>
-                <TabPanel step={step} index={6}>
+                <TabPanel step={step} index={5}>
                     7
                 </TabPanel>
             </div>

@@ -21,8 +21,29 @@ function Setting() {
                     textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
                 />
             </div> */}
+            <Uploader
+                textOne={`تصویر بک گراند`}
+                textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+            />
 
-            {/* <hr className='w-[95%] m-auto'/> */}
+            <hr className='w-[95%] my-4 m-auto'/>
+
+            <div className='grid grid-cols-3 gap-4'>
+                <Uploader
+                    textOne={`تصویر بنر اول`}
+                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                />
+                <Uploader
+                    textOne={`تصویر بنر دوم`}
+                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                />
+                <Uploader
+                    textOne={`تصویر بنر سوم`}
+                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                />
+            </div>
+
+            <hr className='w-[95%] my-4 m-auto'/>
 
             <div className=' mb-6 grid grid-cols-2 gap-4'>
                 <TabRightDetail/>
@@ -74,8 +95,15 @@ function Setting() {
             <hr className='w-[95%] m-auto'/>
 
             <div className='mt-6'>
+                <Text>متن کاتالوگ</Text>
+                <textarea className='w-full mt-2 rounded-lg h-80 bg-bgInput outline-none p-2 text-xs resize-none' name="" id=""></textarea>
+            </div>
+
+            <hr className='w-[95%] my-4 m-auto'/>
+
+            <div>
                 <Text>متن درباره ما</Text>
-                <textarea className='w-full mt-2 rounded-lg h-80 bg-bgInput resize-none' name="" id=""></textarea>
+                <textarea className='w-full mt-2 rounded-lg h-80 bg-bgInput outline-none p-2 text-xs resize-none' name="" id=""></textarea>
             </div>
 
             <div className='mt-6 flex justify-end gap-4'>

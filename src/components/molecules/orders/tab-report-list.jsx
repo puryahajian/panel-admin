@@ -1,27 +1,19 @@
 import React, { useState } from 'react'
-import CardDiagram from '../dashboard/card-diagram'
 import Text from '../../atoms/text'
-import ChartComponent from '../chart'
-import LinearProgressCom from '../linear-progress'
-import InputDate from './input-date'
 import ButtonGeneral from '../../atoms/button-general'
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import SalesRatingList from './sales-rating-list'
-import ListOrders from './list-orders'
 import ChartColumn from './chart-column'
-import ChartCircle from './chart-circle'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Card, CardContent, Typography } from '@mui/material'
 import TitleListSearch from './title-list-search'
 import ListSearch from './list-search'
-
-
+import GeneralModal from '../modal-general'
+import Input from '../../atoms/input'
 
 function TabReportList () {
     const [page, setPage] = useState(1);
-
+    const [openPrice, setOpenPrice] = useState(false);
+    
     const handleChange = (event, value) => {
       setPage(value);
     };
@@ -36,7 +28,7 @@ function TabReportList () {
                         textCalender={'تا تاریخ'}
                     /> */}
                 </div>
-                <ButtonGeneral className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
+                <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
             </div>
             {/* <div className='grid grid-cols-3 gap-6'>
                 <CardDiagram 
@@ -231,6 +223,18 @@ function TabReportList () {
                 </div>
                 <Pagination count={5} style={{direction:'ltr', width: '100%', marginTop: '24px'}} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
             </Stack>
+
+            <GeneralModal
+                open={openPrice}
+                handleClose={() => setOpenPrice(false)}
+                title="تسفیه حساب"
+                actionText="ثبت"
+                actionHandler={() => { setOpenPrice(false); }}
+            >
+                <div className=' text-right mt-4'>
+                    <Input className={`w-full`} placeholder={`مبلغ درخواستی`}/>
+                </div>
+            </GeneralModal>
 
         </div>
     )

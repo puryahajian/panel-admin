@@ -12,6 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import MenuAutoComplete from '../menu-auto-complete';
+import List from '../../../lib/list';
 
 
 function TabProduct({ children, step, index }) {
@@ -36,57 +38,47 @@ function Products() {
 
     
     const Buttons = [
-        {label: "لیست محصولات" },
-        {label: "دسته بندی ها" },
+        {label: "افزودن محصول" },
+        // {label: "دسته بندی ها" },
     ];
-
-    const [age, setAge] = React.useState('');
-
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
 
     return (
         <div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between items-center'>
                 <div className='flex gap-4'>
                     {Buttons.map((tab, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setStep(index)}
-                            className={`px-7 py-3 rounded-lg text-sm font-sans text-grayText ${
-                                step === index
-                                    ? 'bg-grayText text-white'
-                                    : 'border border-gray-600 text-grayText'
-                            }`}
-                            aria-controls={`vertical-tabpanel-${index}`}
-                        >
-                            <span className='font-sans text-sm '>{tab.label}</span>
+                        // <button
+                        //     key={index}
+                        //     onClick={() => setStep(index)}
+                        //     className={`px-7 py-3 rounded-lg text-sm font-sans text-grayText ${
+                        //         step === index
+                        //             ? 'bg-grayText text-white'
+                        //             : 'border border-gray-600 text-grayText'
+                        //     }`}
+                        //     aria-controls={`vertical-tabpanel-${index}`}
+                        // >
+                            <Text className='font-sans text-sm '>{tab.label}</Text>
                             
-                        </button>
+                        // </button>
                     ))}
                 </div>
 
-                {step === 0 ? (
-                    <ButtonGeneral onClick={() => setOpen(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن محصول
-                    </ButtonGeneral>
-                ) : (
+                {/* {step === 0 && ( */}
                     <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن دسته بندی
+                        درخواست کالای جدید
                     </ButtonGeneral>
-                )}
+                {/* )} */}
             </div>
             <TabProduct step={step} index={0}>
                 <hr className='w-[95%] m-auto'/>
                 <TabListProducts/>
             </TabProduct>
-            <TabProduct step={step} index={1}>
+            {/* <TabProduct step={step} index={1}>
                 <hr className='w-[95%] m-auto'/>
                 <TabCategory/>
-            </TabProduct>
+            </TabProduct> */}
 
-            <GeneralModal
+            {/* <GeneralModal
                 open={open}
                 handleClose={() => setOpen(false)}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
@@ -96,7 +88,7 @@ function Products() {
                 <div className='text-right'>
                     <Uploader
                         textOne={`عکس محصول را انتخاب کنید`}
-                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بابت بیشتر باشه`}
                     />
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
@@ -109,10 +101,13 @@ function Products() {
                         </div>                    
                     </div>
 
+                    <Text className={`mt-4`}>نوع کالا</Text>
+                    <MenuAutoComplete options={List}/>
+
                     <Text className={`mt-4 mb-2`}>دسته بندی</Text>
-                    <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none'>
+                    <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none !py-0'>
                         <Select
-                            className='!outline-none'
+                            className='!outline-none !py-0'
                             value={age}
                             onChange={handleChange}
                             displayEmpty
@@ -129,6 +124,31 @@ function Products() {
                         </Select>
                     </FormControl>
 
+                    <div className='text-right'>
+                        <Text className={`mt-4 mb-2`}>ظرفیت محصول</Text>
+                        <Input className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                    </div>  
+
+                    <Text className={`mt-4 mb-2`}>نوع بسته بندی</Text>
+                    <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none !py-0'>
+                        <Select
+                            className='!outline-none !py-0'
+                            value={age}
+                            onChange={handleChange}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            <MenuItem value="">
+                                <Text>
+                                    نوع بسته بندی را انتخاب کنید
+                                </Text>
+                            </MenuItem>
+                            <MenuItem value={10}>کیلویی</MenuItem>
+                            <MenuItem value={20}>شیشه ای</MenuItem>
+                            <MenuItem value={30}>دانه ای</MenuItem>
+                        </Select>
+                    </FormControl>
+
                     <Text className={`mt-4`}>توضیحات</Text>
                     <textarea 
                         // value={description} 
@@ -136,7 +156,7 @@ function Products() {
                         className='bg-bgInput placeholder:text-black text-sm resize-none w-full border !border-Custom mt-2 rounded outline-none p-2' 
                     />
                 </div>
-            </GeneralModal>
+            </GeneralModal> */}
 
             <GeneralModal
                 open={openAddProduct}
@@ -147,12 +167,12 @@ function Products() {
             >
                 <div className=' text-right'>
                     <Uploader
-                        textOne={`تصویر دسته بندی را اپلود کنید`}
+                        textOne={`تصویر محصول را انتخاب کنید`}
                         textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     />
 
-                    <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Text className={`mt-4 mb-2`}>جزئیات محصول</Text>
+                    <Input className={`w-full`} placeholder={`جزئیات را بنویسید`}/>
                 </div>
             </GeneralModal>
         </div>

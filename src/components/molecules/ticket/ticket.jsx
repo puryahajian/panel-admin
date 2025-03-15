@@ -6,6 +6,8 @@ import ButtonGeneral from '../../atoms/button-general';
 import ModalLeft from '../modal-left';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import SendIcon from '@mui/icons-material/Send';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Uploader from '../uploader';
 
 function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
@@ -13,9 +15,15 @@ function Ticket() {
     const [selectedId, setSelectedId] = useState('');
     const [description, setDescription] = useState('');
     const [showLeft, setShowLeft] = useState(false);
+    const [fileName, setFileName] = useState('');
+    const [age, setAge] = React.useState('');
+        
+    const handleChange = (event) => {
+        setAge(event.target.value);
+    };
 
     const handleCloseModalLeft = () => setShowLeft(false);
-    const handleChange = (event) => setSelectedId(event.target.value);
+    // const handleChange = (event) => setSelectedId(event.target.value);
 
     return (
         <div>
@@ -46,6 +54,12 @@ function Ticket() {
                 actionText="ثبت"
                 actionHandler={() => setOpenSentTicket(false)}
             >
+                <Uploader
+                    className={`h-full grid items-center mt-4`}
+                    textOne={`عکس خود را انتخاب کنید`}
+                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بابت بیشتر باشه`}
+                />
+
                 <Text className='text-right mt-4'>موضوع :</Text>
                 <input 
                     onChange={(e) => setTitle(e.target.value)} 
@@ -54,15 +68,22 @@ function Ticket() {
                 />
 
                 <Text className='text-right mt-4'>انتخاب کنید :</Text>
-                <FormControl className='w-full !outline-none border !border-Custom rounded' style={{direction: 'ltr'}} size="small">
+                <FormControl sx={{ minWidth: 120 }} className='w-full text-right !outline-none !py-0 !mt-2'>
                     <Select
-                        className='!outline-none border-none mt-2'
-                        value={selectedId}
+                        className='!outline-none !py-0 border !border-gray-200'
+                        value={age}
                         onChange={handleChange}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
                     >
-                        <MenuItem className='bg-white'>
-                            <Text className='!text-xs'>qqqq</Text>
+                        <MenuItem value="">
+                            <Text>
+                                انتخاب وضعیت
+                            </Text>
                         </MenuItem>
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -118,19 +139,30 @@ function Ticket() {
                         {/* );
                     })} */}
 
-                    <div className='absolute bottom-0 right-0 w-full flex'>
-                        <ButtonGeneral 
-                            className='!py-2 !px-3 border border-gray-400 rounded-l-none' 
-                            // onClick={() => handlePostTicket(data?.ticket?.id)}
-                        >
-                            <SendIcon className='text-xs' />
-                        </ButtonGeneral>
-                        <input 
-                            // value={valueMessage}
-                            // onChange={(e) => setValueMessage(e.target.value)} 
-                            className='w-full p-2 border border-gray-400 outline-none rounded !rounded-r-none placeholder:font-sans'
-                            placeholder="توضیحات"
-                        />
+                    <div className='absolute grid bottom-0 right-0 w-full'>
+                        {fileName && <Text className='ml-2 text-gray-600'>{fileName}</Text>}
+                        <div className='flex bg-gray-200 py-2'>
+                            <ButtonGeneral 
+                                className='!py-2 !px-3 !border-none bg-gray-200' 
+                                // onClick={() => handlePostTicket(data?.ticket?.id)}
+                            >
+                                <SendIcon className='text-xs' />
+                            </ButtonGeneral>
+                            <input 
+                                // value={valueMessage}
+                                // onChange={(e) => setValueMessage(e.target.value)} 
+                                className='w-full p-2 outline-none text-xs rounded-3xl placeholder:font-sans'
+                                placeholder="توضیحات"
+                            />
+                            <label className='p-2 cursor-pointer bg-gray-200'>
+                                <input 
+                                    type='file' 
+                                    className='hidden' 
+                                    onChange={(e) => setFileName(e.target.files[0]?.name || '')}
+                                />
+                                <AttachFileIcon/>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </ModalLeft>

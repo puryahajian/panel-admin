@@ -43,3 +43,29 @@
   font-size: 12px;
   color: #a0a0a0;
 }
+
+/* drop down */
+.css-1ll44ll-MuiOutlinedInput-notchedOutline{
+  border: none !important;
+  outline: none !important;
+}
+.css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root{
+  padding: 4px !important;
+}
+.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+  padding: 12px 30px !important;
+}
+.css-2cu920-MuiFormControl-root{
+  border-radius: 4px !important;
+}
+.css-1tlcqt-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
+  padding: 7.5px 34px 7.5px 5px !important;
+}
+
+
+/* icon-notif */
+.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper{
+  width: 250px !important;
+  padding: 0 8px;
+}
+

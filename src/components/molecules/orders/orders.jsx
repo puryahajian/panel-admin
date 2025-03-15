@@ -23,8 +23,8 @@ function Orders() {
     const [step, setStep] = useState(0);
 
     const Buttons = [
-        {label: "لیست سفارشات" },
         {label: "کیف پول" },
+        {label: "لیست سفارشات" },
     ];
 
     return (
@@ -55,11 +55,11 @@ function Orders() {
 
             <TabOrder step={step} index={0}>
                 <hr className='w-[95%] m-auto'/>
-                <TabOrderList/>
+                <TabReportList/>
             </TabOrder>
             <TabOrder step={step} index={1}>
                 <hr className='w-[95%] m-auto'/>
-                <TabReportList/>
+                <TabOrderList/>
             </TabOrder>
         </div>
     )

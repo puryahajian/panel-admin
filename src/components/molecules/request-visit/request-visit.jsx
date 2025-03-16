@@ -13,8 +13,8 @@ function RequestVisit() {
                     <Text className={`col-span-2 border-r border-gray-500 pr-2`}>نام</Text>
                     <Text className={`border-r border-gray-500 pr-2`}>تاریخ و ساعت</Text>
                 </div>
-                <div className='w-1/5 text-left ml-4'>
-                    <Text>وضعیت</Text>
+                <div className='w-1/5 text-left'>
+                    <Text className={`ml-10`}>وضعیت</Text>
                 </div>
             </div>
 

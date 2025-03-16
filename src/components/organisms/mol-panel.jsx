@@ -6,6 +6,8 @@ import GeneralModal from '../molecules/modal-general';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import Ticket from '../molecules/ticket/ticket';
 import RequestVisit from '../molecules/request-visit/request-visit';
+import Visit from '../molecules/visit/visit';
+import Sick from '../molecules/sick/sick';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -62,14 +64,13 @@ function MolPanel() {
             </div>
             <div className=' max-[990px]:ml-0 max-[990px]:mt-4 grow'>
                 <TabPanel step={step} index={0}>
-                    {/* <Dashboard/> */}
                     <RequestVisit/>
                 </TabPanel>
                 <TabPanel step={step} index={1}>
-                    {/* <Orders/> */}
+                    <Visit/>
                 </TabPanel>
                 <TabPanel step={step} index={2}>
-                    {/* <Products/> */}
+                    <Sick/>
                 </TabPanel>
                 <TabPanel step={step} index={3}>
                     {/* <Management/> */}

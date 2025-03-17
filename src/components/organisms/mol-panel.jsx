@@ -54,7 +54,6 @@ function MolPanel() {
                             
                         </button>
                     ))}
-                    
                 </div>
 
                 <div className='grid gap-2'>

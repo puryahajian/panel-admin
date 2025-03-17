@@ -43,18 +43,18 @@ function Ticket() {
                 handleClose={() => setOpenSentTicket(false)}
                 title="ثبت تیکت"
                 content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
-                actionText="ثبت"
+                actionText="ارسال"
                 actionHandler={() => setOpenSentTicket(false)}
             >
                 <Text className='text-right mt-4'>موضوع :</Text>
                 <input 
                     onChange={(e) => setTitle(e.target.value)} 
                     value={title} 
-                    className='w-full border !border-Custom my-2 outline-none p-2 rounded' 
+                    className='w-full border my-2 outline-none p-2 rounded' 
                 />
 
                 <Text className='text-right mt-4'>انتخاب کنید :</Text>
-                <FormControl className='w-full !outline-none border !border-Custom rounded' style={{direction: 'ltr'}} size="small">
+                <FormControl className='w-full !outline-none rounded' style={{direction: 'ltr'}} size="small">
                     <Select
                         className='!outline-none border-none mt-2'
                         value={selectedId}

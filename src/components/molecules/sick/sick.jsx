@@ -25,15 +25,15 @@ function Sick() {
                     <Text>123456</Text>
                 </div>
                 <div className='w-4/12 text-left flex justify-end gap-2'>
-                    {/* <ButtonGeneral className={`!py-2 bg-red-500 border-transparent text-white`}>
+                    <ButtonGeneral className={`!py-2 bg-red-500 border-transparent cursor-default text-white`}>
                         پایان ویزیت
                     </ButtonGeneral>
-                    <ButtonGeneral className={`!py-2 bg-green-500 border-transparent text-white`}>
+                    {/* <ButtonGeneral className={`!py-2 bg-green-500 border-transparent cursor-default text-white`}>
                         درحال ویزیت
                     </ButtonGeneral> */}
-                    <ButtonGeneral className={`!py-2 bg-yellow-400 border-transparent text-gray-500`}>
+                    {/* <ButtonGeneral className={`!py-2 bg-yellow-400 border-transparent cursor-default text-gray-500`}>
                         منتظر تایید پزشک
-                    </ButtonGeneral>
+                    </ButtonGeneral> */}
                 </div>
             </div>
         </div>

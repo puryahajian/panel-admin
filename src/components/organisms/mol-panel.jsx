@@ -72,18 +72,18 @@ function MolPanel() {
                 <TabPanel step={step} index={2}>
                     <Sick/>
                 </TabPanel>
-                <TabPanel step={step} index={3}>
-                    {/* <Management/> */}
+                {/* <TabPanel step={step} index={3}>
+                    <Management/>
                 </TabPanel>
                 <TabPanel step={step} index={4}>
-                    {/* <Setting/> */}
-                </TabPanel>
-                <TabPanel step={step} index={5}>
+                    <Setting/>
+                </TabPanel> */}
+                <TabPanel step={step} index={3}>
                     <Ticket/>
                 </TabPanel>
-                <TabPanel step={step} index={6}>
+                {/* <TabPanel step={step} index={6}>
                     7
-                </TabPanel>
+                </TabPanel> */}
             </div>
         </div>
         <GeneralModal

@@ -1,25 +1,25 @@
 import React from 'react'
 import Text from '../atoms/text'
 
-function ListOrders({momber,order,orderCode,price,comments,date,orderStatus, onClick, handleClick, detailOrder}) {
+function ListOrders({momber,order,orderCode,price,comments,date,orderStatus, onClick, handleClick, detailOrder, key}) {
     return (
-        <ul className='grid grid-cols-7 py-4 px-6 border border-gray-300 rounded-lg'>
+        <ul key={key} className='grid grid-cols-7 py-4 px-6 border border-gray-300 rounded-lg'>
             <li className=''>
                 <Text>{momber}</Text>
             </li>
-            <li>
+            {/* <li>
                 <Text>{order}</Text>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
                 <Text>{orderCode}</Text>
-            </li>
+            </li> */}
             <li>
-                <Text>{price}</Text>
+                <Text>{price} تومان</Text>
             </li>
             <li>
                 <Text>{date}</Text>
             </li>
-            <li>
+            <li className='text-center'>
                 <button onClick={handleClick}>
                     <Text>
                         {detailOrder}
@@ -32,6 +32,8 @@ function ListOrders({momber,order,orderCode,price,comments,date,orderStatus, onC
                         {comments}
                     </Text>
                 </button>
+            </li>
+            <li className={`text-left col-span-2`}>
                 <Text>{orderStatus}</Text>
             </li>
         </ul>

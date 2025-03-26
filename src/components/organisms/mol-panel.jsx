@@ -13,6 +13,10 @@ import Ticket from '../molecules/ticket/ticket';
 import TitleIconNotif from '../molecules/title-icon-notif';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import EmailIcon from '@mui/icons-material/Email';
+import GetShopProduct from '../db/get-shop-product';
+import Cookies from "js-cookie";
+import { useNavigate } from 'react-router-dom';
+
 
 function TabPanel({ children, step, index }) {
     return (
@@ -31,7 +35,7 @@ function TabPanel({ children, step, index }) {
 function MolPanel() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
-    
+    const navigate = useNavigate();
 
     return (
         <>
@@ -73,11 +77,11 @@ function MolPanel() {
                             <NotificationsIcon/>
                         }
                     >
-                        <div className='border-b flex gap-2 p-1 items-center'>
+                        <div className='border-b flex gap-36 p-1 items-center'>
                             <EmailIcon className='text-gray-300'/>
                             <Text>sssss</Text>
                         </div>
-                        <div className='border-b flex gap-2 p-1 items-center'>
+                        <div className='border-b flex gap-36 p-1 items-center'>
                             <EmailIcon className='text-gray-300'/>
                             <Text>sssss</Text>
                         </div>
@@ -112,7 +116,12 @@ function MolPanel() {
             title="آیا می خواهید از اکانت خود خارج شوید ؟"
             // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
             actionText="بله"
-            actionHandler={() => { setOpen(false); }}
+            actionHandler={() => { 
+                Cookies.remove('access');
+                Cookies.remove('refresh');
+                setOpen(false); 
+                navigate('/login')
+            }}
         />
         </>
     )

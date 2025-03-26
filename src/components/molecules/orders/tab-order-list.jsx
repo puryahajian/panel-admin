@@ -6,152 +6,157 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import StarFeedback from '../start-feedback';
 import CloseIcon from '@mui/icons-material/Close';
 import { FormControl, MenuItem, Select } from '@mui/material';
+import UseGetListOrders from '../../db/use-get-list-orders';
 
 function TabOrderList() {
   const [openModalComments, setOpenModalComments] = useState(false);
   const [openModalDetailOrders, setOpenModalDetailOrders] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectedCommentOrderId, setSelectedCommentOrderId] = useState(null);
   const [age, setAge] = React.useState('');
-      
+  const { data } = UseGetListOrders();
+
   const handleChange = (event) => {
-      setAge(event.target.value);
+    setAge(event.target.value);
+  };
+
+  const handleOpenModalDetailOrders = (event, orderId) => {
+    if (event && event.preventDefault) event.preventDefault(); 
+    setSelectedOrderId(orderId);
+    setOpenModalDetailOrders(true);
+  };
+  
+  const handleCloseModalDetailOrders = (event) => {
+    if (event && event.preventDefault) event.preventDefault();
+    setOpenModalDetailOrders(false);
+  };
+
+  const handleOpenModalComments = (event, orderId) => {
+    if (event && event.preventDefault) event.preventDefault();
+    setSelectedCommentOrderId(orderId);
+    setOpenModalComments(true);
   };
 
   return (
     <div className=''>
-        <div className='grid grid-cols-7 my-4'>
-          <Text>ردیف</Text>
-          <Text className={`pr-4`}>سفارشات</Text>
-          <Text>توضیحات</Text>
-          <Text>هزینه</Text>
-          {/* <Text>آدرس</Text> */}
-          <Text>تاریخ</Text>
-          <Text className={`text-left pl-4 col-span-2`}>وضعیت سفارش</Text>
-        </div>
-        <div className='grid gap-2'>
-          <ListOrders
-            momber={'1'}
-            order={'پیتزا ,ساندویچ'}
-            orderCode={'K9f94fhdb'}
-            price={'۲۰۰,۰۰۰ تومان'}
-            orderer={'لورم ایپسوم'}
-            date={'۱۴۰۳ / ۱۲ / ۰۴   ۲۰ : ۰۰'}
-            comments={`نظرات`}
-            orderStatus={
-              <Text className={`text-green-500`}>ارسال شده</Text>
-            }
-            detailOrder={`جزئیات`}
-            onClick={() => setOpenModalComments(true)}
-            handleClick={() => setOpenModalDetailOrders(true)}
-          />
-          <ListOrders
-            momber={'1'}
-            order={'پیتزا ,ساندویچ'}
-            orderCode={'K9f94fhdb'}
-            price={'۲۰۰,۰۰۰ تومان'}
-            orderer={'لورم ایپسوم'}
-            date={'۱۴۰۳ / ۱۲ / ۰۴   ۲۰ : ۰۰'}
-            comments={`نظرات`}
-            orderStatus={
-              <Text className={`text-green-500`}>ارسال شده</Text>
-            }
-            detailOrder={`جزئیات`}
-            onClick={() => setOpenModalComments(true)}
-            handleClick={() => setOpenModalDetailOrders(true)}
-          />
-          <ListOrders
-            momber={'1'}
-            order={'پیتزا ,ساندویچ'}
-            orderCode={'K9f94fhdb'}
-            price={'۲۰۰,۰۰۰ تومان'}
-            orderer={'لورم ایپسوم'}
-            date={'۱۴۰۳ / ۱۲ / ۰۴   ۲۰ : ۰۰'}
-            comments={`نظرات`}
-            orderStatus={
-              <Text className={`text-green-500`}>ارسال شده</Text>
-            }
-            detailOrder={`جزئیات`}
-            onClick={() => setOpenModalComments(true)}
-            handleClick={() => setOpenModalDetailOrders(true)}
-          />
-        </div>
-
-        {/* modal comment */}
-        <GeneralModal
-          open={openModalComments}
-          handleClose={() => setOpenModalComments(false)}
-          title="نظرات ثبت شده"
-          actionText="ثبت"
-          actionHandler={() => { setOpenModalComments(false); }}
-        >
-          <div className='max-h-44 overflow-auto'>
-            <div className='border-b py-2 mt-4'>
-              <div className='flex justify-between items-center'>
-                <div className='flex items-center gap-2'>
-                  <AccountCircleIcon className='text-grayTitle'/>
-                  <Text>no.1</Text>
-                </div>
-                <StarFeedback rating={4}/>
-              </div>
-              <div className='text-right mt-2'>
-                <Text>لورم ایپسومیسنزپسمنپز</Text>
-              </div>
-            </div>
-            <div className='border-b py-2 mt-4'>
-              <div className='flex justify-between items-center'>
-                <div className='flex items-center gap-2'>
-                  <AccountCircleIcon className='text-grayTitle'/>
-                  <Text>no.1</Text>
-                </div>
-                <StarFeedback rating={4}/>
-              </div>
-              <div className='text-right mt-2'>
-                <Text>لورم ایپسومیسنزپسمنپز</Text>
-              </div>
-            </div>
-          </div>
-        </GeneralModal>
-
-        {/* modal comment */}
-        <GeneralModal
-          open={openModalDetailOrders}
-          handleClose={() => setOpenModalDetailOrders(false)}
-          title="جزئیات سفارش"
-          actionText="ثبت"
-          actionHandler={() => setOpenModalDetailOrders(false)}
-        >
-          <div className='border mt-4'>
-            <div className='flex justify-between'>
-              <Text>نام محصول</Text>
-              <div className='flex items-center'>
-                <Text>2</Text>
-                <CloseIcon className='!text-sm'/>
-              </div>
-            </div>
-            <div className='mt-4'>
-              <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput text-right !outline-none !py-0'>
-                  <Select
-                      className='!outline-none !py-0'
-                      value={age}
-                      onChange={handleChange}
-                      displayEmpty
-                      inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                      <MenuItem value="">
-                          <Text>
-                              انتخاب وضعیت
-                          </Text>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-              </FormControl>
-            </div>
-
-          </div>
-        </GeneralModal>
+      <div className='grid grid-cols-7 my-4'>
+        <Text>ردیف</Text>
+        <Text className="mr-4">هزینه</Text>
+        <Text className="mr-2">تاریخ</Text>
+        <Text className="text-left pl-4 col-span-4">وضعیت سفارش</Text>
       </div>
+
+      <div className='grid gap-2'>
+        {data?.results.map((item) => {
+          let orderStatus;
+
+          switch (item?.state) {
+            case 0:
+              orderStatus = <Text className="text-yellow-400">تعلیق</Text>;
+              break;
+            case 1:
+              orderStatus = <Text className="text-orange-400">درحال پرداخت</Text>;
+              break;
+            case 2:
+              orderStatus = <Text className="text-red-400">لغو پرداخت</Text>;
+              break;
+            case 3:
+              orderStatus = <Text className="text-green-500">پرداخت شده</Text>;
+              break;
+            case 4:
+              orderStatus = <Text className="text-green-500">درحال بررسی</Text>;
+              break;
+            case 5:
+              orderStatus = <Text className="text-green-500">ارسال شده</Text>;
+              break;
+            case 6:
+              orderStatus = <Text className="text-green-500">برگشت خورده</Text>;
+              break;
+            case 7:
+              orderStatus = <Text className="text-yellow-400">در دست ارسال</Text>;
+              break;
+            case 8:
+              orderStatus = <Text className="text-yellow-400">انجام شده</Text>;
+              break;
+            case 9:
+              orderStatus = <Text className="text-yellow-400">لغو شده</Text>;
+              break;
+            case 10:
+              orderStatus = <Text className="text-yellow-400">لغو فروشگاه</Text>;
+              break;
+            default:
+              orderStatus = <Text className="text-gray-500">نامشخص</Text>;
+          }
+
+          return (
+            <ListOrders
+              key={item?.id} 
+              momber={item?.id}
+              price={item?.price}
+              date={item?.created_at ? new Date(item?.created_at).toLocaleString('fa-IR') : 'نامشخص'}
+              comments="نظرات"
+              orderStatus={orderStatus}
+              detailOrder="جزئیات"
+              onClick={(event) => handleOpenModalComments(event, item?.id)}
+              handleClick={(event) => handleOpenModalDetailOrders(event, item?.id)}
+            />
+          );
+        })}
+      </div>
+
+      {/* modal comment */}
+      <GeneralModal
+        open={openModalComments}
+        handleClose={(event) => setOpenModalComments(event,false)}
+        title={`نظرات ثبت شده `}
+        actionText="ثبت"
+        actionHandler={(event) => { setOpenModalComments(event,false); }}
+      >
+        <div className='max-h-44 overflow-auto'>
+          {data?.results.map((item) => (
+            item?.items.map((comments) => (
+            <div key={comments?.id} className='border-b py-2 mt-4'>
+              <div className='flex justify-between items-center'>
+                <div className='flex items-center gap-2'>
+                  <AccountCircleIcon className='text-grayTitle'/>
+                  <Text>{comments?.user_name}</Text>
+                </div>
+                <StarFeedback rating={comments?.rate}/>
+              </div>
+              <div className='text-right mt-2'>
+                <Text>{comments?.description}</Text>
+              </div>
+            </div>
+            ))
+          ))}
+        </div>
+      </GeneralModal>
+
+      {/* modal detail orders */}
+      <GeneralModal
+        open={openModalDetailOrders}
+        handleClose={handleCloseModalDetailOrders}
+        title="جزئیات سفارش"
+        actionText="ثبت"
+        actionHandler={(e) => handleCloseModalDetailOrders(e)}
+      >
+        <div className='mt-4'>
+          {data?.results
+            .find(order => order.id === selectedOrderId)
+            ?.items?.map((detail) => (
+              <div className='flex justify-between' key={detail?.id}>
+                <Text>{detail?.name}</Text>
+                <div className='flex items-center'>
+                  <Text>{detail?.unit}</Text>
+                  <CloseIcon className='!text-sm'/>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </GeneralModal>
+    </div>
   )
 }
 
-export default TabOrderList
+export default TabOrderList;

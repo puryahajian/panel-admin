@@ -5,7 +5,7 @@ function TitleListSearch() {
     return (
         <div className='grid grid-cols-4 gap-4 p-3 bg-gray-100 border-b'>
             <div className='border-l border-grayText'><Text>ردیف</Text></div>
-            <div className='border-l border-grayText'><Text>شماره تماس</Text></div>
+            <div className='border-l border-grayText'><Text>نام فروشگاه</Text></div>
             <div className='border-l border-grayText'><Text>مبلغ درخواستی</Text></div>
             <div><Text>وضعیت</Text></div>
         </div>

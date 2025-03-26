@@ -39,7 +39,7 @@
 }
 
 .file-name {
-  margin-top: 10px;
+  margin-top: 10px auto;
   font-size: 12px;
   color: #a0a0a0;
 }
@@ -65,7 +65,46 @@
 
 /* icon-notif */
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper{
-  width: 250px !important;
   padding: 0 8px;
 }
+
+
+/* size mp */
+.mapboxgl-map {
+  width: 100% !important;
+  height: 400px !important;
+}
+
+/* snipper */
+.loader {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid #FFF;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border-bottom: 4px solid #FF3D00;
+  border-left: 4px solid transparent;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+
 

@@ -22,7 +22,7 @@ const style = {
   borderRadius: '16px'
 };
 
-const GeneralModal = ({ open, handleClose, title, children, actionText, actionHandler }) => {
+const GeneralModal = ({ open, handleClose, title, children, actionText, actionHandler, onSubmit }) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -39,6 +39,7 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
     >
     <Fade in={open}>
         <Box sx={style}>
+          <form action="" onSubmit={onSubmit}>
             <Text id="transition-modal-title">
                 {title}
             </Text>
@@ -46,9 +47,10 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
                 {children}
             {/* </Typography> */}
             <Box mt={2} display="flex" gap="16px" justifyContent="space-between">
-                {actionText && <ButtonGeneral className={`bg-customBlue text-white border-none w-full`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral>}
-                <ButtonGeneral className={` border border-red-600 text-red-600 w-full`} variant="outlined" onClick={handleClose}>خیر</ButtonGeneral>
+              {actionText && <ButtonGeneral className={`bg-customBlue text-white border-none w-full`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral>}
+              <ButtonGeneral className={` border border-red-600 text-red-600 w-full`} variant="outlined" onClick={handleClose}>خیر</ButtonGeneral>
             </Box>
+          </form>
         </Box>
       </Fade>
     </Modal>

@@ -9,14 +9,50 @@ import TitleListSearch from './title-list-search'
 import ListSearch from './list-search'
 import GeneralModal from '../modal-general'
 import Input from '../../atoms/input'
+import UseShopSettlement from '../../db/use-shop-settlement'
+import { toast } from 'react-toastify'
+import UseGetTransaction from '../../db/use-get-transaction'
+import UseGetChartSale from '../../db/use-get-chart-sale'
 
 function TabReportList () {
     const [page, setPage] = useState(1);
     const [openPrice, setOpenPrice] = useState(false);
-    
+    const [mony, setMony] = useState('');
+    const { mutate } = UseShopSettlement();
+    const {data} = UseGetTransaction();
+    const { data: dataChart } = UseGetChartSale();
+
     const handleChange = (event, value) => {
       setPage(value);
     };
+
+    const askingForMony = (e) => {
+        e.preventDefault();
+        // console.log(mony)
+            
+        mutate(
+            { 
+                mony
+            },
+            {
+                onSuccess: (data) => {
+                    toast.success('با موفقیت ثبت شد !')
+                },
+            }
+        );
+    }
+
+    // Pagination
+    const itemsPerPage = 5;
+    
+    const allItems = data?.results.flatMap(item => 
+        item?.items.map(items => ({ items, item }))
+    ) || [];
+    
+    const startIndex = (page - 1) * itemsPerPage;
+    const paginatedItems = allItems.slice(startIndex, startIndex + itemsPerPage);
+    const pageCount = Math.ceil(allItems.length / itemsPerPage);
+
     return (
         <div>
             <div className='flex justify-between my-6'>
@@ -122,18 +158,20 @@ function TabReportList () {
                 <div className='col-span-2'>
                     <Text>فروش هفتگی</Text>
                     <ChartColumn 
-                        colOne={1}
-                        colTwo={2}
-                        colThree={3}
-                        colFour={4}
-                        colFive={5}
-                        colSix={6}
-                        colSeven={7}
+                        columns={dataChart?.data.map((chart) => [
+                            chart[0]?.total_sales || 0,
+                            chart[1]?.total_sales || 0,
+                            chart[2]?.total_sales || 0,
+                            chart[3]?.total_sales || 0,
+                            chart[4]?.total_sales || 0,
+                            chart[5]?.total_sales || 0,
+                            chart[6]?.total_sales || 0
+                        ])}
                     />
                 </div>
-                <div>
+                {/* <div>
                     <SalesRatingList/>
-                </div>
+                </div> */}
             </div>
 
             {/* <div className='mt-8'>
@@ -208,20 +246,22 @@ function TabReportList () {
             <Text className={`mt-14`}>لیست تراکنش های قبلی</Text>
 
             <Stack spacing={2} style={{ direction: "rtl", alignItems: "center", marginTop: '24px' }}>
-
-                <div variant="outlined" className=' w-full'>
-                    <TitleListSearch/>
+                <div className='w-full'>
+                    <TitleListSearch />
                     <div>
-                        {page === 1 && 
-                            <ListSearch/>
-                        }
-                        {page === 2 && <div>محتوای صفحه ۲</div>}
-                        {page === 3 && <div>محتوای صفحه ۳</div>}
-                        {page === 4 && <div>محتوای صفحه ۴</div>}
-                        {page === 5 && <div>محتوای صفحه ۵</div>}
+                        {paginatedItems.map(({ items, item }, index) => (
+                            <ListSearch key={index} items={items} item={item} />
+                        ))}
                     </div>
                 </div>
-                <Pagination count={5} style={{direction:'ltr', width: '100%', marginTop: '24px'}} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
+                <Pagination 
+                    count={pageCount} 
+                    style={{ direction: 'ltr', width: '100%', marginTop: '24px' }} 
+                    variant="outlined" 
+                    shape="rounded" 
+                    page={page} 
+                    onChange={handleChange} 
+                />
             </Stack>
 
             <GeneralModal
@@ -229,10 +269,12 @@ function TabReportList () {
                 handleClose={() => setOpenPrice(false)}
                 title="تسفیه حساب"
                 actionText="ثبت"
-                actionHandler={() => { setOpenPrice(false); }}
+                // actionHandler={() => setOpenPrice(false)}
+                onSubmit={askingForMony}
             >
-                <div className=' text-right mt-4'>
-                    <Input className={`w-full`} placeholder={`مبلغ درخواستی`}/>
+                <div className=' text-right mt-4 relative'>
+                    <Text className={`absolute left-2 top-3 !text-base`}>ریال</Text>
+                    <Input onChange={(e) => setMony(e.target.value)} className={`w-full`} placeholder={`مبلغ درخواستی`}/>
                 </div>
             </GeneralModal>
 

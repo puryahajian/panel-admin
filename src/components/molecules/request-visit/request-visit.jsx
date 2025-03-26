@@ -25,7 +25,7 @@ function RequestVisit() {
                     <Text className={` pr-2`}>123456</Text>
                 </div>
                 <div className='w-1/5 text-left ml-4'>
-                    <ButtonGeneral className={`!py-2 bg-customBlue text-white`}>
+                    <ButtonGeneral className={`!py-2 bg-customBlue text-white border-none`}>
                         وضعیت
                     </ButtonGeneral>
                 </div>

@@ -54,3 +54,9 @@
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper{
   width: 150px;
 }
+
+/* size mp */
+.mapboxgl-map {
+  width: 100% !important;
+  height: 400px !important;
+}

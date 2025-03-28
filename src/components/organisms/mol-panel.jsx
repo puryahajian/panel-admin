@@ -9,6 +9,7 @@ import RequestVisit from '../molecules/request-visit/request-visit';
 import Visit from '../molecules/visit/visit';
 import Sick from '../molecules/sick/sick';
 import ChatId from '../molecules/chat/chatId';
+import Setting from '../molecules/manegment/setting';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -32,7 +33,7 @@ function MolPanel() {
     return (
         <>
         <div className='flex'>
-            <div className='w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border border-gray-400 sticky top-0'>
+            <div className='min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0'>
                 <div>
                     <img src={Logo} className='mb-10' alt="" />
                     {MenuPanel.map((tab, index) => (
@@ -73,9 +74,9 @@ function MolPanel() {
                 <TabPanel step={step} index={2}>
                     <Ticket/>
                 </TabPanel>
-                {/* <TabPanel step={step} index={3}>
-                    <ChatId/>
-                </TabPanel> */}
+                <TabPanel step={step} index={3}>
+                    <Setting/>
+                </TabPanel>
                 {/* <TabPanel step={step} index={1}>
                     <Visit/>
                 </TabPanel> */}

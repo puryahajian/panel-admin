@@ -63,7 +63,7 @@ const options = {
 function ChartComponent() {
     return (
         <div>
-            <Line className='!h-28 !w-full' data={data} options={options} />
+          <Line className='!h-28 !w-full' data={data} options={options} />
         </div>
     )
 }

@@ -8,7 +8,7 @@ import Ticket from '../molecules/ticket/ticket';
 import RequestVisit from '../molecules/request-visit/request-visit';
 import Visit from '../molecules/visit/visit';
 import Sick from '../molecules/sick/sick';
-import Chat from '../molecules/chat/chat';
+import ChatId from '../molecules/chat/chatId';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -68,17 +68,17 @@ function MolPanel() {
                     <RequestVisit/>
                 </TabPanel>
                 <TabPanel step={step} index={1}>
-                    <Visit/>
-                </TabPanel>
-                <TabPanel step={step} index={2}>
                     <Sick/>
                 </TabPanel>
-                <TabPanel step={step} index={3}>
+                <TabPanel step={step} index={2}>
                     <Ticket/>
                 </TabPanel>
-                <TabPanel step={step} index={4}>
-                    <Chat/>
-                </TabPanel>
+                {/* <TabPanel step={step} index={3}>
+                    <ChatId/>
+                </TabPanel> */}
+                {/* <TabPanel step={step} index={1}>
+                    <Visit/>
+                </TabPanel> */}
 
             </div>
         </div>

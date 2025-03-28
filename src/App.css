@@ -43,3 +43,14 @@
   font-size: 12px;
   color: #a0a0a0;
 }
+
+/*  */
+.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+  padding: 10px 12px !important;
+  background-color: #6669f9;
+}
+/*  */
+
+.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper{
+  width: 150px;
+}

@@ -8,7 +8,7 @@ import ButtonGeneral from '../../atoms/button-general';
 import SendIcon from '@mui/icons-material/Send';
 import Uploader from '../uploader';
 
-function Chat() {
+function ChatId() {
     const [fileName, setFileName] = useState('');
     const [preview, setPreview] = useState(null);
     const [view, setView] = useState(1);
@@ -24,6 +24,12 @@ function Chat() {
     return (
         <div>
             <div className=' max-w-[800px] m-auto p-2'>
+                <div className='flex justify-between items-center my-4'>
+                    <Text>چت با بیمار</Text>
+                    <ButtonGeneral className={`bg-customBlue text-white border-none`}>
+                        بازگشت
+                    </ButtonGeneral>
+                </div>
                 <div className='grid grid-cols-2 text-center gap-4 mb-4'>
                     <div 
                         className={`p-3 shadow-lg rounded cursor-pointer ${view === 1 ? 'bg-gray-100' : ''}`}
@@ -99,4 +105,4 @@ function Chat() {
     )
 }
 
-export default Chat
+export default ChatId

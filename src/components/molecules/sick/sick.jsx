@@ -5,7 +5,7 @@ import ButtonGeneral from '../../atoms/button-general'
 function Sick() {
     return (
         <div>
-            <Text>نسخه ها</Text>
+            <Text>بیماران</Text>
 
             <div className='flex py-4 bg-gray-100 rounded-lg px-2 mt-2'>
                 <div className='w-2/3 grid grid-cols-6'>

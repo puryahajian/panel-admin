@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
-import interceptor from '../lib/interceptor';
+import interceptor from '../../lib/interceptor';
+// import interceptor from '../lib/interceptor';
 
 function UseGetNewVisit() {
     const queryClient = useQueryClient();

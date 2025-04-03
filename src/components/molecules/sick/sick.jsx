@@ -7,7 +7,7 @@ import UseGetNewVisit from '../../db/use-get-new-visit';
 function Sick() {
     const [openSeeComment, setSeeComment] = useState(false);
     const { data } = UseGetNewVisit();
-    console.log(data)
+    // console.log(data)
     return (
         <div>
             <Text>بیماران</Text>

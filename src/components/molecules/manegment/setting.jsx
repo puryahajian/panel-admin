@@ -5,11 +5,16 @@ import TabLeftMap from './tab-left-map'
 import Text from '../../atoms/text'
 import Input from '../../atoms/input'
 import ButtonGeneral from '../../atoms/button-general'
+import UsePatchProfileShop from '../../db/use-patch-profile-shop'
+import { toast } from 'react-toastify'
+import Loading from '../../atoms/loading'
 // import UsePatchProfileShop from '../../db/use-patch-profile-shop'
 // import Loading from '../../atoms/loading'
 
 function Setting() {
     // const { mutate, isLoading } = UsePatchProfileShop();
+    const { mutate, isLoading } = UsePatchProfileShop();
+
     const [ selectedBg, setSelectedBg ] = useState();
     const [ selectedBannerOne, setSelectedBannerOne ] = useState();
     const [ selectedBannerTwo, setSelectedBannerTwo ] = useState();
@@ -27,17 +32,66 @@ function Setting() {
     const [telegram, setTelegram] = useState('');   
     const [whatsApp, setWhatsApp] = useState(''); 
     
-    const [catalog, setCatalog] = useState('');    
+    // const [catalog, setCatalog] = useState('');    
     const [about, setAbout] = useState('');    
     const [certificate, setCertificate] = useState('');    
     const [markerPosition, setMarkerPosition] = useState('');    
     const [tradeId, setTradeId] = useState('');    
     
+    const handleNeedCreateProduct = (e) => {
+        e.preventDefault();
 
+        mutate(
+            { 
+                selectedBg, 
+                selectedBannerOne,
+                selectedBannerTwo,
+                selectedBannerThree, 
+                selectedLogo, 
+                nameProduct, 
+                numberPhoneShop, 
+                nationalCode, 
+                support, 
+                timeOpen, 
+                timeClose,
+                // catalog,
+                about,
+                instagram,
+                telegram,
+                whatsApp,
+                certificate,
+                markerPosition,
+                tradeId
+            },
+            {
+                onSuccess: (data) => {
+                    setSelectedBg('')
+                    setSelectedBannerOne('')
+                    setSelectedBannerTwo('')
+                    selectedBannerThree('')
+                    setSelectedLogo('')
+                    setNameProduct('')
+                    setNumberPhoneShop('')
+                    setNationalCode('')
+                    setSupport('')
+                    setTimeOpen('')
+                    setTimeClose('')
+                    setInstagram('')
+                    setTelegram('')
+                    setWhatsApp('')
+                    // setCatalog('')
+                    setAbout('')
+                    setCertificate('')
+                    setTradeId('')
+                    toast.success('پروفایل با موفقیت ثبت شد')
+                },
+            }
+        );
+    }
    
 
     return (
-        <form >
+        <form onSubmit={handleNeedCreateProduct}>
             <div className=' mb-6 grid grid-cols-2 gap-4'>
                 <TabRightDetail
                     selectedFile={selectedLogo}
@@ -114,7 +168,7 @@ function Setting() {
 
             <div className='mt-6 flex justify-end gap-4'>
                 <ButtonGeneral className={`!px-16 bg-customBlue text-white border-customBlue`}>
-                    ثبت و اعمال
+                    {isLoading ? <Loading/> : 'ثبت و اعمال'}
                 </ButtonGeneral>
                 <ButtonGeneral className={`!px-16 border-red-500 text-red-500`}>انصراف</ButtonGeneral>
             </div>

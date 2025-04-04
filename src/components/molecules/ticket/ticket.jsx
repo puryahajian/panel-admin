@@ -15,6 +15,7 @@ import UseGetAllTicket from '../../db/use-get-all-ticket';
 import UseSentAnswer from '../../db/use-sent-answer';
 import Img from '../../atoms/img';
 import Audio from '../audio-player';
+import Loading from '../../atoms/loading';
 
 function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
@@ -200,7 +201,7 @@ function Ticket() {
                                                 className='!py-2 !px-3 !border-none bg-gray-200' 
                                                 onClick={() => handlePostTicket(selectedTicket?.id)}
                                             >
-                                                {isLoadingAnswer ? 'loading' : <SendIcon className='text-xs' /> }
+                                                {isLoadingAnswer ? <Loading/> : <SendIcon className='text-xs' /> }
                                             </ButtonGeneral>
                                             <input 
                                                 value={valueMessage}
@@ -221,7 +222,7 @@ function Ticket() {
                                 </form>
                             </div>
                         </>
-                    ) : ""}
+                    ) : <Loading/>}
                 </div>
             </ModalLeft>
         </div>

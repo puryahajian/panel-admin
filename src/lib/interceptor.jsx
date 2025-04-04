@@ -8,12 +8,12 @@ const interceptor = axios.create({
 interceptor.interceptors.request.use(
   (config) => {
     // config.headers['Content-Type'] = 'multipart/form-data';
-    const accessToken = Cookies.get('access');
+    // const accessToken = Cookies.get('access');
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     config.headers['Accept'] = 'application/json';
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
-    }
+    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0ODg5NTkzLCJpYXQiOjE3NDM2Nzk5OTMsImp0aSI6IjI4NmJiZmMyOWYzMzQ2ODBhZGM3ZGU2NzkzOWIxMmQ4IiwidXNlcl9pZCI6MX0.PnBwiN60S8tqcOhz1XwC0L9WDXQzI-SUIrXvpPKiX7k`;
+    // if (accessToken) {
+    // }
     
     return config;
   },

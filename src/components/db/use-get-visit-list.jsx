@@ -1,19 +1,18 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
 import interceptor from '../../lib/interceptor';
-// import interceptor from '../lib/interceptor';
 
-function UseGetNewVisit() {
+function UseGetVisitList() {
     const queryClient = useQueryClient();
 
     const { data, error, isLoading } = useQuery({
-        queryKey: ['getNewVisit'],
+        queryKey: ['getVisitList'],
         queryFn: async () => {
-            const response = await interceptor.get(`doctor/new-visit/`);
+            const response = await interceptor.get(`doctor/visit-list/`);
             return response.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['getNewVisit']);
+            queryClient.invalidateQueries(['getVisitList']);
         },
         onError: (error) => {
             console.log('Error fetching data:', error);
@@ -22,7 +21,7 @@ function UseGetNewVisit() {
     
     useEffect(() => {
         if (data) {
-            queryClient.invalidateQueries(['getNewVisit']);
+            queryClient.invalidateQueries(['getVisitList']);
         }
     }, [data]); 
 
@@ -33,4 +32,4 @@ function UseGetNewVisit() {
     return {data}
 }
 
-export default UseGetNewVisit
+export default UseGetVisitList

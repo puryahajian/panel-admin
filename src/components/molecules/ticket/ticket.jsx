@@ -6,8 +6,11 @@ import ButtonGeneral from '../../atoms/button-general';
 import ModalLeft from '../modal-left';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import SendIcon from '@mui/icons-material/Send';
+import UseGetSection from '../../db/use-get-section';
 
 function Ticket() {
+    const { data } = UseGetSection();
+    console.log(data)
     const [openSentTicket, setOpenSentTicket] = useState(false);
     const [title, setTitle] = useState('');
     const [selectedId, setSelectedId] = useState('');
@@ -15,7 +18,7 @@ function Ticket() {
     const [showLeft, setShowLeft] = useState(false);
 
     const handleCloseModalLeft = () => setShowLeft(false);
-    const handleChange = (event) => setSelectedId(event.target.value);
+    // const handleChange = (event) => setSelectedId(event.target.value);
 
     return (
         <div>
@@ -57,12 +60,14 @@ function Ticket() {
                 <FormControl className='w-full !outline-none rounded' style={{direction: 'ltr'}} size="small">
                     <Select
                         className='!outline-none border-none mt-2'
-                        value={selectedId}
-                        onChange={handleChange}
+                        // value={selectedId}
+                        // onChange={handleChange}
                     >
-                        <MenuItem className='bg-white'>
-                            <Text className='!text-xs'>qqqq</Text>
-                        </MenuItem>
+                        {data?.results.map((item) => (
+                            <MenuItem key={item?.id} className='bg-white'>
+                                <Text className='!text-xs'>{item?.name}</Text>
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
 

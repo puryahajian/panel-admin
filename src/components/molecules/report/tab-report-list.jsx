@@ -14,12 +14,14 @@ import Input from '../../atoms/input'
 // import UseGetTransaction from '../../db/use-get-transaction'
 // import UseGetChartSale from '../../db/use-get-chart-sale'
 import ChartColumn from './chart-column';
+import UseShopSettlement from '../../db/use-post-settlement';
+import { toast } from 'react-toastify';
 
 function TabReportList () {
+    const { mutate } = UseShopSettlement();
     const [page, setPage] = useState(1);
     const [openPrice, setOpenPrice] = useState(false);
     const [mony, setMony] = useState('');
-    // const { mutate } = UseShopSettlement();
     // const {data} = UseGetTransaction();
     // const { data: dataChart } = UseGetChartSale();
 
@@ -27,21 +29,21 @@ function TabReportList () {
       setPage(value);
     };
 
-    // const askingForMony = (e) => {
-    //     e.preventDefault();
-    //     console.log(mony)
+    const askingForMony = (e) => {
+        e.preventDefault();
+        console.log(mony)
             
-    //     mutate(
-    //         { 
-    //             mony
-    //         },
-    //         {
-    //             onSuccess: (data) => {
-    //                 toast.success('با موفقیت ثبت شد !')
-    //             },
-    //         }
-    //     );
-    // }
+        mutate(
+            { 
+                mony
+            },
+            {
+                onSuccess: (data) => {
+                    toast.success('با موفقیت ثبت شد !')
+                },
+            }
+        );
+    }
 
     // Pagination
     const itemsPerPage = 5;
@@ -111,8 +113,8 @@ function TabReportList () {
                 handleClose={() => setOpenPrice(false)}
                 title="تسفیه حساب"
                 actionText="ثبت"
-                // actionHandler={() => setOpenPrice(false)}
-                // onSubmit={askingForMony}
+                actionHandler={() => setOpenPrice(false)}
+                onSubmit={askingForMony}
             >
                 <div className=' text-right mt-4 relative'>
                     <Text className={`absolute left-2 top-3 !text-base`}>ریال</Text>

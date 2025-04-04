@@ -11,8 +11,8 @@ import GeneralModal from '../modal-general'
 import Input from '../../atoms/input'
 // import UseShopSettlement from '../../db/use-shop-settlement'
 // import { toast } from 'react-toastify'
-// import UseGetTransaction from '../../db/use-get-transaction'
-// import UseGetChartSale from '../../db/use-get-chart-sale'
+import UseGetTransaction from '../../db/use-get-transaction'
+import UseGetChartSale from '../../db/use-get-chart-sale'
 import ChartColumn from './chart-column';
 import UseShopSettlement from '../../db/use-post-settlement';
 import { toast } from 'react-toastify';
@@ -22,8 +22,8 @@ function TabReportList () {
     const [page, setPage] = useState(1);
     const [openPrice, setOpenPrice] = useState(false);
     const [mony, setMony] = useState('');
-    // const {data} = UseGetTransaction();
-    // const { data: dataChart } = UseGetChartSale();
+    const {data} = UseGetTransaction();
+    const { data: dataChart } = UseGetChartSale();
 
     const handleChange = (event, value) => {
       setPage(value);
@@ -48,13 +48,13 @@ function TabReportList () {
     // Pagination
     const itemsPerPage = 5;
     
-    // const allItems = data?.results.flatMap(item => 
-    //     item?.items.map(items => ({ items, item }))
-    // ) || [];
+    const allItems = data?.results.flatMap(item => 
+        item?.items.map(items => ({ items, item }))
+    ) || [];
     
-    // const startIndex = (page - 1) * itemsPerPage;
-    // const paginatedItems = allItems.slice(startIndex, startIndex + itemsPerPage);
-    // const pageCount = Math.ceil(allItems.length / itemsPerPage);
+    const startIndex = (page - 1) * itemsPerPage;
+    const paginatedItems = allItems.slice(startIndex, startIndex + itemsPerPage);
+    const pageCount = Math.ceil(allItems.length / itemsPerPage);
 
     return (
         <div>
@@ -93,9 +93,9 @@ function TabReportList () {
                 <div className='w-full'>
                     <TitleListSearch />
                     <div>
-                        {/* {paginatedItems.map(({ items, item }, index) => (
+                        {paginatedItems.map(({ items, item }, index) => (
                             <ListSearch key={index} items={items} item={item} />
-                        ))} */}
+                        ))}
                     </div>
                 </div>
                 <Pagination 

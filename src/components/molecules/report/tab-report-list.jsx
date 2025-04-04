@@ -16,6 +16,7 @@ import UseGetChartSale from '../../db/use-get-chart-sale'
 import ChartColumn from './chart-column';
 import UseShopSettlement from '../../db/use-post-settlement';
 import { toast } from 'react-toastify';
+import ListSearch from './list-search';
 
 function TabReportList () {
     const { mutate } = UseShopSettlement();

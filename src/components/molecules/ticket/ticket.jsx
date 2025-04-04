@@ -200,7 +200,7 @@ function Ticket() {
                                                 className='!py-2 !px-3 !border-none bg-gray-200' 
                                                 onClick={() => handlePostTicket(selectedTicket?.id)}
                                             >
-                                                {isLoadingAnswer ? <Loading/> : <SendIcon className='text-xs' /> }
+                                                {isLoadingAnswer ? 'loading' : <SendIcon className='text-xs' /> }
                                             </ButtonGeneral>
                                             <input 
                                                 value={valueMessage}

@@ -22,7 +22,6 @@ function UseSentAnswer() {
         {
             onSuccess: (data) => {
                 console.log(data)
-                // toast.success('پروفایل با موفقیت ذخیره شد')
                 queryClient.invalidateQueries(['createNewProduct']);
             },
         }

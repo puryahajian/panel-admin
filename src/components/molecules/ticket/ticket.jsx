@@ -128,7 +128,7 @@ function Ticket() {
                         className='!outline-none !py-0 border !border-gray-200'
                         value={section}
                         onChange={(e) => setSection(e.target.value)}
-                        displayEmpty
+                        // displayEmpty
                     >
                         <MenuItem disabled value="">
                             <Text>انتخاب وضعیت</Text>

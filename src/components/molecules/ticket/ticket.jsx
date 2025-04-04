@@ -9,7 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import UseSectionTicket from '../../db/use-section-ticket';
 import UseCreateTicket from '../../db/use-create-ticket';
-import Loading from '../../atoms/loading';
+// import Loading from '../../atoms/loading';
 import { toast } from 'react-toastify';
 import UseGetAllTicket from '../../db/use-get-all-ticket';
 import UseSentAnswer from '../../db/use-sent-answer';
@@ -221,7 +221,7 @@ function Ticket() {
                                 </form>
                             </div>
                         </>
-                    ) : <Loading />}
+                    ) : ""}
                 </div>
             </ModalLeft>
         </div>

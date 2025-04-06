@@ -16,8 +16,6 @@ function Sick() {
     const [selectedId, setSelectedId] = useState(null);
     
     const selectedItem = data?.find((item) => item?.id === selectedId);
-
-    console.log(selectedItem)
     
     const handleOpenComments = (id) => {
         setSelectedId(id);
@@ -50,23 +48,14 @@ function Sick() {
                         </ButtonGeneral>
                     </div>
                     <div className='w-4/12 text-left flex justify-end gap-2'>
-                        {/* <ButtonGeneral className={`!py-2 bg-red-500 border-transparent cursor-default text-white`}>
-                            پایان ویزیت
-                        </ButtonGeneral> */}
-                        {/* <ButtonGeneral className={`!py-2 bg-yellow-400 border-transparent cursor-default text-gray-500`}>
-                            منتظر تایید پزشک
-                        </ButtonGeneral> */}
                         <MenuDoted
                             contentButton={<MoreVertIcon/>} 
                         >
                             <MenuItem>
-                                <Link to='/chat'>
+                                <Link to={`/chat/${item?.id}`}>
                                     <Text>چت با بیمار</Text>
                                 </Link>
                             </MenuItem>
-                            {/* <MenuItem >
-                                <Text>ثبت وضعیت</Text>
-                            </MenuItem> */}
                             <MenuItem >
                                 <Text>حذف</Text>
                             </MenuItem>

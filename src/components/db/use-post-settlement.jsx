@@ -18,6 +18,7 @@ function UseShopSettlement() {
         },
         {
             onSuccess: (data) => {
+                console.log(data)
                 queryClient.invalidateQueries(['doctorSettlements']);
             },
             onError: (error) => {

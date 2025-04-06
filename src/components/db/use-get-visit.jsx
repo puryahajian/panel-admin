@@ -1,24 +1,28 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
 import interceptor from '../../lib/interceptor';
+import { useParams } from 'react-router-dom';
 
-function UseGetTransaction() {
+function UseGetVisit() {
+    const {id} = useParams();
+    console.log(id)
     const queryClient = useQueryClient();
 
     const { data, error, isLoading } = useQuery({
-        queryKey: ['transaction'],
+        queryKey: ['listVisit', id],
         queryFn: async () => {
-          const response = await interceptor.get('doctor/transaction');
+          const response = await interceptor.get(`doctor-request/doctor-visit/${id}/chats/`);
           return response.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['transaction'])
+            queryClient.invalidateQueries(['listVisit'])
         },
+
     });
 
     useEffect(() => {
         if (data) {
-            queryClient.invalidateQueries(['transaction'])
+            queryClient.invalidateQueries(['listVisit'])
         }
     }, [data]);
 
@@ -29,4 +33,4 @@ function UseGetTransaction() {
     return {data}
 }
 
-export default UseGetTransaction
+export default UseGetVisit

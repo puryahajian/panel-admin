@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonGeneral from '../../atoms/button-general'
-// import SalesRatingList from './sales-rating-list'
-// import ChartColumn from './chart-column'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import TitleListSearch from './title-list-search'
-// import ListSearch from './list-search'
 import GeneralModal from '../modal-general'
 import Input from '../../atoms/input'
-// import UseShopSettlement from '../../db/use-shop-settlement'
-// import { toast } from 'react-toastify'
 import UseGetTransaction from '../../db/use-get-transaction'
 import UseGetChartSale from '../../db/use-get-chart-sale'
 import ChartColumn from './chart-column';
@@ -32,7 +27,6 @@ function TabReportList () {
 
     const askingForMony = (e) => {
         e.preventDefault();
-        console.log(mony)
             
         mutate(
             { 
@@ -59,29 +53,23 @@ function TabReportList () {
 
     return (
         <div>
-            <div className='flex justify-between my-6'>
-                <div className='flex gap-8'>
-                    {/* <InputDate
-                        textCalender={'از تاریخ'}
-                    />
-                    <InputDate
-                        textCalender={'تا تاریخ'}
-                    /> */}
-                </div>
+            <div className='my-6'>
                 <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
             </div>
 
             <div className='grid grid-cols-3 pt-10 gap-8'>
                 <div className='col-span-2'>
                     <Text>فروش هفتگی</Text>
-                    <ChartColumn
-                        colFive={5}
-                        colFour={1}
-                        colOne={3}
-                        colSeven={1}
-                        colSix={1}
-                        colThree={1}
-                        colTwo={1}
+                    <ChartColumn 
+                        columns={dataChart?.data.map((chart) => [
+                            chart[0]?.total_sales || 0,
+                            chart[1]?.total_sales || 0,
+                            chart[2]?.total_sales || 0,
+                            chart[3]?.total_sales || 0,
+                            chart[4]?.total_sales || 0,
+                            chart[5]?.total_sales || 0,
+                            chart[6]?.total_sales || 0
+                        ])}
                     />
                 </div>
                
@@ -97,10 +85,13 @@ function TabReportList () {
                         {paginatedItems.map(({ items, item }, index) => (
                             <ListSearch key={index} items={items} item={item} />
                         ))}
+                        <div className='flex justify-center mt-4'>
+                            {pageCount === 0 && <Text>تراکنش موجود نیست</Text>}
+                        </div>
                     </div>
                 </div>
                 <Pagination 
-                    // count={pageCount} 
+                    count={pageCount} 
                     style={{ direction: 'ltr', width: '100%', marginTop: '24px' }} 
                     variant="outlined" 
                     shape="rounded" 

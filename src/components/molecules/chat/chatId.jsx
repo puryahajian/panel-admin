@@ -7,11 +7,14 @@ import Input from '../../atoms/input'
 import ButtonGeneral from '../../atoms/button-general';
 import SendIcon from '@mui/icons-material/Send';
 import Uploader from '../uploader';
+import UseGetVisit from '../../db/use-get-visit';
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
     const [preview, setPreview] = useState(null);
     const [view, setView] = useState(1);
+    const {data} = UseGetVisit();
+    console.log(data)
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -26,7 +29,7 @@ function ChatId() {
             <div className=' max-w-[800px] m-auto p-2'>
                 <div className='flex justify-between items-center my-4'>
                     <Text>چت با بیمار</Text>
-                    <ButtonGeneral className={`bg-customBlue text-white border-none`}>
+                    <ButtonGeneral to='/' className={`bg-customBlue text-white border-none`}>
                         بازگشت
                     </ButtonGeneral>
                 </div>
@@ -47,19 +50,33 @@ function ChatId() {
 
                 {view === 2 && (
                     <>
-                        <Uploader
-                            textOne={`نسخه رو انتخاب کنید`}
-                            textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
-                        />
-                        <div className='border mt-3 flex justify-between items-center p-2 rounded-lg'>
-                            <div>
-                                <Text>شماره نسخه</Text>
+                        <form action="">
+                            <div className='grid grid-cols-2 gap-4'>
+                                <Uploader
+                                    textOne={`نسخه رو آپلود کنید`}
+                                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                              
+                                />
+                                <textarea className='w-full h-full border border-gray-300 outline-none rounded-2xl resize-none p-2 text-sm font-sans' placeholder='توضیحات...'></textarea>
+
+                                <ButtonGeneral classLink={`col-span-2 w-full`} className={`bg-customBlue col-span-2 w-full text-white border-transparent`}>ارسال نسخه</ButtonGeneral>
                             </div>
-                            <div>
-                                <ButtonGeneral className={`bg-customBlue border-none text-white`}>
-                                    دانلود نسخه
-                                </ButtonGeneral>
+                        </form>
+
+                        {data?.results.map((visit) => (
+                            <div key={visit?.id} className='border mt-3 flex justify-between items-center p-2 rounded-lg'>
+                                <div>
+                                    <Text>{visit?.content}</Text>
+                                </div>
+                                <div>
+                                    <ButtonGeneral onClick={() => window.open(`${visit?.media}`, '_blank', 'noopener,noreferrer')} className={`bg-customBlue border-none text-white`}>
+                                        مشاهده نسخه
+                                    </ButtonGeneral>
+                                </div>
                             </div>
+                        ))}
+                        <div className='w-full justify-center mt-6'>
+                            {data?.results.length === 0 && <Text>نسخه موجود نیست</Text>}
                         </div>
                     </>
                 )}

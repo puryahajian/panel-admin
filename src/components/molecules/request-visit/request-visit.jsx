@@ -15,7 +15,6 @@ import moment from 'jalali-moment'
 
 function RequestVisit() {
     const { data } = UseGetNewVisit();
-    console.log(data)
     const { mutate } = UsePostAcceptNewVisit();
     const { mutate: mutateDelete } = UsePostDeleteNewVisit();
 

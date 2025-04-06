@@ -8,13 +8,17 @@ import ButtonGeneral from '../../atoms/button-general';
 import SendIcon from '@mui/icons-material/Send';
 import Uploader from '../uploader';
 import UseGetVisit from '../../db/use-get-visit';
+import UsePostDoctorVisit from '../../db/use-post-doctor-visit';
+import Loading from '../../atoms/loading';
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
     const [preview, setPreview] = useState(null);
+    const [description, setDescription] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [view, setView] = useState(1);
     const {data} = UseGetVisit();
-    console.log(data)
+    const {mutate, isLoading} = UsePostDoctorVisit();
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -23,6 +27,23 @@ function ChatId() {
             setPreview(URL.createObjectURL(selectedFile));
         }
     };
+
+    const handleGetVisit = (e) => {
+        e.preventDefault()
+        // console.log(description, selectedFile)
+        mutate(
+            {
+                description,selectedFile
+            },
+            {
+                onSuccess: (data) => {
+                    console.log(data)
+                }
+            }
+        )
+    }
+
+
 
     return (
         <div>
@@ -50,16 +71,19 @@ function ChatId() {
 
                 {view === 2 && (
                     <>
-                        <form action="">
+                        <form onSubmit={handleGetVisit}>
                             <div className='grid grid-cols-2 gap-4'>
                                 <Uploader
                                     textOne={`نسخه رو آپلود کنید`}
                                     textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
-                              
+                                    selectedFile={selectedFile}
+                                    setSelectedFile={setSelectedFile}
                                 />
-                                <textarea className='w-full h-full border border-gray-300 outline-none rounded-2xl resize-none p-2 text-sm font-sans' placeholder='توضیحات...'></textarea>
+                                <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='w-full h-full border border-gray-300 outline-none rounded-2xl resize-none p-2 text-sm font-sans' placeholder='توضیحات...'></textarea>
 
-                                <ButtonGeneral classLink={`col-span-2 w-full`} className={`bg-customBlue col-span-2 w-full text-white border-transparent`}>ارسال نسخه</ButtonGeneral>
+                                <ButtonGeneral type={`submit`} className={`bg-customBlue col-span-2 w-full text-white border-transparent`}>
+                                    {isLoading ? <Loading/> : 'ارسال نسخه'}
+                                </ButtonGeneral>
                             </div>
                         </form>
 

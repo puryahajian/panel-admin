@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 
 function UseGetVisit() {
     const {id} = useParams();
-    console.log(id)
     const queryClient = useQueryClient();
 
     const { data, error, isLoading } = useQuery({

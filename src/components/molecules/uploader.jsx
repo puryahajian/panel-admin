@@ -4,8 +4,8 @@ import iconImage from '../../assets/image/Huge-icon.png'
 import Text from '../atoms/text';
 import Title from '../atoms/title';
 
-function Uploader({textOne, textTwo,className}) {
-    const [selectedFile, setSelectedFile] = useState(null);
+function Uploader({textOne, textTwo,className, selectedFile,setSelectedFile}) {
+    // const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];

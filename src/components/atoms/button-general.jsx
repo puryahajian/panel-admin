@@ -1,13 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-function ButtonGeneral({children, className, onClick, to, classLink}) {
+function ButtonGeneral({children, className, onClick, type}) {
   return (
-    <Link className={classLink} to={to}>
-      <button onClick={onClick} className={`px-7 py-3 border border-black rounded-lg text-sm font-sans text-grayText ${className}`}>
-        {children}
-      </button>
-    </Link>
+    <button onClick={onClick} type={type} className={`px-7 py-3 border border-black rounded-lg text-sm font-sans text-grayText ${className}`}>
+      {children}
+    </button>
   )
 }
 

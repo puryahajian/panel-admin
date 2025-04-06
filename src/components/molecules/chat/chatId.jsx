@@ -10,6 +10,9 @@ import Uploader from '../uploader';
 import UseGetVisit from '../../db/use-get-visit';
 import UsePostDoctorVisit from '../../db/use-post-doctor-visit';
 import Loading from '../../atoms/loading';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import GeneralModal from '../modal-general';
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
@@ -17,6 +20,7 @@ function ChatId() {
     const [description, setDescription] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [view, setView] = useState(1);
+    const [openShowVisit, setOpenShowVisit] = useState(false);
     const {data} = UseGetVisit();
     const {mutate, isLoading} = UsePostDoctorVisit();
 
@@ -30,14 +34,13 @@ function ChatId() {
 
     const handleGetVisit = (e) => {
         e.preventDefault()
-        // console.log(description, selectedFile)
         mutate(
             {
                 description,selectedFile
             },
             {
                 onSuccess: (data) => {
-                    console.log(data)
+                    toast.success('نسخه با موفقیت ثبت شد')
                 }
             }
         )
@@ -50,8 +53,10 @@ function ChatId() {
             <div className=' max-w-[800px] m-auto p-2'>
                 <div className='flex justify-between items-center my-4'>
                     <Text>چت با بیمار</Text>
-                    <ButtonGeneral to='/' className={`bg-customBlue text-white border-none`}>
-                        بازگشت
+                    <ButtonGeneral className={`bg-customBlue text-white border-none`}>
+                        <Link to='/'>
+                            بازگشت
+                        </Link>
                     </ButtonGeneral>
                 </div>
                 <div className='grid grid-cols-2 text-center gap-4 mb-4'>
@@ -93,7 +98,10 @@ function ChatId() {
                                     <Text>{visit?.content}</Text>
                                 </div>
                                 <div>
-                                    <ButtonGeneral onClick={() => window.open(`${visit?.media}`, '_blank', 'noopener,noreferrer')} className={`bg-customBlue border-none text-white`}>
+                                    <ButtonGeneral onClick={(e) => {
+                                        e.preventDefault()
+                                        setOpenShowVisit(true)
+                                        }} className={`bg-customBlue border-none text-white`}>
                                         مشاهده نسخه
                                     </ButtonGeneral>
                                 </div>
@@ -142,6 +150,24 @@ function ChatId() {
                     </div>
                 )}
             </div>
+            <GeneralModal
+                open={openShowVisit}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenShowVisit(false)
+                }}
+                title="مشاهده نسخه"
+                // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
+                actionText="بله"
+                actionHandler={(e) => { 
+                    e.preventDefault()
+                    setOpenShowVisit(false); 
+                }}
+            >
+                <div className='border border-gray-400 mt-2'>
+                    1
+                </div>
+            </GeneralModal>
         </div>
     )
 }

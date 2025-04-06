@@ -16,6 +16,8 @@ import UseSentAnswer from '../../db/use-sent-answer';
 import Img from '../../atoms/img';
 import Audio from '../audio-player';
 import Loading from '../../atoms/loading';
+import Input from '../../atoms/input';
+import Uploader from '../uploader';
 
 function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
@@ -25,7 +27,8 @@ function Ticket() {
     const [getIdTicket, setGetIdTicket] = useState('');
     const [fileName, setFileName] = useState('');
     const [preview, setPreview] = useState(null);
-
+    const [selectedFile, setSelectedFile] = useState('');
+    const [title, setTitle] = useState('');
     const [section, setSection] = useState('');
     const { data } = UseSectionTicket('');
     const [selectedTicketId, setSelectedTicketId] = useState(null);
@@ -46,7 +49,9 @@ function Ticket() {
         mutate(
             {
                 section,
-                description
+                description,
+                selectedFile,
+                title
             },
             {
                 onSuccess: () => {
@@ -115,31 +120,41 @@ function Ticket() {
                 actionText={isLoading ? <Loading /> : 'ثبت'}
                 actionHandler={handleSubmitCreateTicket}
             >
-                <Text className='text-right mt-2'>موضوع :</Text>
+                <Text className='text-right mt-2'>دسته بندی را انتخاب کنید :</Text>
+                <Select
+                    className='!outline-none w-full text-right pr-5 mt-2 !py-0 border !border-gray-300'
+                    value={section}
+                    onChange={(e) => setSection(e.target.value)}
+                    // displayEmpty
+                >
+                    <MenuItem disabled value="">
+                        <Text>انتخاب وضعیت</Text>
+                    </MenuItem>
+                    {data?.results.map((item) => (
+                        <MenuItem key={item.id} value={item?.id}>
+                            <Text>{item?.name}</Text>
+                        </MenuItem>
+                    ))}
+                </Select>
+
+                <Text className='text-right mt-4'>موضوع :</Text>
+                <Input onChange={(e) => setTitle(e.target.value)} className={`w-full mt-2 border border-gray-300 bg-transparent`}/>
+
+                <Text className='text-right mt-4'>توضیحات :</Text>
                 <textarea 
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
-                    className='resize-none w-full border !border-Custom mt-2 rounded outline-none p-2' 
+                    className='resize-none w-full border border-gray-300 mt-2 rounded outline-none p-2' 
                 />
 
-                <Text className='text-right mt-4'>انتخاب کنید :</Text>
-                <FormControl className='w-full text-right !outline-none !py-0 !mt-2'>
-                    <Select
-                        className='!outline-none !py-0 border !border-gray-200'
-                        value={section}
-                        onChange={(e) => setSection(e.target.value)}
-                        // displayEmpty
-                    >
-                        <MenuItem disabled value="">
-                            <Text>انتخاب وضعیت</Text>
-                        </MenuItem>
-                        {data?.results.map((item) => (
-                            <MenuItem key={item.id} value={item?.id}>
-                                <Text>{item?.name}</Text>
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Uploader
+                    className={`mt-2`}
+                    textOne={`فایل خود را آپلود کنید`}
+                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                    selectedFile={selectedFile}
+                    setSelectedFile={setSelectedFile}
+                />
+
             </GeneralModal>
 
             <ModalLeft open={showLeft} onClose={handleCloseModalLeft}>

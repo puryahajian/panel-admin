@@ -7,14 +7,19 @@ function UseCreateTicket() {
     const queryClient = useQueryClient();
     
     const mutation = useMutation(
-        async ({ section, description }) => {
+        async ({ section, description ,selectedFile, title}) => {
 
-            const data = qs.stringify({
-                title: description,
-                section: section
-            });
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('section', section);
+            formData.append('media', selectedFile);
+            formData.append('description', description);
             
-            const response = await interceptor.post(`ticket/tickets/`, data);
+            const response = await interceptor.post(`ticket/tickets/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             return response.data;
         },
         {

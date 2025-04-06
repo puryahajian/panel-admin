@@ -43,7 +43,7 @@ function Sick() {
                         <Text>{item?.id}</Text>
                         <Text className={`col-span-2`}>{item?.user}</Text>
                         <Text>{moment(item?.created_at).locale('fa').format('YYYY/MM/DD')}</Text>
-                        <ButtonGeneral onClick={() => handleOpenComments(item?.id)} className={` border-transparent cursor-pointer`}>
+                        <ButtonGeneral onClick={() => handleOpenComments(item?.id)} className={`cursor-pointer bg-customBlue border-transparent text-white`}>
                             نظرات
                         </ButtonGeneral>
                     </div>
@@ -66,11 +66,17 @@ function Sick() {
 
             <GeneralModal
                 open={openSeeComment}
-                handleClose={() => setSeeComment(false)}
+                handleClose={(e) => {
+                    e.preventDefault();
+                    setSeeComment(false)
+                }}
                 title="نظرات"
                 actionText="بستن"
                 className={`hidden`}
-                actionHandler={() => { setSeeComment(false); }}
+                actionHandler={(e) => { 
+                    e.preventDefault();
+                    setSeeComment(false); 
+                }}
             >
                 <div className='border-b p-2 flex justify-between'>
                     <Text>{selectedItem?.comment}</Text>

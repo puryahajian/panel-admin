@@ -24,7 +24,6 @@ function UsePostDoctorVisit() {
         },
         {
             onSuccess: (data) => {
-                console.log(data)
                 queryClient.invalidateQueries(['create-visit']);
             },
         }

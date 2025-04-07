@@ -103,7 +103,7 @@ function TabReportList () {
             <GeneralModal
                 open={openPrice}
                 handleClose={() => setOpenPrice(false)}
-                title="تسفیه حساب"
+                title="درخواست تسویه حساب"
                 actionText="ثبت"
                 actionHandler={() => setOpenPrice(false)}
                 onSubmit={askingForMony}

@@ -13,6 +13,7 @@ import Loading from '../../atoms/loading';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import GeneralModal from '../modal-general';
+import ReactAudioPlayer from 'react-audio-player';
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
@@ -20,6 +21,7 @@ function ChatId() {
     const [description, setDescription] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [view, setView] = useState(1);
+    const [selectedVisit, setSelectedVisit] = useState(null);
     const [openShowVisit, setOpenShowVisit] = useState(false);
     const {data} = UseGetVisit();
     const {mutate, isLoading} = UsePostDoctorVisit();
@@ -41,6 +43,8 @@ function ChatId() {
             {
                 onSuccess: (data) => {
                     toast.success('نسخه با موفقیت ثبت شد')
+                    setDescription('')
+                    setSelectedFile(false)
                 }
             }
         )
@@ -86,7 +90,7 @@ function ChatId() {
                                 />
                                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='w-full h-full border border-gray-300 outline-none rounded-2xl resize-none p-2 text-sm font-sans' placeholder='توضیحات...'></textarea>
 
-                                <ButtonGeneral type={`submit`} className={`bg-customBlue col-span-2 w-full text-white border-transparent`}>
+                                <ButtonGeneral type={`submit`} className={`bg-customBlue col-span-2 w-full text-white border-transparent ${isLoading && 'cursor-default'}`}>
                                     {isLoading ? <Loading/> : 'ارسال نسخه'}
                                 </ButtonGeneral>
                             </div>
@@ -101,6 +105,7 @@ function ChatId() {
                                     <ButtonGeneral onClick={(e) => {
                                         e.preventDefault()
                                         setOpenShowVisit(true)
+                                        setSelectedVisit(visit);
                                         }} className={`bg-customBlue border-none text-white`}>
                                         مشاهده نسخه
                                     </ButtonGeneral>
@@ -155,17 +160,33 @@ function ChatId() {
                 handleClose={(e) => {
                     e.preventDefault()
                     setOpenShowVisit(false)
+                    setSelectedVisit(null);
                 }}
                 title="مشاهده نسخه"
                 // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
-                actionText="بله"
+                actionText="بستن"
                 actionHandler={(e) => { 
                     e.preventDefault()
                     setOpenShowVisit(false); 
+                    setSelectedVisit(null);
                 }}
+                className={`hidden`}
             >
-                <div className='border border-gray-400 mt-2'>
-                    1
+                <div className=' mt-2'>
+                    {selectedVisit && (() => {
+                        const fileExtension = selectedVisit.media?.split('.').pop().toLowerCase();
+
+                        if (fileExtension === 'png' || fileExtension === 'jpg' || fileExtension === 'jpeg') {
+                            return <img className='w-full rounded-lg' src={selectedVisit.media} />;
+                        } else if (fileExtension === 'mp3') {
+                            return <ReactAudioPlayer className='w-full' src={selectedVisit?.media} controls/>;
+                        } else {
+                            return <Text>فرمت فایل پشتیبانی نمی‌شود</Text>;
+                        }
+                    })()}
+
+                    <Text className={`mt-4 text-right`}>توضیحات :</Text>
+                    <Text className={`mt-2 text-right`}>{selectedVisit?.content}</Text>
                 </div>
             </GeneralModal>
         </div>

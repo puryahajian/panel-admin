@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '../../App.css';
 import Mapir from 'mapir-react-component';
-
+import HomeIcon from '@mui/icons-material/Home';
 const Map = Mapir.setToken({
     transformRequest: url => {
         return {
@@ -19,7 +19,8 @@ export default class App extends Component {
         super(props);
         this.state = {
             lat: 35.72,
-            lon: 51.42
+            lon: 51.42,
+            zoom: 18
         };
         this.reverseFunction = this.reverseFunction.bind(this);
     }
@@ -29,7 +30,7 @@ export default class App extends Component {
         const savedCoordinates = localStorage.getItem('addressCoordinates');
         if (savedCoordinates) {
             const [savedLon, savedLat] = JSON.parse(savedCoordinates);
-            this.setState({ lat: savedLat, lon: savedLon });
+            this.setState({ lat: savedLat, lon: savedLon, zoom: 18 });
         }
     }
 
@@ -41,7 +42,7 @@ export default class App extends Component {
         localStorage.setItem('addressCoordinates', JSON.stringify([newLon, newLat]));
 
         // تنظیم مختصات جدید برای مارکر
-        this.setState({ lat: newLat, lon: newLon });
+        this.setState({ lat: newLat, lon: newLon, zoom: 18 });
 
         // درخواست معکوس جغرافیایی برای دریافت آدرس (اختیاری)
         fetch(`https://map.ir/reverse/no?lat=${newLat}&lon=${newLon}`, {
@@ -58,16 +59,23 @@ export default class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <Mapir
-                    center={[this.state.lon, this.state.lat]}
-                    Map={Map}
-                    onClick={this.reverseFunction}
-                >
-                    <Mapir.Layer type="symbol" layout={{ "icon-image": "harbor-15" }} />
-                    <Mapir.Marker coordinates={[this.state.lon, this.state.lat]} anchor="bottom" />
-                </Mapir>
-            </div>
+            <>
+                <div className="App h-full">
+                    <Mapir
+                        center={[this.state.lon, this.state.lat]}
+                        Map={Map}
+                        onClick={this.reverseFunction}
+                        zoom={[this.state.zoom]}
+                        
+                    >
+                        {/* <Mapir.Layer type="symbol" layout={{ "icon-image": "harbor-15" }} /> */}
+                        {/* <Mapir.Marker coordinates={[this.state.lon, this.state.lat]} anchor="bottom" /> */}
+                    </Mapir>
+                </div>
+                <div className=' relative -top-[200px] flex justify-center'>
+                    <HomeIcon/>
+                </div>
+            </>
         );
     }
 }

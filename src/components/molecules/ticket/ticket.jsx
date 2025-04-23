@@ -20,6 +20,7 @@ function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
     const [description, setDescription] = useState('');
     const [showLeft, setShowLeft] = useState(false);
+    const [err, setErr] = useState(false);
     const [valueMessage, setValueMessage] = useState('');
     const [getIdTicket, setGetIdTicket] = useState('');
     const [fileName, setFileName] = useState('');
@@ -41,6 +42,10 @@ function Ticket() {
 
     const handleSubmitCreateTicket = (e) => {
         e.preventDefault();
+        if (setSection || setDescription === '') {
+            setErr('فیلدها اجباری *')
+            return
+        }
         setOpenSentTicket(false);
         mutate(
             {
@@ -114,17 +119,19 @@ function Ticket() {
                 actionText={isLoading ? <Loading /> : 'ثبت'}
                 actionHandler={handleSubmitCreateTicket}
             >
+                <Text className='text-right !text-red-500 mt-2'>{err}</Text>
+
                 <Text className='text-right mt-2'>موضوع :</Text>
                 <textarea 
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
-                    className='resize-none w-full border !border-Custom mt-2 rounded outline-none p-2' 
+                    className={`resize-none w-full border !border-Custom mt-2 rounded outline-none p-2 ${err && 'border-red-500'}`}
                 />
 
                 <Text className='text-right mt-4'>انتخاب کنید :</Text>
                 <FormControl className='w-full text-right !outline-none !py-0 !mt-2'>
                     <Select
-                        className='!outline-none !py-0 border !border-gray-200'
+                        className={`!outline-none !py-0 border border-gray-200 ${err && '!border-red-500'}`}
                         value={section}
                         onChange={(e) => setSection(e.target.value)}
                         displayEmpty

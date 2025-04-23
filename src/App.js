@@ -12,8 +12,8 @@ function App() {
       <Routes>
         <Route element={<Middleware />}>
           <Route path='/' element={<Panel/>}/>
-          <Route path='/chat/:id' element={<Chat/>}/>
         </Route>
+        <Route path='/chat/:id' element={<Chat/>}/>
         <Route path='/login' element={<Login/>}/>
       </Routes>
     </div>

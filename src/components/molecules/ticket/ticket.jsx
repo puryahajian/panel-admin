@@ -21,6 +21,7 @@ import Uploader from '../uploader';
 
 function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
+    const [err, setErr] = useState('');
     const [description, setDescription] = useState('');
     const [showLeft, setShowLeft] = useState(false);
     const [valueMessage, setValueMessage] = useState('');
@@ -45,6 +46,10 @@ function Ticket() {
 
     const handleSubmitCreateTicket = (e) => {
         e.preventDefault();
+        if (setSection || setDescription || setTitle === '') {
+            setErr('فیلدها اجباری *')
+            return
+        }
         setOpenSentTicket(false);
         mutate(
             {
@@ -120,9 +125,11 @@ function Ticket() {
                 actionText={isLoading ? <Loading /> : 'ثبت'}
                 actionHandler={handleSubmitCreateTicket}
             >
+                <Text className='text-right !text-red-500 mt-2'>{err}</Text>
+
                 <Text className='text-right mt-2'>دسته بندی را انتخاب کنید :</Text>
                 <Select
-                    className='!outline-none w-full text-right pr-5 mt-2 !py-0 border !border-gray-300'
+                    className={`!outline-none w-full text-right pr-5 mt-2 !py-0 border border-gray-300 ${err && 'border-red-500'}`}
                     value={section}
                     onChange={(e) => setSection(e.target.value)}
                     // displayEmpty
@@ -138,17 +145,17 @@ function Ticket() {
                 </Select>
 
                 <Text className='text-right mt-4'>موضوع :</Text>
-                <Input onChange={(e) => setTitle(e.target.value)} className={`w-full mt-2 border border-gray-300 bg-transparent`}/>
+                <Input onChange={(e) => setTitle(e.target.value)} className={`w-full mt-2 border border-gray-300 bg-transparent ${err && 'border-red-500'}`}/>
 
                 <Text className='text-right mt-4'>توضیحات :</Text>
                 <textarea 
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
-                    className='resize-none w-full border border-gray-300 mt-2 rounded outline-none p-2' 
+                    className={`resize-none w-full border border-gray-300 mt-2 rounded outline-none p-2 ${err && 'border-red-500'}`} 
                 />
 
                 <Uploader
-                    className={`mt-2`}
+                    className={`mt-2 ${err && '!border-red-500'}`}
                     textOne={`فایل خود را آپلود کنید`}
                     textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     selectedFile={selectedFile}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MessageDoctor from './message-doctor'
 import MessageUser from './message-user'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
@@ -14,18 +14,24 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import GeneralModal from '../modal-general';
 import ReactAudioPlayer from 'react-audio-player';
+import io from 'socket.io-client';
+import UsePostSendMessage from '../../db/use-post-send-message';
+const socket = io("ws://localhost:8000/ws/chat/")
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
+    const [message, setMessage] = useState('');
+    const [messageList, setMessageList] = useState([]);
     const [preview, setPreview] = useState(null);
-    const [description, setDescription] = useState(null);
+    const [description, setDescription] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [view, setView] = useState(1);
     const [selectedVisit, setSelectedVisit] = useState(null);
     const [openShowVisit, setOpenShowVisit] = useState(false);
-    const {data} = UseGetVisit();
-    const {mutate, isLoading} = UsePostDoctorVisit();
-
+    const { data } = UseGetVisit();
+    const { mutate, isLoading } = UsePostDoctorVisit();
+    const { mutate: mutatePostMessage } = UsePostSendMessage();
+    
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
@@ -50,7 +56,30 @@ function ChatId() {
         )
     }
 
+    const sendMessage = (e) => {
+        e.preventDefault();
 
+        mutatePostMessage(
+            {
+                message, fileName
+            }
+        )
+        if (!message.trim()) return;
+
+        const messageData = {
+            sender: 'doctor',
+            content: message,
+        };
+        socket.emit("send_message", messageData);
+        setMessageList(prev => [...prev, messageData]);
+    };
+
+    useEffect(() => {
+        socket.on("receive_message", (data) => {
+            setMessageList(prev => [...prev, data]);
+            window.location.reload();
+        });
+    }, [socket]);
 
     return (
         <div>
@@ -123,34 +152,28 @@ function ChatId() {
                         <div className='rounded-t bg-bgInput p-2 h-[500px] max-h-[500px] overflow-scroll'>
                             <MessageDoctor/>
                             <MessageUser/>
-                            <MessageDoctor/>
-                            <MessageUser/>
-                            <MessageDoctor/>
-                            <MessageUser/>
-                            <MessageDoctor/>
-                            <MessageUser/>
-                            <MessageDoctor/>
-                            <MessageUser/>
                         </div>
                         <div className='py-2 bg-bgInput rounded-b shadow-lg'>
                             <div className='flex items-center gap-2 px-2 pb-2'>
                                 {preview && <img src={preview} alt="Preview" className="mt-2 w-12 h-12 rounded" />}
                                 {fileName && <Text className='ml-2 text-gray-600'>{fileName.name}</Text>}
                             </div>
-                            <div className='flex items-center'>
-                                <ButtonGeneral className={`!px-2 border-none`}>
-                                    <SendIcon/>
-                                </ButtonGeneral>
-                                <Input className={`w-full !rounded-full !border border-gray-500`} placeholder={`متن خود را بنویسید`}/>
-                                <label className='p-2 !cursor-pointe'>
-                                    <input 
-                                        type='file' 
-                                        className='hidden' 
-                                        onChange={handleFileChange}
-                                    />
-                                    <FolderOpenIcon/>
-                                </label>
-                            </div>
+                            <form action="" onSubmit={sendMessage}>
+                                <div className='flex items-center'>
+                                    <ButtonGeneral className={`!px-2 border-none`}>
+                                        <SendIcon/>
+                                    </ButtonGeneral>
+                                    <Input value={message} onChange={(e) => setMessage(e.target.value)} className={`w-full !rounded-full !border border-gray-500`} placeholder={`متن خود را بنویسید`}/>
+                                    <label className='p-2 !cursor-pointe'>
+                                        <input 
+                                            type='file' 
+                                            className='hidden' 
+                                            onChange={handleFileChange}
+                                        />
+                                        <FolderOpenIcon/>
+                                    </label>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 )}

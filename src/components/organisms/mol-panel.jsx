@@ -3,14 +3,13 @@ import MenuPanel from '../../lib/menu-panel';
 import Logo from '../../assets/image/logo.png'
 import Text from '../atoms/text';
 import GeneralModal from '../molecules/modal-general';
-import { FormControl, MenuItem, Select } from '@mui/material';
 import Ticket from '../molecules/ticket/ticket';
 import RequestVisit from '../molecules/request-visit/request-visit';
-import Visit from '../molecules/visit/visit';
 import Sick from '../molecules/sick/sick';
-import ChatId from '../molecules/chat/chatId';
 import Setting from '../molecules/manegment/setting';
 import Orders from '../molecules/report/orders';
+import Cookies from "js-cookie";
+
 
 function TabPanel({ children, step, index }) {
     return (
@@ -88,9 +87,13 @@ function MolPanel() {
             open={open}
             handleClose={() => setOpen(false)}
             title="آیا می خواهید از اکانت خود خارج شوید ؟"
-            // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
             actionText="بله"
-            actionHandler={() => { setOpen(false); }}
+            className={`hidden`}
+            actionHandler={() => { 
+                setOpen(false)
+                Cookies.remove('access')
+                Cookies.remove('refresh')
+            }}
         />
         </>
     )

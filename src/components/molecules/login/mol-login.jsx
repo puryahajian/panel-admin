@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ImgLogin from '../../../assets/image/Layer-login.png'
+import ImgLogin from '../../../assets/image/undraw_drag_8oyk.png'
 import TextBold from '../../atoms/text-bold'
 import Title from '../../atoms/title'
 import Input from '../../atoms/input'

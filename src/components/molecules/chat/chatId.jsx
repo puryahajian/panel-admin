@@ -14,9 +14,9 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import GeneralModal from '../modal-general';
 import ReactAudioPlayer from 'react-audio-player';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import UsePostSendMessage from '../../db/use-post-send-message';
-const socket = io("ws://localhost:8000/ws/chat/")
+// const socket = io("ws://localhost:8000/ws/chat/")
 
 function ChatId() {
     const [fileName, setFileName] = useState('');
@@ -70,16 +70,16 @@ function ChatId() {
             sender: 'doctor',
             content: message,
         };
-        socket.emit("send_message", messageData);
-        setMessageList(prev => [...prev, messageData]);
+        // socket.emit("send_message", messageData);
+        // setMessageList(prev => [...prev, messageData]);
     };
 
-    useEffect(() => {
-        socket.on("receive_message", (data) => {
-            setMessageList(prev => [...prev, data]);
-            window.location.reload();
-        });
-    }, [socket]);
+    // useEffect(() => {
+    //     socket.on("receive_message", (data) => {
+    //         setMessageList(prev => [...prev, data]);
+    //         window.location.reload();
+    //     });
+    // }, [socket]);
 
     return (
         <div>

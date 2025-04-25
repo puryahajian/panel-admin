@@ -54,7 +54,7 @@ function TabReportList () {
     return (
         <div>
             <div className='my-6'>
-                <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
+                <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-customBlue !text-customBlue`}>درخواست تسفیه حساب</ButtonGeneral>
             </div>
 
             <div className='grid grid-cols-3 pt-10 gap-8'>

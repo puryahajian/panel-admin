@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 function Middleware() {
     const accessToken = Cookies.get('access');
     const location = useLocation();
+    const isAuthenticated = true;
 
     if (accessToken && location.pathname !== '/') {
         return <Navigate to="/" replace />;
@@ -15,7 +16,7 @@ function Middleware() {
         return <Navigate to="/login" replace />;
     }
 
-    return <Outlet />;
+    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default Middleware

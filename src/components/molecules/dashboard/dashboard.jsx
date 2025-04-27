@@ -7,6 +7,7 @@ import Input from '../../atoms/input';
 
 function Dashboard() {
   const {data} = UseAllProduct();
+  console.log(data)
   const [searchTerm, setSearchTerm] = useState("");
   const search =  data?.results.map((item) => item)
   const filteredItems = search?.filter((item) =>

@@ -37,10 +37,10 @@ function Sick() {
                 </div> */}
             </div>
 
-            {data?.map((item) => (
+            {data?.map((item, index) => (
                 <div key={item?.id} className='flex py-4 bg-gray-100 rounded-lg px-2 mt-2 items-center'>
                     <div className='w-3/4 grid grid-cols-6 items-center'>
-                        <Text>{item?.id}</Text>
+                        <Text>{index + 1}</Text>
                         <Text className={`col-span-2`}>{item?.user}</Text>
                         <Text>{moment(item?.created_at).locale('fa').format('YYYY/MM/DD')}</Text>
                         <ButtonGeneral onClick={() => handleOpenComments(item?.id)} className={`cursor-pointer bg-customBlue border-transparent text-white`}>

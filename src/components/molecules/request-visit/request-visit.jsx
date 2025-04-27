@@ -61,10 +61,10 @@ function RequestVisit() {
                 </div>
             </div>
 
-            {data?.map((item) => (
+            {data?.map((item, index) => (
                 <div key={item?.id} className='flex py-4 bg-gray-100 rounded-lg px-2 mt-2 items-center'>
                     <div className='w-4/5 grid grid-cols-6'>
-                        <Text>{item?.id}</Text>
+                        <Text>{index + 1}</Text>
                         <Text className={`col-span-2  pr-2`}>{item?.user}</Text>
                         <Text className={` pr-2`}>{moment(item?.created_at).locale('fa').format('YYYY/MM/DD')}</Text>
                     </div>

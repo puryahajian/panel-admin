@@ -108,8 +108,8 @@ function Ticket() {
                     <ButtonGeneral onClick={() => {
                         setSelectedTicketId(item.id);
                         setShowLeft(true);
-                    }} className='border border-customBlue !px-4 !py-2'>
-                        <Text>مشاهده</Text>
+                    }} className='bg-customBlue border-none !px-4 !py-2'>
+                        <Text className={`text-white`}>مشاهده</Text>
                     </ButtonGeneral>
                 </div>
             ))}

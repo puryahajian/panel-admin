@@ -8,12 +8,14 @@ import ButtonGeneral from '../../atoms/button-general'
 import UsePatchProfileShop from '../../db/use-patch-profile-shop'
 import { toast } from 'react-toastify'
 import Loading from '../../atoms/loading'
+import UseGetProfileDoctor from '../../db/use-get-profile-doctor'
 // import UsePatchProfileShop from '../../db/use-patch-profile-shop'
 // import Loading from '../../atoms/loading'
 
 function Setting() {
     // const { mutate, isLoading } = UsePatchProfileShop();
     const { mutate, isLoading } = UsePatchProfileShop();
+    const { data } = UseGetProfileDoctor();
 
     const [ selectedBg, setSelectedBg ] = useState();
     const [ selectedBannerOne, setSelectedBannerOne ] = useState();
@@ -65,24 +67,6 @@ function Setting() {
             },
             {
                 onSuccess: (data) => {
-                    setSelectedBg('')
-                    setSelectedBannerOne('')
-                    setSelectedBannerTwo('')
-                    selectedBannerThree('')
-                    setSelectedLogo('')
-                    setNameProduct('')
-                    setNumberPhoneShop('')
-                    setNationalCode('')
-                    setSupport('')
-                    setTimeOpen('')
-                    setTimeClose('')
-                    setInstagram('')
-                    setTelegram('')
-                    setWhatsApp('')
-                    // setCatalog('')
-                    setAbout('')
-                    setCertificate('')
-                    setTradeId('')
                     toast.success('پروفایل با موفقیت ثبت شد')
                 },
             }
@@ -136,20 +120,22 @@ function Setting() {
                     <Text className={`text-base !text-black !font-bold`}>فضای مجازی مطب</Text>
                     <Text>شما می توانید آدرس پروفایل مطب خود را وارد کنید تا کاربران شما را دنبال کنند</Text>
                 </div>
-                <div className='grid grid-cols-3 mt-4 gap-10'>
-                    <div className='grid grid-cols-5 gap-4 items-center'>
-                        <Text>اینستاگرام</Text>
-                        <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-4`}/>
+                {data && (
+                    <div className='grid grid-cols-3 mt-4 gap-10'>
+                        <div className='grid grid-cols-5 gap-4 items-center'>
+                            <Text>اینستاگرام</Text>
+                            <Input defaultValue={data?.instagram} value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-4`}/>
+                        </div>
+                        <div className='grid grid-cols-5 gap-4 items-center'>
+                            <Text>واتس اپ</Text>
+                            <Input defaultValue={data?.whatsapp} value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-4`}/>
+                        </div>
+                        <div className='grid grid-cols-5 gap-4 items-center'>
+                            <Text>تلگرام</Text>
+                            <Input value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-4`}/>
+                        </div>
                     </div>
-                    <div className='grid grid-cols-5 gap-4 items-center'>
-                        <Text>واتس اپ</Text>
-                        <Input value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-4`}/>
-                    </div>
-                    <div className='grid grid-cols-5 gap-4 items-center'>
-                        <Text>تلگرام</Text>
-                        <Input value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-4`}/>
-                    </div>
-                </div>
+                )}
             </div>
 
             <hr className='w-[95%] m-auto'/>
@@ -163,7 +149,9 @@ function Setting() {
 
             <div className='mt-6'>
                 <Text>متن درباره ما</Text>
-                <textarea value={about} onChange={(e) => setAbout(e.target.value)} className='w-full mt-2 rounded-lg h-80 bg-bgInput outline-none p-2 text-xs resize-none' name="" id=""></textarea>
+                {data && (
+                    <textarea defaultValue={data?.description} value={about} onChange={(e) => setAbout(e.target.value)} className='w-full mt-2 rounded-lg h-80 bg-bgInput outline-none p-2 text-xs resize-none' name="" id=""></textarea>
+                )}
             </div>
 
             <div className='mt-6 flex justify-end gap-4'>

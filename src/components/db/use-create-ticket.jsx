@@ -7,11 +7,12 @@ function UseCreateTicket() {
     const queryClient = useQueryClient();
     
     const mutation = useMutation(
-        async ({ section, description }) => {
+        async ({ section, description , title}) => {
 
             const data = qs.stringify({
-                title: description,
-                section: section
+                description: description,
+                section: section,
+                title: title
             });
             
             const response = await interceptor.post(`ticket/tickets/`, data);

@@ -74,6 +74,12 @@
   width: 100% !important;
   height: 400px !important;
 }
+/* .mapboxgl-marker {
+  transform: translate(-60%, -300%) !important;
+  display: flex;
+  justify-content: center;
+  background-size: 10px;
+} */
 
 /* snipper */
 .loader {

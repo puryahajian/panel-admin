@@ -7,13 +7,14 @@ import Text from '../../atoms/text';
 import Input from '../../atoms/input';
 import UseCreateProduct from '../../db/use-create-product';
 import { toast } from 'react-toastify';
+import FeatureAddProduct from './feature-add-product';
 
 
 function TabProduct({ children, step, index }) {
     return (
         <div
             role="tabpanel"
-            className='mt-4'
+            className='mt-8'
             hidden={step !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
@@ -28,17 +29,13 @@ function Products() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
     const [openAddProduct, setOpenAddProduct] = useState(false);
+    const [openSelectProduct, setOpenSelectProduct] = useState(false);
     const { mutate } = UseCreateProduct();
     const [selectedFile, setSelectedFile] = useState(null);
     const [detailProduct, setDetailProduct] = useState(null);
     const [description, setDescription] = useState(null);
 
     // console.log(detailProduct)
-
-    const Buttons = [
-        {label: "افزودن محصول" },
-        // {label: "دسته بندی ها" },
-    ];
 
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();
@@ -59,40 +56,34 @@ function Products() {
     return (
         <div>
             <div className='flex justify-between items-center'>
-                <div className='flex gap-4'>
-                    {Buttons?.map((tab, index) => (
-                        // <button
-                        //     key={index}
-                        //     onClick={() => setStep(index)}
-                        //     className={`px-7 py-3 rounded-lg text-sm font-sans text-grayText ${
-                        //         step === index
-                        //             ? 'bg-grayText text-white'
-                        //             : 'border border-gray-600 text-grayText'
-                        //     }`}
-                        //     aria-controls={`vertical-tabpanel-${index}`}
-                        // >
-                            <Text className='font-sans text-sm '>{tab.label}</Text>
-                            
-                        // </button>
-                    ))}
-                </div>
 
-                <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500`}>
-                    درخواست کالای جدید
-                </ButtonGeneral>
+                <div className='flex gap-4'>
+                    <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-customBlue !text-customBlue`}>
+                        درخواست کالای جدید
+                    </ButtonGeneral>
+                    <ButtonGeneral onClick={() => setOpenSelectProduct(true)} className={`border border-customBlue !text-customBlue`}>
+                        انتخاب کالا
+                    </ButtonGeneral>
+                </div>
             </div>
 
             <TabProduct step={step} index={0}>
-                <hr className='w-[95%] m-auto'/>
+                {/* <hr className='w-[95%] m-auto'/> */}
                 <TabListProducts/>
             </TabProduct>
 
             <GeneralModal
                 open={openAddProduct}
-                handleClose={() => setOpenAddProduct(false)}
+                handleClose={(e) => {
+                    setOpenAddProduct(false)
+                    e.preventDefault();
+                }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
                 actionText="ذخیره"
-                actionHandler={() => setOpenAddProduct(false)}
+                actionHandler={(e) => {
+                    setOpenAddProduct(false)
+                    e.preventDefault();
+                }}
                 onSubmit={handleNeedCreateProduct}
             >
                     <div className=' text-right'>
@@ -109,6 +100,24 @@ function Products() {
                         <Text className={`mt-4 mb-2`}>جزئیات محصول</Text>
                         <Input className={`w-full`} onChange={(e) => setDescription(e.target.value)} placeholder={`جزئیات را بنویسید`}/>
                     </div>
+            </GeneralModal>
+
+            <GeneralModal
+                open={openSelectProduct}
+                handleClose={() => setOpenSelectProduct(false)}
+                // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
+                actionText="ثبت"
+                actionHandler={() => setOpenSelectProduct(false)}
+                // onSubmit={handleNeedCreateProduct}
+                classBtn={`hidden`}
+            >
+                <FeatureAddProduct 
+                    classMain={`grid-cols-1 text-right`}
+                    classStatus={`grid-cols-1 text-right`}
+                    classDecuraition={`grid-cols-1 text-right`}
+                    classTextarea={`col-span-1`}
+                />
+
             </GeneralModal>
         </div>
     )

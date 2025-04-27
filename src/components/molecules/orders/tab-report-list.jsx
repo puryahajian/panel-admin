@@ -64,7 +64,7 @@ function TabReportList () {
                         textCalender={'تا تاریخ'}
                     /> */}
                 </div>
-                <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-blue-500 !text-blue-500`}>درخواست تسفیه حساب</ButtonGeneral>
+                <ButtonGeneral onClick={() => setOpenPrice(true)} className={`border border-customBlue !text-customBlue`}>درخواست تسویه حساب</ButtonGeneral>
             </div>
             {/* <div className='grid grid-cols-3 gap-6'>
                 <CardDiagram 
@@ -267,7 +267,7 @@ function TabReportList () {
             <GeneralModal
                 open={openPrice}
                 handleClose={() => setOpenPrice(false)}
-                title="تسفیه حساب"
+                title="تسویه حساب"
                 actionText="ثبت"
                 // actionHandler={() => setOpenPrice(false)}
                 onSubmit={askingForMony}

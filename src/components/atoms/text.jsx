@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Text({children, className}) {
+function Text({children, className, dangerouslySetInnerHTML}) {
     return (
-        <p className={`text-sm font-sans text-grayText ${className}`}>{children}</p>
+        <p dangerouslySetInnerHTML={dangerouslySetInnerHTML} className={`text-sm font-sans text-grayText ${className}`}>{children}</p>
     )
 }
 

@@ -30,28 +30,6 @@ function UsePatchProfileShop() {
             certificate, 
             tradeId
         }) => {
-
-            // const formData = new FormData();
-            // formData.append('name', nameProduct);
-            // formData.append('trade_id', tradeId);
-            // formData.append('national_code', nationalCode);
-            // formData.append('description', about);
-            // formData.append('catalog', catalog);
-            // formData.append('location_lat', storedCoordinates[0]);
-            // formData.append('location_lng', storedCoordinates[1]);
-            // formData.append('image', selectedBg);
-            // formData.append('banner_1', selectedBannerOne);
-            // formData.append('banner_2', selectedBannerTwo);
-            // formData.append('banner_3', selectedBannerThree);
-            // formData.append('cert_1', selectedLogo);
-            // formData.append('cert_2', certificate);
-            // formData.append('shop_phones', numberPhoneShop);
-            // formData.append('start_time', timeOpen);
-            // formData.append('end_time', timeClose);
-            // formData.append('instagram', instagram);
-            // formData.append('whats_app', whatsApp);
-            // formData.append('telegram', telegram);
-
             const formData = new FormData();
             formData.append('name', nameProduct);
             formData.append('trade_id', tradeId);
@@ -82,6 +60,7 @@ function UsePatchProfileShop() {
         },
         {
             onSuccess: (data) => {
+                console.log(data)
                 toast.success('پروفایل با موفقیت ذخیره شد')
                 queryClient.invalidateQueries(['createNewProduct']);
             },

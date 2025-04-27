@@ -15,10 +15,12 @@ import UseGetAllTicket from '../../db/use-get-all-ticket';
 import UseSentAnswer from '../../db/use-sent-answer';
 import Img from '../../atoms/img';
 import Audio from '../audio-player';
+import Input from '../../atoms/input';
 
 function Ticket() {
     const [openSentTicket, setOpenSentTicket] = useState(false);
     const [description, setDescription] = useState('');
+    const [title, setTitle] = useState('');
     const [showLeft, setShowLeft] = useState(false);
     const [err, setErr] = useState(false);
     const [valueMessage, setValueMessage] = useState('');
@@ -42,13 +44,14 @@ function Ticket() {
 
     const handleSubmitCreateTicket = (e) => {
         e.preventDefault();
-        if (setSection || setDescription === '') {
+        if (setSection && setDescription === '') {
             setErr('فیلدها اجباری *')
             return
         }
         setOpenSentTicket(false);
         mutate(
             {
+                title,
                 section,
                 description
             },
@@ -100,10 +103,10 @@ function Ticket() {
                 <div key={item.id} className='border cursor-pointer !border-customBlue my-3 rounded-lg flex justify-between items-center p-2'>
                     <Text>{item?.title}</Text>
                     <ButtonGeneral onClick={() => {
-                        setSelectedTicketId(item.id);
-                        setShowLeft(true);
-                    }} className='border border-customBlue !px-4 !py-2'>
-                        <Text>مشاهده</Text>
+                            setSelectedTicketId(item.id);
+                            setShowLeft(true);
+                        }} className='!border-none bg-customBlue !px-4 !py-2'>
+                        <Text className={`text-white`}>مشاهده</Text>
                     </ButtonGeneral>
                 </div>
             ))}
@@ -122,13 +125,20 @@ function Ticket() {
                 <Text className='text-right !text-red-500 mt-2'>{err}</Text>
 
                 <Text className='text-right mt-2'>موضوع :</Text>
+                <Input 
+                    value={title} 
+                    onChange={(e) => setTitle(e.target.value)} 
+                    className={`resize-none w-full border border-gray-300 mt-2 rounded outline-none p-2 bg-transparent ${err && 'border-red-500'}`}
+                />
+
+                <Text className='text-right mt-2'>توضیحات :</Text>
                 <textarea 
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
-                    className={`resize-none w-full border !border-Custom mt-2 rounded outline-none p-2 ${err && 'border-red-500'}`}
+                    className={`resize-none w-full border border-gray-300 mt-2 rounded outline-none p-2 bg-transparent ${err && 'border-red-500'}`}
                 />
 
-                <Text className='text-right mt-4'>انتخاب کنید :</Text>
+                <Text className='text-right mt-4'>دپارتمان :</Text>
                 <FormControl className='w-full text-right !outline-none !py-0 !mt-2'>
                     <Select
                         className={`!outline-none !py-0 border border-gray-200 ${err && '!border-red-500'}`}
@@ -137,7 +147,7 @@ function Ticket() {
                         displayEmpty
                     >
                         <MenuItem disabled value="">
-                            <Text>انتخاب وضعیت</Text>
+                            <Text>انتخاب دپارتمان</Text>
                         </MenuItem>
                         {data?.results.map((item) => (
                             <MenuItem key={item.id} value={item?.id}>

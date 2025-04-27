@@ -1,80 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import UseAllProduct from '../../db/use-all-product';
 import moment from 'jalali-moment'
 import ListGoods from './list-goods';
+import Input from '../../atoms/input';
 
 function Dashboard() {
   const {data} = UseAllProduct();
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const search =  data?.results.map((item) => item)
+  const filteredItems = search?.filter((item) =>
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div>
-      {/* <div className='grid grid-cols-3 gap-6'>
-        <CardDiagram 
-            contentTitle={
-                'جمع فروش'
-            }
-            contentFooter={
-                'فروش روزانه 12,432 ريال'
-            }
-            contentBold={
-              '126,560 تومان'
-            }
-        >
-            <Text>تغییر wow 10%</Text>
-            <Text>تغییر dod 18%</Text>
-
-        </CardDiagram>
-
-        <CardDiagram 
-            contentTitle={
-                'جمع فروش'
-            }
-            contentFooter={
-                'فروش روزانه 12,432 ريال'
-            }
-            contentBold={
-              '2,560'
-            }
-        >
-          <ChartComponent/>
-        </CardDiagram>
-
-        <CardDiagram 
-            contentTitle={
-              'اثر عملیاتی'
-            }
-            contentFooter={
-              'تغییر WoW   27.2'
-            }
-            contentBold={
-              '69%'
-            }
-        >
-           <LinearProgressCom value={50}/>
-        </CardDiagram>
-      </div>
-
-      <hr className='border border-gray-300 m-auto w-[93%] my-6'/> */}
-
       <div className=''>
 
-        <Text className={`mb-2`}>لیست کالا ها</Text>
-        <div className='grid grid-cols-7 gap-4 p-3 mb-2 rounded-lg bg-gray-100 border-b'>
+        <div className='w-full flex justify-between mb-2 items-center'>
+          <Text className={``}>لیست کالا ها</Text>
+          <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder={`جستجو بر اساس نام`}/>
+        </div>
+
+
+        <div className='flex gap-4 p-3 mb-2 rounded-lg bg-gray-100'>
           <div><Text>ردیف</Text></div>
-          <div className='border-l border-r pr-2 border-grayText'><Text>نام</Text></div>
-          <div className='border-l border-grayText'><Text>توضیحات</Text></div>
-          <div className='border-l border-grayText'><Text>قیمت</Text></div>
-          <div><Text>تاریخ</Text></div>
-          <div className='text-left pl-4 col-span-2'><Text>وضعیت کالا</Text></div>
+            <div className=' border-grayText'><Text></Text></div>
+          <div className='grid w-full grid-cols-7'>
+            <div className=' col-span-2 border-r pr-2 border-grayText'><Text>نام</Text></div>
+            <div className='border-r border-grayText pr-2 mr-10'><Text>قیمت</Text></div>
+            <div className='pr-2 mr-7 border-r border-grayText'><Text>تاریخ</Text></div>
+            <div className='text-left pl-4 col-span-3'><Text>وضعیت کالا</Text></div>
+          </div>
         </div>
 
 
         <div className='grid gap-2'>
-          {data?.results.map((items) => {
+          {filteredItems?.map((item, index) => {
             let orderStatus;
 
-            switch (items?.inventory_state) {
+            switch (item?.inventory_state) {
               case 0:
                 orderStatus = <Text className="text-green-400">در دسترس</Text>;
                 break;
@@ -85,31 +49,18 @@ function Dashboard() {
 
             return (
               <ListGoods
-                key={items?.id}
-                momber={items?.id}
-                order={items?.name}
-                orderCode={items?.description.replace(/<\/?p>/g, '')}
-                price={items?.price.toLocaleString('fa-IR')}
+                key={item?.id}
+                src={item?.images[1]?.image}
+                momber={index + 1}
+                order={<Text className={``} dangerouslySetInnerHTML={{__html: item?.name || 'محتوا موجود نیست'}}></Text>}
+                // orderCode={<Text className={`truncate w-20 h-[20px]`} dangerouslySetInnerHTML={{__html: item?.description || 'محتوا موجود نیست'}}></Text>}
+                price={item?.price.toLocaleString('fa-IR')}
                 // orderer={'لورم ایپسوم'}
-                date={moment(items?.created_at).locale('fa').format('YYYY/MM/DD')}
+                date={moment(item?.created_at).locale('fa').format('YYYY/MM/DD')}
                 orderStatus={orderStatus}
               />
             );
-          })}
-          {/* {data?.results.map((items) => (
-            <ListGoods
-              key={items?.id}
-              momber={items?.id}
-              order={items?.name}
-              orderCode={items?.description.replace(/<\/?p>/g, '')}
-              price={items?.price.toLocaleString('fa-IR')}
-              // orderer={'لورم ایپسوم'}
-              date={moment(items?.created_at).locale('fa').format('YYYY/MM/DD')}
-
-
-              orderStatus={items?.inventory_state}
-            />
-          ))} */}
+    })}
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import UseNameProduct from '../../db/use-name-product'
 import UseGetMaterial from '../../db/use-get-material'
 import Loading from '../../atoms/loading'
 
-function FeatureAddProduct() {
+function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,classTextarea}) {
     const { mutate, isLoading } = UseCreateNewProduct();
     const [selectProduct, setSelectProduct] = useState('')
     const [priceProduct, setPriceProduct] = useState('')
@@ -42,7 +42,7 @@ function FeatureAddProduct() {
         <form onSubmit={handleCreateNewProduct}>
             <div className='flex gap-4'>
                 <div className='w-full'>
-                    <div className='grid grid-cols-3 gap-4'>
+                    <div className={`grid grid-cols-3 gap-4 ${classMain}`}>
                         <div className='text-right'>
                             <Text className={`mb-2`}>انتخاب محصول</Text>
                             {/* <Input onChange={(e) => setNameProduct(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/> */}
@@ -104,7 +104,7 @@ function FeatureAddProduct() {
                         </div>                 
                     </div>
 
-                    <div className='grid grid-cols-3 gap-4'>
+                    <div className={`grid grid-cols-3 gap-4 ${classStatus}`}>
                         <div>
                             <Text className={`mt-4 mb-2`}>وضعیت</Text>
                             <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none !py-0'>
@@ -144,8 +144,8 @@ function FeatureAddProduct() {
                         </div>
                     </div>
 
-                    <div className='grid grid-cols-3 gap-4'>
-                        <div className='col-span-2'>
+                    <div className={`grid grid-cols-3 gap-4 ${classDecuraition}`}>
+                        <div className={`col-span-2 ${classTextarea}`}>
                             <Text className={`mt-4`}>توضیحات</Text>
                             <textarea 
                                 // value={description} 
@@ -153,8 +153,8 @@ function FeatureAddProduct() {
                                 className='bg-bgInput placeholder:text-black text-sm resize-none w-full border !border-Custom mt-2 rounded outline-none p-2' 
                             />
                         </div>
-                        <div className='flex items-end pb-2'>
-                            <ButtonGeneral className={`bg-customBlue text-white border-transparent w-full py-[18px]`}>
+                        <div className={`flex items-end pb-2 ${classBtn}`}>
+                            <ButtonGeneral className={`bg-customBlue text-white border-transparent w-full py-[18px] `}>
                                 {isLoading ? <Loading/> : "ثبت"}
                             </ButtonGeneral>
                         </div>

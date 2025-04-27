@@ -23,6 +23,7 @@ function ChatId() {
     const [message, setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
     const [preview, setPreview] = useState(null);
+    const [previewUpload, setPreviewUpload] = useState(null);
     const [description, setDescription] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [view, setView] = useState(1);
@@ -31,6 +32,7 @@ function ChatId() {
     const { data } = UseGetVisit();
     const { mutate, isLoading } = UsePostDoctorVisit();
     const { mutate: mutatePostMessage } = UsePostSendMessage();
+    
     
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -115,7 +117,8 @@ function ChatId() {
                                     textOne={`نسخه رو آپلود کنید`}
                                     textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                                     selectedFile={selectedFile}
-                                    setSelectedFile={setSelectedFile}
+                                    onFileSelect={setSelectedFile}
+                                    setPreview={setPreviewUpload}
                                 />
                                 <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='w-full h-full border border-gray-300 outline-none rounded-2xl resize-none p-2 text-sm font-sans' placeholder='توضیحات...'></textarea>
 
@@ -151,7 +154,7 @@ function ChatId() {
                     <div>
                         <div className='rounded-t bg-bgInput p-2 h-[500px] max-h-[500px] overflow-scroll'>
                             <MessageDoctor/>
-                            <MessageUser/>
+                            {/* <MessageUser/> */}
                         </div>
                         <div className='py-2 bg-bgInput rounded-b shadow-lg'>
                             <div className='flex items-center gap-2 px-2 pb-2'>

@@ -213,7 +213,7 @@ function Ticket() {
                                                 <button onClick={handleRemoveFile}><CloseIcon/></button> */}
                                                 <div className='flex items-center gap-2'>
                                                     {preview && <img src={preview} alt="Preview" className="mt-2 w-12 h-12 rounded" />}
-                                                    {fileName && <Text className='ml-2 text-gray-600'>{fileName.name}</Text>}
+                                                    {/* {fileName && <Text className='ml-2 text-gray-600'>{fileName.name}</Text>} */}
                                                 </div>
                                                 {/* </>
                                             )} */}

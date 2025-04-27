@@ -4,20 +4,25 @@ import iconImage from '../../assets/image/Huge-icon.png'
 import Text from '../atoms/text';
 import Title from '../atoms/title';
 
-function Uploader({textOne, textTwo,className, selectedFile,setSelectedFile, preview}) {
+function Uploader({textOne, textTwo,className, selectedFile,onFileSelect, preview, setPreview}) {
     // const [selectedFile, setSelectedFile] = useState(null);
+    const [localPreview, setLocalPreview] = useState(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setSelectedFile(file);
+        if (file) {
+            onFileSelect(file); 
+            setLocalPreview(URL.createObjectURL(file));
+        }
     };
 
     const getBackgroundImage = () => {
-        if (!preview) return 'none';
-        if (preview.startsWith('blob:')) {
-            return `url(${preview})`; // لوکال فایل
+        const img = localPreview || preview;
+        if (!img) return 'none';
+        if (img.startsWith('blob:')) {
+            return `url(${img})`; // لوکال فایل
         } else {
-            return `url(https://mediplant.ir${preview})`; // سروری
+            return `url(https://mediplant.ir${img})`; // سروری
         }
     };
 

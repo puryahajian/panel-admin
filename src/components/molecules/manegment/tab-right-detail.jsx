@@ -20,6 +20,8 @@ function TabRightDetail({
     }) {
 
     const { data } = UseGetProfileDoctor();
+    const [preview, setPreview] = useState(null);
+    
     console.log(data)
 
     return (
@@ -34,6 +36,7 @@ function TabRightDetail({
                     selectedFile={selectedFile}
                     onFileSelect={onFileSelect}
                     preview={data?.picture}
+                    setPreview={setPreview}
                 />
 
                 <Text className="mt-4">نام پزشک</Text>

@@ -43,11 +43,11 @@ function Sick() {
                         <Text>{index + 1}</Text>
                         <Text className={`col-span-2`}>{item?.user}</Text>
                         <Text>{moment(item?.created_at).locale('fa').format('YYYY/MM/DD')}</Text>
+                    </div>
+                    <div className='w-4/12 text-left flex justify-end items-center gap-2'>
                         <ButtonGeneral onClick={() => handleOpenComments(item?.id)} className={`cursor-pointer bg-customBlue border-transparent text-white`}>
                             نظرات
                         </ButtonGeneral>
-                    </div>
-                    <div className='w-4/12 text-left flex justify-end gap-2'>
                         <MenuDoted
                             contentButton={<MoreVertIcon/>} 
                         >

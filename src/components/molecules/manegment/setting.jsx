@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Uploader from '../uploader'
 import TabRightDetail from './tab-right-detail'
 import TabLeftMap from './tab-left-map'
@@ -16,6 +16,7 @@ function Setting() {
     // const { mutate, isLoading } = UsePatchProfileShop();
     const { mutate, isLoading } = UsePatchProfileShop();
     const { data } = UseGetProfileDoctor();
+    console.log(data)
 
     const [ selectedBg, setSelectedBg ] = useState();
     const [ selectedBannerOne, setSelectedBannerOne ] = useState();
@@ -28,17 +29,29 @@ function Setting() {
     const [nationalCode, setNationalCode] = useState('');
     const [support, setSupport] = useState('');
 
-    const [timeOpen, setTimeOpen] = useState('');
-    const [timeClose, setTimeClose] = useState('');    
-    const [instagram, setInstagram] = useState('');   
-    const [telegram, setTelegram] = useState('');   
-    const [whatsApp, setWhatsApp] = useState(''); 
+    const [timeOpen, setTimeOpen] = useState(data?.start_time || '');
+    const [timeClose, setTimeClose] = useState(data?.end_time || '');    
+    const [instagram, setInstagram] = useState(data?.instagram || '');   
+    const [telegram, setTelegram] = useState(data?.telegram || '');   
+    const [whatsApp, setWhatsApp] = useState(data?.whats_app || ''); 
     
     // const [catalog, setCatalog] = useState('');    
-    const [about, setAbout] = useState('');    
+    const [about, setAbout] = useState(data?.description || '');    
     const [certificate, setCertificate] = useState('');    
     const [markerPosition, setMarkerPosition] = useState('');    
     const [tradeId, setTradeId] = useState('');    
+
+    useEffect(() => {
+        if (data?.start_time && data?.end_time && data?.instagram && data?.telegram && data?.whats_app && data?.description) {
+            setTimeOpen(data?.start_time);
+            setTimeClose(data?.end_time);
+            setInstagram(data?.instagram);
+            setTelegram(data?.telegram);
+            setWhatsApp(data?.whats_app);
+            setAbout(data?.description)
+        }
+    }, [data]);
+    
     
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();
@@ -75,7 +88,7 @@ function Setting() {
    
 
     return (
-        <form onSubmit={handleNeedCreateProduct}>
+        <form>
             <div className=' mb-6 grid grid-cols-2 gap-4'>
                 <TabRightDetail
                     selectedFile={selectedLogo}
@@ -155,7 +168,7 @@ function Setting() {
             </div>
 
             <div className='mt-6 flex justify-end gap-4'>
-                <ButtonGeneral className={`!px-16 bg-customBlue text-white border-customBlue`}>
+                <ButtonGeneral onClick={handleNeedCreateProduct} className={`!px-16 bg-customBlue text-white border-customBlue`}>
                     {isLoading ? <Loading/> : 'ثبت و اعمال'}
                 </ButtonGeneral>
                 <ButtonGeneral className={`!px-16 border-red-500 text-red-500`}>انصراف</ButtonGeneral>

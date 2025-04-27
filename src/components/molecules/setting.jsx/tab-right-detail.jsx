@@ -21,6 +21,7 @@ function TabRightDetail({
     }) {
 
     const { data } = UseGetProfile();
+    const [preview, setPreview] = useState(null);
 
     return (
         <div>
@@ -35,6 +36,7 @@ function TabRightDetail({
                         selectedFile={selectedFile}
                         onFileSelect={onFileSelect}
                         preview={data?.cert_1}
+                        setPreview={setPreview}
                     />
 
                     <Text className="mt-4">نام فروشگاه</Text>

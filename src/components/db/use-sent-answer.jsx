@@ -4,8 +4,6 @@ import interceptor from '../../lib/interceptor';
 
 function UseSentAnswer() {
     const queryClient = useQueryClient();
-    // const storedCoordinates = JSON.parse(localStorage.getItem('addressCoordinates'));
-    // console.log('مختصات بازیابی‌شده از localStorage:', storedCoordinates);
     
     const mutation = useMutation(
         async ({ getIdTicket, fileName, valueMessage }) => {

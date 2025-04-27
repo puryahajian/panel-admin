@@ -18,6 +18,11 @@ import Audio from '../audio-player';
 import Input from '../../atoms/input';
 
 function Ticket() {
+    const { mutate, isLoading } = UseCreateTicket('');
+    const { data } = UseSectionTicket('');
+    const { data: dataAllTicket } = UseGetAllTicket('');
+    const { mutate: mutateAnswer, isLoading: isLoadingAnswer } = UseSentAnswer('');
+
     const [openSentTicket, setOpenSentTicket] = useState(false);
     const [description, setDescription] = useState('');
     const [title, setTitle] = useState('');
@@ -29,11 +34,7 @@ function Ticket() {
     const [preview, setPreview] = useState(null);
 
     const [section, setSection] = useState('');
-    const { data } = UseSectionTicket('');
     const [selectedTicketId, setSelectedTicketId] = useState(null);
-    const { mutate, isLoading } = UseCreateTicket('');
-    const { data: dataAllTicket } = UseGetAllTicket('');
-    const { mutate: mutateAnswer, isLoading: isLoadingAnswer } = UseSentAnswer('');
 
     const selectedTicket = dataAllTicket?.results.find(ticket => ticket.id === selectedTicketId);
 
@@ -76,7 +77,6 @@ function Ticket() {
     }
 
     const handleSubmitSentAnswer = (e) => {
-        e.preventDefault();
 
         mutateAnswer(
             {
@@ -167,8 +167,9 @@ function Ticket() {
                                     const fileExtension = ticket?.file?.split('.').pop().toLowerCase();
                                     return (
                                         <div className='border-b border-gray-400 p-1'>
-                                            {fileExtension === 'png' || fileExtension === 'jpg' ? (
+                                            {fileExtension === 'png' || fileExtension === 'jpg' || fileExtension === 'jpeg' ? (
                                                 <Img href={ticket?.file} src={ticket?.file} />
+
                                             ) : fileExtension === 'mp3' ? (
                                                 <Audio src={ticket?.file} />
                                             ) : null}
@@ -199,7 +200,7 @@ function Ticket() {
                             ))} */}
                             <div className='absolute grid bottom-0 right-0 w-full'>
 
-                                <form onSubmit={handleSubmitSentAnswer}>
+                                <form>
                                     <div className='bg-gray-200 p-2'>
                                         <div className='flex items-center gap-2 w-full'>
                                             {/* {preview && (
@@ -207,7 +208,7 @@ function Ticket() {
                                                 <button onClick={handleRemoveFile}><CloseIcon/></button> */}
                                                 <div className='flex items-center gap-2'>
                                                     {preview && <img src={preview} alt="Preview" className="mt-2 w-12 h-12 rounded" />}
-                                                    {fileName && <Text className='ml-2 text-gray-600'>{fileName.name}</Text>}
+                                                    {/* {fileName && <Text className='ml-2 text-gray-600'>{fileName.name}</Text>} */}
                                                 </div>
                                                 {/* </>
                                             )} */}
@@ -215,7 +216,11 @@ function Ticket() {
                                         <div className='flex mt-2'>
                                             <ButtonGeneral 
                                                 className='!py-2 !px-3 !border-none bg-gray-200' 
-                                                onClick={() => handlePostTicket(selectedTicket?.id)}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleSubmitSentAnswer();
+                                                    handlePostTicket(selectedTicket?.id)
+                                                }}
                                             >
                                                 {isLoadingAnswer ? <Loading/> : <SendIcon className='text-xs' /> }
                                             </ButtonGeneral>

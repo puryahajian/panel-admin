@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonExisting from '../../atoms/button-existing'
 import GeneralModal from '../modal-general'
-import FeatureAddProduct from './feature-add-product'
+import FeatureAddProduct from './mostafa'
 import GetShopProduct from '../../db/get-shop-product'
 import Img from '../../atoms/img'
 import moment from 'jalali-moment'
@@ -13,6 +13,7 @@ function TabListProducts() {
     const [open, setOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
     const { data } = GetShopProduct();
+    
     const { mutate } = UseDeleteShopProduct();
     const [searchTerm, setSearchTerm] = useState("");
     const search =  data?.results.map((item) => item)
@@ -25,15 +26,17 @@ function TabListProducts() {
         setOpen(true);
     };
 
-    const handleDeleteConfirm = () => {
-        if (selectedProductId) {
-            mutate({ selectedProductId }, {
-                onSuccess: () => {
-                    setOpen(false);
-                    setSelectedProductId(null);
-                },
-            });
-        }
+    const handleDeleteConfirm = (e) => {
+        e.preventDefault();
+        mutate(
+            { selectedProductId 
+
+            }, 
+            {
+            onSuccess: () => {
+                setOpen(false);
+            },
+        });
     };
 
     return (

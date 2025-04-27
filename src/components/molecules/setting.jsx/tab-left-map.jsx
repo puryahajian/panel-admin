@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import Uploader from '../uploader'
 import Mapp from '../mapp'
@@ -10,6 +10,7 @@ function TabLeftMap({
     }) {
 
     const { data } = UseGetProfile();
+    const [preview, setPreview] = useState(null);
     
     return (
         <div>
@@ -22,6 +23,7 @@ function TabLeftMap({
                     selectedFile={selectedFile}
                     onFileSelect={onFileSelect}
                     preview={data?.image}
+                    setPreview={setPreview}
                 />
             )}
 

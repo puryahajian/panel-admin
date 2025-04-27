@@ -39,7 +39,7 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
     >
     <Fade in={open}>
         <Box sx={style}>
-          <form action="" onSubmit={onSubmit}>
+          <form action="">
             <Text id="transition-modal-title">
                 {title}
             </Text>

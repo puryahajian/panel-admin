@@ -10,7 +10,7 @@ import UseNameProduct from '../../db/use-name-product'
 import UseGetMaterial from '../../db/use-get-material'
 import Loading from '../../atoms/loading'
 
-function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,classTextarea}) {
+function Mostafa({ali, classStatus, classDecuraition, classBtn,classTextarea}) {
     const { mutate, isLoading } = UseCreateNewProduct();
     const [selectProduct, setSelectProduct] = useState('')
     const [priceProduct, setPriceProduct] = useState('')
@@ -24,6 +24,13 @@ function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,c
     // console.log(material)
 
     const handleCreateNewProduct = (e) => {
+        console.log(selectProduct, 
+                    priceProduct, 
+                    productType, 
+                    stateProduct, 
+                    capacityProduct,
+                    detailProduct,
+                    typeOfPackProduct)
         e.preventDefault();
         mutate(
             {
@@ -39,10 +46,10 @@ function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,c
     }
 
     return (
-        <form onSubmit={handleCreateNewProduct}>
+        <form>
             <div className='flex gap-4'>
                 <div className='w-full'>
-                    <div className={`grid grid-cols-3 gap-4 ${classMain}`}>
+                    <div className={`grid grid-cols-3 gap-4 ${ali}`}>
                         <div className='text-right'>
                             <Text className={`mb-2`}>انتخاب محصول</Text>
                             {/* <Input onChange={(e) => setNameProduct(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/> */}
@@ -154,9 +161,10 @@ function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,c
                             />
                         </div>
                         <div className={`flex items-end pb-2 ${classBtn}`}>
-                            <ButtonGeneral className={`bg-customBlue text-white border-transparent w-full py-[18px] `}>
+                            <ButtonGeneral onClick={handleCreateNewProduct} className={`bg-customBlue text-white border-transparent w-full py-[18px] `}>
                                 {isLoading ? <Loading/> : "ثبت"}
                             </ButtonGeneral>
+                            {/* <button onClick={handleCreateNewProduct}>ssss</button> */}
                         </div>
                     </div>
                 </div>
@@ -165,4 +173,4 @@ function FeatureAddProduct({classMain, classStatus, classDecuraition, classBtn,c
     )
 }
 
-export default FeatureAddProduct
+export default Mostafa

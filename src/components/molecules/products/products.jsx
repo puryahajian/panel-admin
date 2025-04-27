@@ -7,7 +7,9 @@ import Text from '../../atoms/text';
 import Input from '../../atoms/input';
 import UseCreateProduct from '../../db/use-create-product';
 import { toast } from 'react-toastify';
-import FeatureAddProduct from './feature-add-product';
+import FeatureAddProduct from './mostafa';
+import Mostafa from './mostafa';
+import Loading from '../../atoms/loading';
 
 
 function TabProduct({ children, step, index }) {
@@ -30,16 +32,13 @@ function Products() {
     const [open, setOpen] = useState(false);
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [openSelectProduct, setOpenSelectProduct] = useState(false);
-    const { mutate } = UseCreateProduct();
+    const { mutate, isLoading } = UseCreateProduct();
     const [selectedFile, setSelectedFile] = useState(null);
     const [detailProduct, setDetailProduct] = useState(null);
     const [description, setDescription] = useState(null);
+    const [preview, setPreview] = useState(null);
 
-    // console.log(detailProduct)
-
-    const handleNeedCreateProduct = (e) => {
-        e.preventDefault();
-        
+    const handleNeedCreateProduct = () => {
         mutate(
             { 
                 detailProduct, selectedFile, description
@@ -79,12 +78,14 @@ function Products() {
                     e.preventDefault();
                 }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="ذخیره"
+                actionText={isLoading ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => {
-                    setOpenAddProduct(false)
                     e.preventDefault();
+                    handleNeedCreateProduct()
+                    setOpenAddProduct(false)
                 }}
-                onSubmit={handleNeedCreateProduct}
+
+                // onSubmit={handleNeedCreateProduct}
             >
                     <div className=' text-right'>
                         <Uploader
@@ -92,6 +93,7 @@ function Products() {
                             textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                             selectedFile={selectedFile}
                             onFileSelect={setSelectedFile}
+                            preview={preview}
                         />
 
                         <Text className={`mt-4 mb-2`}>نام محصول</Text>
@@ -111,11 +113,11 @@ function Products() {
                 // onSubmit={handleNeedCreateProduct}
                 classBtn={`hidden`}
             >
-                <FeatureAddProduct 
-                    classMain={`grid-cols-1 text-right`}
-                    classStatus={`grid-cols-1 text-right`}
-                    classDecuraition={`grid-cols-1 text-right`}
-                    classTextarea={`col-span-1`}
+                <Mostafa 
+                    ali={`!grid-cols-1 text-right`}
+                    classStatus={`!grid-cols-1 text-right`}
+                    classDecuraition={`!grid-cols-1 text-right`}
+                    classTextarea={`!col-span-1`}
                 />
 
             </GeneralModal>

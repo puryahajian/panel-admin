@@ -7,7 +7,6 @@ import Input from '../../atoms/input';
 
 function Dashboard() {
   const {data} = UseAllProduct();
-  console.log(data)
   const [searchTerm, setSearchTerm] = useState("");
   const search =  data?.results.map((item) => item)
   const filteredItems = search?.filter((item) =>
@@ -41,7 +40,7 @@ function Dashboard() {
 
             switch (item?.inventory_state) {
               case 0:
-                orderStatus = <Text className="text-green-400">در دسترس</Text>;
+                orderStatus = <Text className="!text-customBlue">در دسترس</Text>;
                 break;
               case 1:
                 orderStatus = <Text className="text-red-400">در دسترس نیست</Text>;

@@ -5,21 +5,23 @@ import Title from '../atoms/title';
 
 function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview }) {
     // const [preview, setPreview] = useState(null);
+    const [localPreview, setLocalPreview] = useState(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             onFileSelect(file); 
-            setPreview(URL.createObjectURL(file));
+            setLocalPreview(URL.createObjectURL(file));
         }
     };
 
     const getBackgroundImage = () => {
-        if (!preview) return 'none';
-        if (preview.startsWith('blob:')) {
-            return `url(${preview})`; // لوکال فایل
+        const img = localPreview || preview;
+        if (!img) return 'none';
+        if (img.startsWith('blob:')) {
+            return `url(${img})`; // لوکال فایل
         } else {
-            return `url(https://mediplant.ir${preview})`; // سروری
+            return `url(https://mediplant.ir${img})`; // سروری
         }
     };
 

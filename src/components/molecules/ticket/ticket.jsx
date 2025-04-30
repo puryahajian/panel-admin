@@ -113,6 +113,9 @@ function Ticket() {
                     </ButtonGeneral>
                 </div>
             ))}
+            <div className='w-full flex justify-center mt-6'>
+                {dataAllTicket?.count === 0 && <Text>تیکت موجود نیست</Text>}
+            </div>
 
             <GeneralModal
                 open={openSentTicket}

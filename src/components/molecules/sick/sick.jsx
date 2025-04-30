@@ -63,7 +63,9 @@ function Sick() {
                     </div>
                 </div>
             ))}
-
+            <div className='w-full flex justify-center mt-6'>
+                {data?.length === 0 && <Text>بیمار موجود نیست</Text>}
+            </div>
             <GeneralModal
                 open={openSeeComment}
                 handleClose={(e) => {

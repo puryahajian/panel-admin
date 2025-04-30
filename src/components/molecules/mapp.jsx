@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../App.css';
 import neshan_map_loader from "./neshan_map_loader";
-import UseGetProfile from '../db/use-get-profile';
+import UseGetProfileDoctor from '../db/use-get-profile-doctor';
 
 const Mapp = (props) => {
   const { style, options, onInit } = props;
   const mapEl = useRef(null);
   const markerRef = useRef(null);
-  const { data } = UseGetProfile();
+  const { data } = UseGetProfileDoctor();
 
   // خواندن موقعیت آخرین مارکر از localStorage (اگر وجود داشته باشد)
   const savedLat = parseFloat(localStorage.getItem('lat'));

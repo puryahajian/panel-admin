@@ -21,7 +21,7 @@ function TabRightDetail({
     }) {
 
     const { data } = UseGetProfile();
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState('');
 
     return (
         <div>
@@ -40,7 +40,7 @@ function TabRightDetail({
                     />
 
                     <Text className="mt-4">نام فروشگاه</Text>
-                    <Input defaultValue={data?.name} disabled={!!data?.name} value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} placeholder="نام فروشگاه خود را وارد کنید" className="w-full mt-2" />
+                    <Input defaultValue={data?.name} value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} placeholder="نام فروشگاه خود را وارد کنید" className="w-full mt-2" />
 
                     <Text className="mt-4">شماره فروشگاه</Text>
                     <Input defaultValue={data?.shop_phones} value={numberPhoneShop} onChange={(e) => setNumberPhoneShop(e.target.value)} placeholder="۰۹۱۱۱۱۱۱۱۱۱" className="w-full mt-2 text-left" />

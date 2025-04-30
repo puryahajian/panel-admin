@@ -17,7 +17,7 @@ function Setting() {
     const [ selectedBannerTwo, setSelectedBannerTwo ] = useState();
     const [ selectedBannerThree, setSelectedBannerThree ] = useState();
 
-    const [ selectedLogo, setSelectedLogo] = useState('');
+    const [ selectedLogo, setSelectedLogo ] = useState('');
     const [nameProduct, setNameProduct] = useState('');
     const [numberPhoneShop, setNumberPhoneShop] = useState('');
     const [nationalCode, setNationalCode] = useState('');
@@ -28,13 +28,16 @@ function Setting() {
     const [instagram, setInstagram] = useState(data?.instagram || '');   
     const [telegram, setTelegram] = useState(data?.telegram || '');   
     const [whatsApp, setWhatsApp] = useState(data?.whats_app || ''); 
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState();
     
     const [catalog, setCatalog] = useState(data?.catalog || '');    
     const [about, setAbout] = useState(data?.description || '');    
     const [certificate, setCertificate] = useState('');    
     const [markerPosition, setMarkerPosition] = useState('');    
     const [tradeId, setTradeId] = useState('');   
+
+    const lat = localStorage.getItem('lat');
+    const lng = localStorage.getItem('lng');
     
     useEffect(() => {
         if (data?.start_time && data?.end_time && data?.instagram && data?.telegram && data?.whats_app) {
@@ -49,7 +52,7 @@ function Setting() {
 
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();
-
+    
         mutate(
             { 
                 selectedBg, 
@@ -69,8 +72,10 @@ function Setting() {
                 telegram,
                 whatsApp,
                 certificate,
-                markerPosition,
-                tradeId
+                // markerPosition,
+                tradeId,
+                lng, 
+                lat
             },
         );
     }
@@ -84,7 +89,7 @@ function Setting() {
                         textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                         selectedFile={selectedBg}
                         onFileSelect={setSelectedBg}
-                        preview={data?.image}
+                        preview={data ? data.image : preview}
                         etPreview={setPreview}
                     />
 

@@ -5,7 +5,7 @@ import Title from '../atoms/title';
 
 function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview }) {
     // const [preview, setPreview] = useState(null);
-    const [localPreview, setLocalPreview] = useState(null);
+    const [localPreview, setLocalPreview] = useState('');
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -35,7 +35,7 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
             backgroundPosition: 'center',
             }}
         >
-            <div htmlFor="video-upload" className='grid gap-2 mt-2 w-max m-auto p-2 bg-[#0000008f] rounded-lg'>
+            <div htmlFor="video-upload" className='grid gap-2 mt-2 w-full m-auto p-2 bg-[#0000008f] rounded-lg'>
                 <img src={iconImage} className="m-auto" alt="" />
                 <Title>{textOne}</Title>
                 <Title>{textTwo}</Title>

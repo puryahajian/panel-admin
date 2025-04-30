@@ -7,8 +7,8 @@ const interceptor = axios.create({
 
 interceptor.interceptors.request.use(
   (config) => {
-    // config.headers['Content-Type'] = 'multipart/form-data';
     const accessToken = Cookies.get('access');
+    // config.headers['Content-Type'] = 'multipart/form-data';
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     config.headers['Accept'] = 'application/json';
     if (accessToken) {

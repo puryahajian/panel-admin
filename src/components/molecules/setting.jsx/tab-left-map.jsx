@@ -10,8 +10,7 @@ function TabLeftMap({
     }) {
 
     const { data } = UseGetProfile();
-    const [preview, setPreview] = useState(null);
-    
+    const [preview, setPreview] = useState('');
     return (
         <div>
             <Text>تصویر جواز فروشگاه</Text>
@@ -22,7 +21,7 @@ function TabLeftMap({
                     textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     selectedFile={selectedFile}
                     onFileSelect={onFileSelect}
-                    preview={data?.image}
+                    preview={data?.cert_2}
                     setPreview={setPreview}
                 />
             )}

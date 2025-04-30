@@ -16,12 +16,11 @@ function Setting() {
     // const { mutate, isLoading } = UsePatchProfileShop();
     const { mutate, isLoading } = UsePatchProfileShop();
     const { data } = UseGetProfileDoctor();
-    console.log(data)
 
-    const [ selectedBg, setSelectedBg ] = useState();
-    const [ selectedBannerOne, setSelectedBannerOne ] = useState();
-    const [ selectedBannerTwo, setSelectedBannerTwo ] = useState();
-    const [ selectedBannerThree, setSelectedBannerThree ] = useState();
+    // const [ selectedBg, setSelectedBg ] = useState();
+    // const [ selectedBannerOne, setSelectedBannerOne ] = useState();
+    // const [ selectedBannerTwo, setSelectedBannerTwo ] = useState();
+    // const [ selectedBannerThree, setSelectedBannerThree ] = useState();
 
     const [ selectedLogo, setSelectedLogo] = useState('');
     const [nameProduct, setNameProduct] = useState('');
@@ -51,17 +50,19 @@ function Setting() {
             setAbout(data?.description)
         }
     }, [data]);
-    
+
+    const lat = localStorage.getItem('lat');
+    const lng = localStorage.getItem('lng');
     
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();
 
         mutate(
             { 
-                selectedBg, 
-                selectedBannerOne,
-                selectedBannerTwo,
-                selectedBannerThree, 
+                // selectedBg, 
+                // selectedBannerOne,
+                // selectedBannerTwo,
+                // selectedBannerThree, 
                 selectedLogo, 
                 nameProduct, 
                 numberPhoneShop, 
@@ -75,8 +76,10 @@ function Setting() {
                 telegram,
                 whatsApp,
                 certificate,
-                markerPosition,
-                tradeId
+                // markerPosition,
+                tradeId,
+                lat,
+                lng
             },
             {
                 onSuccess: (data) => {

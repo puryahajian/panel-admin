@@ -7,12 +7,6 @@ function ListOrders({momber,order,orderCode,price,comments,date,orderStatus, onC
             <li className=''>
                 <Text>{momber}</Text>
             </li>
-            {/* <li>
-                <Text>{order}</Text>
-            </li> */}
-            {/* <li>
-                <Text>{orderCode}</Text>
-            </li> */}
             <li>
                 <Text>{price} تومان</Text>
             </li>
@@ -20,15 +14,15 @@ function ListOrders({momber,order,orderCode,price,comments,date,orderStatus, onC
                 <Text>{date}</Text>
             </li>
             <li className='text-center'>
-                <button onClick={handleClick}>
-                    <Text>
+                <button onClick={handleClick} className='bg-customBlue px-3 py-1 rounded-lg'>
+                    <Text className={`text-white`}>
                         {detailOrder}
                     </Text>
                 </button>
             </li>
             <li className='text-left flex justify-end'>
-                <button onClick={onClick} className='ml-14'>
-                    <Text>
+                <button onClick={onClick} className='ml-14 bg-customBlue px-3 py-1 rounded-lg'>
+                    <Text className={`text-white`}>
                         {comments}
                     </Text>
                 </button>

@@ -5,7 +5,7 @@ import GeneralModal from '../modal-general';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import StarFeedback from '../start-feedback';
 import CloseIcon from '@mui/icons-material/Close';
-import { FormControl, MenuItem, Select } from '@mui/material';
+// import { FormControl, MenuItem, Select } from '@mui/material';
 import UseGetListOrders from '../../db/use-get-list-orders';
 
 function TabOrderList() {
@@ -13,13 +13,12 @@ function TabOrderList() {
   const [openModalDetailOrders, setOpenModalDetailOrders] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedCommentOrderId, setSelectedCommentOrderId] = useState(null);
-  const [age, setAge] = React.useState('');
+  // const [age, setAge] = React.useState('');
   const { data } = UseGetListOrders();
-  console.log(data)
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setAge(event.target.value);
+  // };
 
   const handleOpenModalDetailOrders = (event, orderId) => {
     if (event && event.preventDefault) event.preventDefault(); 
@@ -37,6 +36,10 @@ function TabOrderList() {
     setSelectedCommentOrderId(orderId);
     setOpenModalComments(true);
   };
+  const handleCloseModalComments = (event, orderId) => {
+    setOpenModalComments(false);
+  }
+
 
   return (
     <div className=''>
@@ -48,7 +51,7 @@ function TabOrderList() {
       </div>
 
       <div className='grid gap-2'>
-        {data?.results.map((item) => {
+        {data?.results.map((item, index) => {
           let orderStatus;
 
           switch (item?.state) {
@@ -92,7 +95,7 @@ function TabOrderList() {
           return (
             <ListOrders
               key={item?.id} 
-              momber={item?.id}
+              momber={index + 1}
               price={item?.price}
               date={item?.created_at ? new Date(item?.created_at).toLocaleString('fa-IR') : 'نامشخص'}
               comments="نظرات"
@@ -111,10 +114,11 @@ function TabOrderList() {
       {/* modal comment */}
       <GeneralModal
         open={openModalComments}
-        handleClose={(event) => setOpenModalComments(event,false)}
+        // handleClose={() => setOpenModalComments(false)}
         title={`نظرات ثبت شده `}
         actionText="ثبت"
-        actionHandler={(event) => { setOpenModalComments(event,false); }}
+        classBack={`hidden`}
+        actionHandler={handleCloseModalComments}
       >
         <div className='max-h-44 overflow-auto'>
           {data?.results.map((item) => (
@@ -133,16 +137,20 @@ function TabOrderList() {
             </div>
             ))
           ))}
+
+          
         </div>
+
       </GeneralModal>
 
       {/* modal detail orders */}
       <GeneralModal
         open={openModalDetailOrders}
-        handleClose={handleCloseModalDetailOrders}
+        // handleClose={handleCloseModalDetailOrders}
         title="جزئیات سفارش"
         actionText="ثبت"
-        actionHandler={(e) => handleCloseModalDetailOrders(e)}
+        classBack={`hidden`}
+        actionHandler={handleCloseModalDetailOrders}
       >
         <div className='mt-4'>
           {data?.results

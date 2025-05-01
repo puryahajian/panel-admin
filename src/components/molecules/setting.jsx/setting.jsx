@@ -86,7 +86,7 @@ function Setting() {
                 <>
                     <Uploader
                         textOne={`تصویر بک گراند`}
-                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                         selectedFile={selectedBg}
                         onFileSelect={setSelectedBg}
                         preview={data ? data.image : preview}
@@ -99,7 +99,7 @@ function Setting() {
                         
                         <Uploader
                             textOne={`تصویر بنر اول`}
-                            textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                            // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                             selectedFile={selectedBannerOne}
                             onFileSelect={setSelectedBannerOne}
                             preview={data?.banner_1}
@@ -107,7 +107,7 @@ function Setting() {
                         />
                         <Uploader
                             textOne={`تصویر بنر دوم`}
-                            textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                            // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                             selectedFile={selectedBannerTwo}
                             onFileSelect={setSelectedBannerTwo}
                             preview={data?.banner_2}
@@ -115,7 +115,7 @@ function Setting() {
                         />
                         <Uploader
                             textOne={`تصویر بنر سوم`}
-                            textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                            // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                             selectedFile={selectedBannerThree}
                             onFileSelect={setSelectedBannerThree}
                             preview={data?.banner_3}

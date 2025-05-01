@@ -40,7 +40,7 @@ function TabOrderList() {
 
   return (
     <div className=''>
-      <div className='grid grid-cols-7 my-4'>
+      <div className='grid grid-cols-7 my-4 bg-gray-100 py-3 px-4 rounded-lg'>
         <Text>ردیف</Text>
         <Text className="mr-4">هزینه</Text>
         <Text className="mr-2">تاریخ</Text>
@@ -103,6 +103,9 @@ function TabOrderList() {
             />
           );
         })}
+        <div className='flex justify-center py-2'>
+          {data?.count === 0 && <Text>سفارشی موجود نیست</Text>}
+        </div>
       </div>
 
       {/* modal comment */}

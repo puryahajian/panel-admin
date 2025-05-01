@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import FeatureAddProduct from './mostafa';
 import Mostafa from './mostafa';
 import Loading from '../../atoms/loading';
+import UseCreateNewProduct from '../../db/use-create-new-product';
 
 
 function TabProduct({ children, step, index }) {
@@ -29,12 +30,20 @@ function TabProduct({ children, step, index }) {
 
 function Products() {
     const [step, setStep] = useState(0);
-    const [open, setOpen] = useState(false);
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [openSelectProduct, setOpenSelectProduct] = useState(false);
     const { mutate, isLoading } = UseCreateProduct();
+    const { mutate: mutateNewProduct, isLoading: isLoadingNewProduct } = UseCreateNewProduct();
+    
     const [selectedFile, setSelectedFile] = useState(null);
     const [detailProduct, setDetailProduct] = useState(null);
+    const [selectProduct, setSelectProduct] = useState('')
+    const [priceProduct, setPriceProduct] = useState('')
+    const [stateProduct, setStateProduct] = useState('')
+    const [capacityProduct, setCapacityProduct] = useState('')
+    const [typeOfPackProduct, setTypeOfPackProduct] = useState('')
+    const [detailsProduct, setDetailsProduct] = useState('')
+
     const [description, setDescription] = useState(null);
     const [preview, setPreview] = useState(null);
 
@@ -49,6 +58,25 @@ function Products() {
                 },
             }
         );
+    }
+
+    const handleCreateNewProduct = (e) => {
+        e.preventDefault();
+        mutateNewProduct(
+            {
+                selectProduct, 
+                priceProduct, 
+                typeOfPackProduct, 
+                stateProduct,
+                capacityProduct,
+                detailsProduct
+            },
+            {
+                onSuccess: (data) => {
+                    setOpenSelectProduct(false)
+                }
+            }
+        )
     }
 
 
@@ -109,17 +137,36 @@ function Products() {
                 handleClose={() => setOpenSelectProduct(false)}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
                 actionText="ثبت"
-                actionHandler={() => setOpenSelectProduct(false)}
+                actionHandler={() => {
+                    // handleCreateNewProduct();
+                    setOpenSelectProduct(false);
+                }}
                 // onSubmit={handleNeedCreateProduct}
                 classBtn={`hidden`}
             >
                 <Mostafa 
-                    ali={`!grid-cols-1 text-right`}
+                    classMain={`!grid-cols-1 text-right`}
                     classStatus={`!grid-cols-1 text-right`}
                     classDecuraition={`!grid-cols-1 text-right`}
                     classTextarea={`!col-span-1`}
-                />
 
+                    detailsProduct={detailsProduct}
+                    setDetailsProduct={setDetailsProduct}
+                    capacityProduct={capacityProduct}
+                    setCapacityProduct={setCapacityProduct}
+                    priceProduct={priceProduct}
+                    setPriceProduct={setPriceProduct}
+                    // productType={}
+                    selectProduct={selectProduct}
+                    setSelectProduct={setSelectProduct}
+                    stateProduct={stateProduct}
+                    setStateProduct={setStateProduct}
+                    typeOfPackProduct={typeOfPackProduct}
+                    setTypeOfPackProduct={setTypeOfPackProduct}
+                    handleCreateNewProduct={handleCreateNewProduct}
+                    contentBtn={isLoadingNewProduct ? <Loading/> : 'ثبت'}
+
+                />
             </GeneralModal>
         </div>
     )

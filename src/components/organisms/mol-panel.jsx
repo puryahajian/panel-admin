@@ -100,10 +100,10 @@ function MolPanel() {
                     <Management/>
                 </TabPanel> */}
                 <TabPanel step={step} index={3}>
-                    <Setting/>
+                    <Ticket/>
                 </TabPanel>
                 <TabPanel step={step} index={4}>
-                    <Ticket/>
+                    <Setting/>
                 </TabPanel>
                 <TabPanel step={step} index={5}>
                     7

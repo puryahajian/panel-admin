@@ -12,6 +12,7 @@ function GetShopProduct() {
           return response.data;
         },
         onSuccess: (data) => {
+            console.log(data)
             queryClient.invalidateQueries(['shopProduct'])
         },
     });

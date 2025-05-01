@@ -60,7 +60,10 @@ function Dashboard() {
                 orderStatus={orderStatus}
               />
             );
-    })}
+          })}
+          <div className='flex justify-center py-2'>
+            {filteredItems?.length === 0 && <Text>کالا موجود نیست</Text>}
+          </div>
         </div>
       </div>
     </div>

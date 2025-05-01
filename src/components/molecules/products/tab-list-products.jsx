@@ -49,7 +49,7 @@ function TabListProducts() {
             </div>
             <hr className='w-[95%] m-auto mt-4'/>
 
-            <div className='flex py-4'>
+            <div className='flex py-4 bg-gray-100 px-2 rounded-lg mt-4'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-8 w-full'>
                     <Text className=" pr-4 col-span-2">محصول</Text>
@@ -58,7 +58,7 @@ function TabListProducts() {
                 </div>
             </div>
 
-            <div className='grid gap-2'>
+            <div className='grid gap-2 mt-4'>
                 {filteredItems?.map((item, index) => (
                     <div className='flex items-center border border-grayTitle rounded-2xl p-4'>
                         <div>{index + 1}</div>
@@ -87,6 +87,9 @@ function TabListProducts() {
                         </div>
                     </div>
                 ))}
+                <div className='flex justify-center py-2'>
+                    {filteredItems?.length === 0 && 'محتوایی وجود ندارد'}
+                </div>
             </div>
 
             <GeneralModal

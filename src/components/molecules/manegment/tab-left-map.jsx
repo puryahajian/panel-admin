@@ -18,7 +18,7 @@ function TabLeftMap({
                 <Uploader
                     className={`mt-2`}
                     textOne={`تصویر جواز پزشک`}
-                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                    // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     selectedFile={selectedFile}
                     onFileSelect={onFileSelect}
                     preview={data?.certificate}

@@ -96,7 +96,7 @@ function Products() {
                 <div className='text-right'>
                     <Uploader
                         textOne={`عکس محصول را انتخاب کنید`}
-                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     />
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>

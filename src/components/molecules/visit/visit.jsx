@@ -48,7 +48,7 @@ function Visit() {
                 <div className=' text-right'>
                     <Uploader
                         textOne={`محتوا مورد نظر را انتخاب کنید`}
-                        textTwo={`سایز محتوا شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        // textTwo={`سایز محتوا شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     />
 
                     <Text className={`mt-4 mb-2`}>توضیحات</Text>

@@ -160,7 +160,7 @@ function Ticket() {
                 <Uploader
                     className={`mt-2 ${err && '!border-red-500'}`}
                     textOne={`فایل خود را آپلود کنید`}
-                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                    // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                     selectedFile={selectedFile}
                     setSelectedFile={setSelectedFile}
                 />

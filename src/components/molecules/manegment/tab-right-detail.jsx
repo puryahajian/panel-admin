@@ -32,7 +32,7 @@ function TabRightDetail({
                 <Uploader
                     className="mt-2"
                     textOne={'تصویر لوگو سایت'}
-                    textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
+                    // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
                     selectedFile={selectedFile}
                     onFileSelect={onFileSelect}
                     preview={data?.picture}

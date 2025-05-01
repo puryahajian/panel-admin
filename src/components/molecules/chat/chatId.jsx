@@ -115,7 +115,7 @@ function ChatId() {
                             <div className='grid grid-cols-2 gap-4'>
                                 <Uploader
                                     textOne={`نسخه رو آپلود کنید`}
-                                    textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                                    // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
                                     selectedFile={selectedFile}
                                     onFileSelect={setSelectedFile}
                                     setPreview={setPreviewUpload}

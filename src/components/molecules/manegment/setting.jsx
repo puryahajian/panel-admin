@@ -51,8 +51,8 @@ function Setting() {
         }
     }, [data]);
 
-    const lat = localStorage.getItem('lat');
-    const lng = localStorage.getItem('lng');
+    const lat = localStorage.getItem('latDoctor');
+    const lng = localStorage.getItem('lngDoctor');
     
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();

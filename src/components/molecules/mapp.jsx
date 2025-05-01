@@ -10,8 +10,8 @@ const Mapp = (props) => {
   const { data } = UseGetProfileDoctor();
 
   // خواندن موقعیت آخرین مارکر از localStorage (اگر وجود داشته باشد)
-  const savedLat = parseFloat(localStorage.getItem('lat'));
-  const savedLng = parseFloat(localStorage.getItem('lng'));
+  const savedLat = parseFloat(localStorage.getItem('latDoctor'));
+  const savedLng = parseFloat(localStorage.getItem('lngDoctor'));
 
   // مختصات پیش‌فرض در صورت عدم وجود داده در localStorage
   const defaultLat = data?.location_lat || 35.699739;
@@ -58,8 +58,8 @@ const Mapp = (props) => {
         map?.on('click', (e) => {
           const latlng = e.latlng;
           console.log('Clicked location:', latlng);
-          localStorage.setItem('lat', latlng.lat.toFixed(9));
-          localStorage.setItem('lng', latlng.lng.toFixed(9));
+          localStorage.setItem('latDoctor', latlng.lat.toFixed(9));
+          localStorage.setItem('lngDoctor', latlng.lng.toFixed(9));
 
           if (markerRef?.current) {
             markerRef?.current?.setLatLng(latlng);

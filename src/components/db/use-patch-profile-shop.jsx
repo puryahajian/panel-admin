@@ -36,10 +36,6 @@ function UsePatchProfileShop() {
             formData.append('catalog', catalog || '');
             formData.append('location_lat', lat || '');
             formData.append('location_lng', lng || '');
-            // if (selectedBg) formData.append('image', selectedBg);
-            // if (selectedBannerOne) formData.append('banner_1', selectedBannerOne);
-            // if (selectedBannerTwo) formData.append('banner_2', selectedBannerTwo);
-            // if (selectedBannerThree) formData.append('banner_3', selectedBannerThree);
             formData.append('cert_1', selectedLogo || '');
             formData.append('cert_2', certificate || '');
             formData.append('shop_phones', numberPhoneShop || '');

@@ -17,11 +17,6 @@ function Setting() {
     const { mutate, isLoading } = UsePatchProfileShop();
     const { data } = UseGetProfileDoctor();
 
-    // const [ selectedBg, setSelectedBg ] = useState();
-    // const [ selectedBannerOne, setSelectedBannerOne ] = useState();
-    // const [ selectedBannerTwo, setSelectedBannerTwo ] = useState();
-    // const [ selectedBannerThree, setSelectedBannerThree ] = useState();
-
     const [ selectedLogo, setSelectedLogo] = useState('');
     const [nameProduct, setNameProduct] = useState('');
     const [numberPhoneShop, setNumberPhoneShop] = useState('');
@@ -56,6 +51,8 @@ function Setting() {
     
     const handleNeedCreateProduct = (e) => {
         e.preventDefault();
+
+        console.log("nameProduct", nameProduct)
 
         mutate(
             { 

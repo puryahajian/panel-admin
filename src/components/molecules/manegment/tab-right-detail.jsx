@@ -22,7 +22,6 @@ function TabRightDetail({
     const { data } = UseGetProfileDoctor();
     const [preview, setPreview] = useState(null);
     
-    console.log(data)
 
     return (
         <div>

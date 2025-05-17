@@ -16,10 +16,12 @@ import Stack from '@mui/material/Stack';
 import { Card, CardContent, Typography } from '@mui/material'
 import TitleListSearch from './title-list-search'
 import ListSearch from './list-search'
-
-
+import UseSalesReport from '../../db/use-sales-report';
 
 function TabReportList () {
+    const { data } = UseSalesReport();
+    const lastItem = data.sales_data[data.sales_data.length - 1];
+
     const [page, setPage] = useState(1);
 
     const handleChange = (event, value) => {
@@ -44,10 +46,10 @@ function TabReportList () {
                         'جمع فروش'
                     }
                     contentFooter={
-                        'فروش روزانه 12,432 ريال'
+                        `فروش روزانه ${lastItem?.total_sales} ريال`
                     }
                     contentBold={
-                    '126,560 تومان'
+                        `${data?.sales_data[0].total_sales} تومان`
                     }
                 >
                     <Text>تغییر wow 10%</Text>
@@ -60,10 +62,10 @@ function TabReportList () {
                         'جمع فروش'
                     }
                     contentFooter={
-                        'فروش روزانه 12,432 ريال'
+                        `فروش روزانه ${lastItem?.total_sales} ريال`
                     }
                     contentBold={
-                    '2,560'
+                        `${data?.sales_data[0].total_sales} تومان`
                     }
                 >
                     <ChartComponent/>

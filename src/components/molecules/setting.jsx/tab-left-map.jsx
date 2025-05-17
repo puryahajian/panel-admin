@@ -1,13 +1,14 @@
 import React from 'react'
 import Text from '../../atoms/text'
+import Mapp from '../mapp'
 
 function TabLeftMap() {
     return (
         <div>
             <Text>ادرس سایت</Text>
             
-            <div className='border border-black mt-2'>
-                1
+            <div className=' mt-2 rounded-lg'>
+                <Mapp/>
             </div>
         </div>
     )

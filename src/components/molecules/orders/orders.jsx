@@ -24,7 +24,7 @@ function Orders() {
 
     const Buttons = [
         {label: "لیست سفارشات" },
-        {label: "لیست گزارشات " },
+        // {label: "لیست گزارشات " },
     ];
 
     return (
@@ -57,10 +57,10 @@ function Orders() {
                 <hr className='w-[95%] m-auto'/>
                 <TabOrderList/>
             </TabOrder>
-            <TabOrder step={step} index={1}>
+            {/* <TabOrder step={step} index={1}>
                 <hr className='w-[95%] m-auto'/>
                 <TabReportList/>
-            </TabOrder>
+            </TabOrder> */}
         </div>
     )
 }

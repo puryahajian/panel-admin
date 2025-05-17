@@ -39,6 +39,7 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
     >
     <Fade in={open}>
         <Box sx={style}>
+          <form>
             <Text id="transition-modal-title">
                 {title}
             </Text>
@@ -49,6 +50,7 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
                 {actionText && <ButtonGeneral className={`bg-customBlue text-white border-none w-full`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral>}
                 <ButtonGeneral className={` border border-red-600 text-red-600 w-full`} variant="outlined" onClick={handleClose}>خیر</ButtonGeneral>
             </Box>
+          </form>
         </Box>
       </Fade>
     </Modal>

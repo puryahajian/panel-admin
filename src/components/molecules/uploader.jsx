@@ -1,35 +1,54 @@
-import React, { useState } from 'react'
-import '../../App.css'
-import iconImage from '../../assets/image/Huge-icon.png'
-import Text from '../atoms/text';
+import React, { useState } from 'react';
+import '../../App.css';
+import iconImage from '../../assets/image/Huge-icon.png';
 import Title from '../atoms/title';
 
-function Uploader({textOne, textTwo,className}) {
-    const [selectedFile, setSelectedFile] = useState(null);
+function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview }) {
+    // const [preview, setPreview] = useState(null);
+    const [localPreview, setLocalPreview] = useState('');
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setSelectedFile(file);
+        if (file) {
+            onFileSelect(file); 
+            setLocalPreview(URL.createObjectURL(file));
+        }
     };
+
+    const getBackgroundImage = () => {
+        const img = localPreview || preview;
+        if (!img) return 'none';
+        if (img.startsWith('blob:')) {
+            return `url(${img})`; // لوکال فایل
+        } else {
+            return `url(${img})`; // سروری
+        }
+    };
+
+
     return (
-        <div className={`upload-container text-center ${className}`}>
-            <img src={iconImage} className='m-auto' alt="" />
-            <div htmlFor="video-upload" className=" grid gap-2 mt-2">
+        <div
+            className={`upload-container !text-center ${className}`}
+            style={{
+            backgroundImage: getBackgroundImage(),
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            }}
+        >
+            <div htmlFor="video-upload" className='grid gap-2 mt-2 w-full m-auto p-2 rounded-lg'>
+                <img src={iconImage} className="m-auto" alt="" />
                 <Title>{textOne}</Title>
                 <Title>{textTwo}</Title>
             </div>
             <input
                 id="video-upload"
                 type="file"
-                accept="jpg/*"
+                accept="xlsx/*"
                 onChange={handleFileChange}
                 className="upload-input"
             />
-            {selectedFile && (
-                <p className="file-name">فایل انتخاب شده: {selectedFile?.name}</p>
-            )}
         </div>
-    )
+    );
 }
 
-export default Uploader
+export default Uploader;

@@ -1,31 +1,33 @@
 import React from 'react'
 import Text from '../atoms/text'
 
-function ListOrders({momber,order,orderCode,price,orderer,date,orderStatus}) {
+function ListOrders({momber,order,orderCode,price,orderer,date,orderStatus, classPrice, classOrderer, classDate}) {
     return (
-        <ul className='flex justify-between py-4 px-6 border border-gray-300 rounded-lg'>
-            <li className=''>
+        <div className='flex py-4 px-6 border border-gray-300 rounded-lg'>
+            <div className=''>
                 <Text>{momber}</Text>
-            </li>
-            <li>
-                <Text>{order}</Text>
-            </li>
-            <li>
-                <Text>{orderCode}</Text>
-            </li>
-            <li>
-                <Text>{price}</Text>
-            </li>
-            <li>
-                <Text>{orderer}</Text>
-            </li>
-            <li>
-                <Text>{date}</Text>
-            </li>
-            <li>
-                <Text>{orderStatus}</Text>
-            </li>
-        </ul>
+            </div>
+            <ul className='grid grid-cols-6 mr-6 w-full'>
+                <li>
+                    <Text>{order}</Text>
+                </li>
+                <li>
+                    <Text className={`truncate w-20 pr-2`}>{orderCode}</Text>
+                </li>
+                <li>
+                    <Text className={classPrice}>{price}</Text>
+                </li>
+                <li>
+                    <Text className={classOrderer}>{orderer}</Text>
+                </li>
+                <li>
+                    <Text className={classDate}>{date}</Text>
+                </li>
+                <li className='text-left'>
+                    <Text>{orderStatus}</Text>
+                </li>
+            </ul>
+        </div>
     )
 }
 

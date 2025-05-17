@@ -1,0 +1,35 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React from 'react'
+import interceptor from '../../lib/interceptor';
+import qs from "qs";
+
+function UseCreateAdmin() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({nameAdmin, phone, gregorianBirthDay, firstNameAdmin, unitName,address, nCode}) => {
+
+            const data = JSON.stringify({
+                user: {
+                    name: nameAdmin,
+                    phone: phone,
+                    birth_day: gregorianBirthDay,
+                    family: firstNameAdmin,
+                    user_name: unitName,
+                    address: address,
+                },
+                national_code: nCode,
+                state: 4
+
+            });
+
+            const res = await interceptor.post(`cashier/api/v1/cashiers/`, data);
+            return res.data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries('allAdmin')
+        },
+    });
+}
+
+export default UseCreateAdmin

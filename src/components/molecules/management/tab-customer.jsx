@@ -2,9 +2,64 @@ import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonEdit from '../../atoms/button-edit'
 import GeneralModal from '../modal-general';
+import UseGetAllCustomer from '../../db/use-get-all-customer';
+import UseDeleteCustomer from '../../db/use-delete-customer';
+import Uploader from '../uploader';
+import Input from '../../atoms/input';
+import UseCreateCustomer from '../../db/use-create-customer';
+import UsePatchCustomer from '../../db/use-patch-customer';
+import UseGetInfo from '../../db/use-get-info';
 
 function TabCustomer() {
+    const { data } = UseGetAllCustomer();
+    const { mutate } = UseDeleteCustomer();
+    const { mutate: mutatePatchCustomer } = UsePatchCustomer();
     const [openModal, setOpenModal] = useState(false);
+    const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
+    const [selectIdCustomer, setSelectIdCustomer] = useState(null);
+    const [selectIdEdit, setSelectIdEdit] = useState();
+    const [nameCustomer, setNameCustomer] = useState();
+    const [lastNameCustomer, setLastNameCustomer] = useState();
+    const [numberCustomer, setNumberCustomer] = useState();
+    const [addressCustomer, setAddressCustomer] = useState();
+  
+
+    // const handleOpenEdit = () => 
+
+    const handleDeleteCustomer = (selectIdCustomer) => {
+        mutate(
+            {
+                selectIdCustomer
+            },
+            {
+                onSuccess: () => {
+
+                }
+            }
+        )
+    }
+
+    const handlePatchCustomer = () => {
+        // console.log(nameCustomer, lastNameCustomer, numberCustomer, addressCustomer, selectIdEdit)
+        mutatePatchCustomer(
+            {
+                nameCustomer, lastNameCustomer, numberCustomer, addressCustomer, selectIdEdit
+            }
+        )
+    }
+
+    const handleOpenEdit = (item) => {
+        setSelectIdEdit(item?.id);
+        setNameCustomer(item?.name || '');
+        setLastNameCustomer(item?.family || '');
+        setNumberCustomer(item?.phone || '');
+        setAddressCustomer(item?.address || '');
+        setOpenModalAddCustomer(true);
+    };
+
+
+
+    
     
     return (
         <div>
@@ -16,53 +71,83 @@ function TabCustomer() {
             </div>
 
             <div className='grid gap-2'>
-                <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4'>
-                    <div>1</div>
-                    <div className=' col-span-2 flex items-center gap-6'>
-                        <Text>علی حاجیان نجات</Text>
+                {data?.results.map((item, index) => (
+                    <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4' key={item?.id}>
+                        <div>{index + 1}</div>
+                        <div className=' col-span-2 flex items-center gap-6'>
+                            <Text>{item?.name === null || item?.name === '' ? 'ناشناس' : item?.name} {item?.family}</Text>
+                        </div>
+                        <div className='col-span-2'>
+                            <Text>{item?.phone === null ? 'ناموجود' : item?.phone}</Text>
+                        </div>
+                        <div className='col-span-4'>
+                            <Text>{item?.address === null || item?.address === '' ? 'ادرس موجود نیست' : item?.address}</Text>
+                        </div>
+                        <div className=' col-span-2 flex justify-end gap-4'>
+                            <ButtonEdit onClick={() => {
+                                setSelectIdEdit(item?.id)
+                                handleOpenEdit(item)
+                                setOpenModalAddCustomer(true)
+                                }}>
+                                    ویرایش
+                            </ButtonEdit>
+                        </div>
+                        <div className=' text-center'>
+                            <button onClick={() => {
+                                setSelectIdCustomer(item?.id)
+                                setOpenModal(true)
+                                }}>
+                                <Text className={`text-red-500`}>حذف</Text>
+                            </button>
+                        </div>
                     </div>
-                    <div className='col-span-2'>
-                        <Text>۰۹۳۶۲۲۹۲۵۶۸</Text>
-                    </div>
-                    <div className='col-span-4'>
-                        <Text>ساری , میدان امام , خیابان آزادی , آزادی نهم</Text>
-                    </div>
-                    <div className=' col-span-2 flex justify-end gap-4'>
-                        <ButtonEdit>ویرایش</ButtonEdit>
-                    </div>
-                    <div className=' text-center'>
-                        <button onClick={() => setOpenModal(true)}>
-                            <Text className={`text-red-500`}>حذف</Text>
-                        </button>
-                    </div>
-                </div>
+                ))}
 
-                <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4'>
-                    <div>1</div>
-                    <div className=' col-span-2 flex items-center gap-6'>
-                        <Text>علی حاجیان نجات</Text>
-                    </div>
-                    <div className='col-span-2'>
-                        <Text>۰۹۳۶۲۲۹۲۵۶۸</Text>
-                    </div>
-                    <div className='col-span-4'>
-                        <Text>ساری , میدان امام , خیابان آزادی , آزادی نهم</Text>
-                    </div>
-                    <div className=' col-span-2 flex justify-end gap-4'>
-                        <ButtonEdit>ویرایش</ButtonEdit>
-                    </div>
-                    <div className=' text-center'>
-                        <Text className={`text-red-500`}>حذف</Text>
-                    </div>
-                </div>
             </div>
+
             <GeneralModal
-                open={openModal}
+                open={openModal && selectIdCustomer}
                 handleClose={() => setOpenModal(false)}
-                title="آیا می خواهید این مشتری را حذف کنید ؟"
+                title={`${selectIdCustomer} آیا می خواهید این مشتری را حذف کنید ؟`}
                 actionText="بله"
-                actionHandler={() => { setOpenModal(false); }}
+                actionHandler={() => { 
+                    handleDeleteCustomer(selectIdCustomer)
+                    setOpenModal(false); 
+                }}
             />
+
+            <GeneralModal
+                open={openModalAddCustomer && selectIdEdit}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenModalAddCustomer(false)
+                }}
+                title={selectIdCustomer}
+                actionText="ذخیره"
+                actionHandler={(e) => { 
+                    e.preventDefault()
+                    handlePatchCustomer(selectIdEdit)
+                    // console.log(selectIdEdit)
+                    // setSelectId(selectIdEdit)
+                }}
+            >
+                <div className='flex w-full gap-4 mt-4'>
+                    <div className='w-full text-right'>
+                        <Text className={`text-right mt-4`}>نام</Text>
+                        <Input value={nameCustomer} onChange={(e) => setNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام مشتری را وارد کنید`}/>
+                    </div>
+                    <div className='w-full text-right'>
+                        <Text className={`text-right mt-4`}>نام خانوادگی</Text>
+                        <Input value={lastNameCustomer} onChange={(e) => setLastNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام خانوادگی مشتری را وارد کنید`}/>
+                    </div>
+                </div> 
+
+                <Text className={`mt-4 text-right`}>شماره</Text>
+                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} className={`w-full text-left mt-2`} placeholder={`09111111111`}/>
+
+                <Text className={`text-right mt-4`}>آدرس</Text>
+                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`آدرس را وارد کنید`}/>
+            </GeneralModal>
         </div>
     )
 }

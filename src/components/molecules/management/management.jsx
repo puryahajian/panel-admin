@@ -13,6 +13,16 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Uploader from '../uploader';
 import ImgGift from '../../../assets/image/gift.png'
+import UseCreateCustomer from '../../db/use-create-customer';
+import UseCreateDriver from '../../db/use-create-driver';
+import TabTickets from './tab-tickets';
+import UseCreateAdmin from '../../db/use-create-admin';
+import Loading from '../../atoms/loading';
+import jalaali from "jalaali-js";
+import BirthDate from '../birth-day';
+import { toast } from 'react-toastify';
+
+
 
 function TabManagement({ children, step, index }) {
     return (
@@ -34,21 +44,67 @@ function Management() {
     const [openAddAdmin, setOpenAddAdmin] = useState(false);
     const [openAddCustomer, setOpenAddCustomer] = useState(false);
     const [openAddCouriers, setOpenAddCouriers] = useState(false);
+    const [ selectedFile, setSelectedFile ] = useState('');
+    const [preview, setPreview] = useState('');
+    const [nameCustomer, setNameCustomer] = useState();
+    const [lastNameCustomer, setLastNameCustomer] = useState();
+    const [numberCustomer, setNumberCustomer] = useState();
+    const [addressCustomer, setAddressCustomer] = useState();
+    const [nameAdmin, setNameAdmin] = useState();
+    const [firstNameAdmin, setFirstNameAdmin] = useState();
+    const [phone, setPhone] = useState();
+    const [unitName, setUnitName] = useState();
+    const [birthDay, setBirthDay] = useState();
+    const [address, setAddress] = useState();
+    const [nCode, setNcode] = useState();
 
-    const [age, setAge] = React.useState('');
+    const [nameDriver, setNameDriver] = useState('');
+    const [phoneDriver, setPhoneDriver] = useState('');
+    const [addressDriver, setAddressDriver] = useState('');
 
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
+    const { mutate: mutateCreateCustomer } = UseCreateCustomer();
+    const { mutate: mutateCreateDriver, isPending} = UseCreateDriver();
+    const { mutate: mutateCreateAdmin } = UseCreateAdmin();
+    const [gregorianBirthDay, setGregorianBirthDay] = useState("");
+
+    const handleCreateNewCustomer = () => {
+        mutateCreateCustomer(
+            {
+                nameCustomer, numberCustomer, addressCustomer, lastNameCustomer
+            },
+        )
+    } 
+
+    const handleCreateNewDriver = () => {
+        mutateCreateDriver(
+            {
+                nameDriver, phoneDriver, addressDriver
+            },
+        )
+    } 
+
+    const handleCreateAdmin = () => {
+        mutateCreateAdmin(
+            {
+                nameAdmin, phone, gregorianBirthDay, firstNameAdmin, unitName, address, nCode
+            },
+            {
+                onSuccess: (data) => {
+                    toast.success('ادمین اضافه شد')
+                }
+            }
+        )
+    }
     
 
     const Buttons = [
         {label: "ادمین ها" },
         {label: "مشتریان" },
         {label: "پیک ها" },
-        {label: "تنظیمات" },
         {label: "پشتیبانی" },
     ];
+
+
     return (
         <div>
             <div className='flex justify-between'>
@@ -101,16 +157,23 @@ function Management() {
             </TabManagement>
             <TabManagement step={step} index={3}>
                 <hr className='w-[95%] m-auto'/>
-                <TabSetting/>
+                <TabTickets/>
             </TabManagement>
 
             {/* add admin */}
             <GeneralModal
                 open={openAddAdmin}
-                handleClose={() => setOpenAddAdmin(false)}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddAdmin(false)
+                }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
                 actionText="ثبت ادمین"
-                actionHandler={() => { setOpenAddAdmin(false); }}
+                actionHandler={(e) => { 
+                    e.preventDefault()
+                    setOpenAddAdmin(false); 
+                    handleCreateAdmin()
+                }}
             >
                 <div className=' text-right'>
                     <div className='m-auto text-center'>
@@ -120,73 +183,98 @@ function Management() {
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                            <Input value={nameAdmin} onChange={(e) => setNameAdmin(e.target.value)} className={`w-full`} placeholder={`نام ادمین `}/>
                         </div>
                         <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>نام خانوادگی</Text>
+                            <Input value={firstNameAdmin} onChange={(e) => setFirstNameAdmin(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
+                        </div>
+                    </div>
+
+                    <div className='text-right'>
+                        <Text className={`mt-4 mb-2`}>نام کاربری</Text>
+                        <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
+                    </div>
+
+                    <div className='grid grid-cols-2 gap-4'>
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>تاریخ تولد</Text>
+                            <BirthDate value={birthDay}  onChange={setBirthDay} onGregorianChange={setGregorianBirthDay}/>  
+                        </div>  
+                        <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                            <Input className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                            <Input value={phone} onChange={(e) => setPhone(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
                         </div>                    
                     </div>
 
-                    <Text className={`mt-4 mb-2`}>سطح دسترسی</Text>
-                    <FormControl className='w-full bg-bgInput !outline-none rounded-lg'>
-                        <Select
-                            className='!outline-none !border-none'
-                            value={age}
-                            onChange={handleChange}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            <MenuItem value="">
-                                <Text>
-                                    سطح دسترسی را انتخاب کنید                                
-                                </Text>
-                            </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <div className='text-right'>
+                        <Text className={`mt-4 mb-2`}>کد ملی</Text>
+                        <Input value={nCode} onChange={(e) => setNcode(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
+                    </div>
+
+                    <div className='text-right'>
+                        <Text className={`mt-4 mb-2`}>آدرس</Text>
+                        <Input value={address} onChange={(e) => setAddress(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
+                    </div>
                 </div>
             </GeneralModal>
 
             {/* add customer */}
             <GeneralModal
                 open={openAddCustomer}
-                handleClose={() => setOpenAddCustomer(false)}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddCustomer(false)
+                }}
                 // title="آیا می خواهید این مشتری را حذف کنید ؟"
                 actionText="ثبت مشتری"
-                actionHandler={() => { setOpenAddCustomer(false); }}
+                actionHandler={(e) => {
+                    e.preventDefault() 
+                    handleCreateNewCustomer(); 
+                    setOpenAddCustomer(false) 
+                }}
             >
-                <div className=' text-right'>
-                    <Uploader
-                        textOne={`لیست مشتری را اپلود کنید`}
-                        textTwo={`فرمت قایل حتما اکسل باشد`}
-                    />
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
-                        </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                            <Input className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
-                        </div>                    
+               <Uploader
+                    textOne={`لیست مشتریان خود را آپلود کنید`}
+                    textTwo={`فرمت فایل حتما اکسل باشد`}
+                    selectedFile={selectedFile}
+                    onFileSelect={setSelectedFile}
+                    preview={preview}
+                    setPreview={setPreview}
+                />
+
+                <div className='flex w-full gap-4 mt-4'>
+                    <div className='w-full text-right'>
+                        <Text>نام</Text>
+                        <Input value={nameCustomer} onChange={(e) => setNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام مشتری را وارد کنید`}/>
                     </div>
-
-                    <Text className={`mt-4 mb-2`}>آدرس</Text>
-                    <Input className={`w-full`} placeholder={`آدرس را وارد کنید`}/>
-
+                    <div className='w-full text-right'>
+                        <Text className={`text-right`}>نام خانوادگی</Text>
+                        <Input value={lastNameCustomer} onChange={(e) => setLastNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام خانوادگی مشتری را وارد کنید`}/>
+                    </div>
                 </div>
+
+                <Text className={`text-right mt-4`}>شماره</Text>
+                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} className={`w-full text-left`} placeholder={`09111111111`}/>
+
+                <Text className={`text-right mt-4`}>آدرس</Text>
+                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`آدرس را وارد کنید`}/>
             </GeneralModal>
 
-            {/* add admin */}
+            {/* add couriers */}
             <GeneralModal
                 open={openAddCouriers}
-                handleClose={() => setOpenAddCouriers(false)}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddCouriers(false)
+                }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="ثبت پیک"
-                actionHandler={() => { setOpenAddCouriers(false); }}
+                actionText={isPending ? <Loading/> : 'ثبت پیک'}
+                actionHandler={(e) => { 
+                    e.preventDefault()
+                    handleCreateNewDriver();
+                    setOpenAddCouriers(false); 
+                }}
             >
                 <div className=' text-right'>
                     <div className='m-auto text-center'>
@@ -196,17 +284,17 @@ function Management() {
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                            <Input value={nameDriver} onChange={(e) => setNameDriver(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                         </div>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                            <Input className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                            <Input value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
                         </div>                    
                     </div>
 
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>آدرس</Text>
-                        <Input className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
+                        <Input value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
                     </div> 
 
                 </div>

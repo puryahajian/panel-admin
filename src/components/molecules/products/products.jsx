@@ -12,6 +12,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import UseCreateCategory from '../../db/use-create-category';
+import UseGetProductCategory from '../../db/use-get-product-category';
+import UseCreateProduct from '../../db/use-create-product';
 
 
 function TabProduct({ children, step, index }) {
@@ -32,19 +35,48 @@ function TabProduct({ children, step, index }) {
 function Products() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
+    const {mutate} = UseCreateCategory();
+    const { mutate: mutateCreatedProduct } = UseCreateProduct();
+    const { data: dataCategory } = UseGetProductCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
+    const [ selectedCategory, setSelectedCategory ] = useState();
+    const [ bgProduct, setBgProduct ] = useState();
+    const [preview, setPreview] = useState();
+    const [previewProduct, setPreviewProduct] = useState();
+    const [nameProduct, setNameProduct] = useState();
+    const [priceProduct, setPriceProduct] = useState();
+    const [selectorCategory, setSelectorCategory] = useState();
+    const [unitName, setUnitName] = useState();
+    const [nameCategory, setNameCategory] = useState('');
 
-    
+
     const Buttons = [
         {label: "لیست محصولات" },
         {label: "دسته بندی ها" },
     ];
+  
 
-    const [age, setAge] = React.useState('');
+    const handleSendCategory = () => {
+        mutate(
+            { 
+                nameCategory, selectedCategory
+            },
+            {
+                onSettled: (data) => {
+                    console.log(data)
+                }
+            }
+        )
+    }
 
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
+    const handleCreateProduct = () => {
+        mutateCreatedProduct(
+            {
+                bgProduct, nameProduct, priceProduct, selectorCategory, unitName
+            }
+        )
+    }
+
 
     return (
         <div>
@@ -88,44 +120,66 @@ function Products() {
 
             <GeneralModal
                 open={open}
-                handleClose={() => setOpen(false)}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpen(false)
+                }}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
                 actionText="بله"
-                actionHandler={() => { setOpen(false); }}
+                actionHandler={(e) => { 
+                    e.preventDefault()
+                    handleCreateProduct()
+                    setOpen(false); 
+                }}
             >
                 <div className='text-right'>
                     <Uploader
-                        textOne={`تصویر دسته بندی را آپلود کنید`}
-                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        textOne={`تصویر محصول را آپلود کنید`}
+                        selectedFile={bgProduct}
+                        onFileSelect={setBgProduct}
+                        preview={previewProduct}
+                        setPreview={setPreviewProduct}
                     />
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                            <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                         </div>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>قیمت</Text>
-                            <Input className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                            <div>
+                                <p className='mt-3 mr-2 absolute font-sans text-xs'>ریال</p>
+                                <Input value={priceProduct} onChange={(e) => setPriceProduct(e.target.value)} className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                            </div>
                         </div>                    
+                    </div>
+
+                    <div className='text-right'>
+                        <Text className={`mt-4 mb-2`}>نام واحد</Text>
+                        <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                     </div>
 
                     <Text className={`mt-4 mb-2`}>دسته بندی</Text>
                     <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none'>
                         <Select
                             className='!outline-none'
-                            value={age}
-                            onChange={handleChange}
+                            value={selectorCategory}
+                            onChange={(e) => setSelectorCategory(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            <MenuItem value="">
-                                <Text>
-                                    دسته بندی را انتخاب کنید
-                                </Text>
-                            </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            >
+                                <MenuItem value="">
+                                    <Text>
+                                        دسته بندی را انتخاب کنید
+                                    </Text>
+                                </MenuItem>
+                            {dataCategory?.results.map((item) => (
+                                <MenuItem key={item?.id} value={item?.id}>
+                                    <Text>
+                                        {item?.name}
+                                    </Text>    
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </div>
@@ -133,19 +187,30 @@ function Products() {
 
             <GeneralModal
                 open={openAddProduct}
-                handleClose={() => setOpenAddProduct(false)}
+                handleClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddProduct(false)
+                }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
                 actionText="بله"
-                actionHandler={() => { setOpenAddProduct(false); }}
+                actionHandler={(e) => {
+                    e.preventDefault()
+                    handleSendCategory();
+                    setOpenAddProduct(false); 
+                }}
             >
                 <div className=' text-right'>
                     <Uploader
                         textOne={`تصویر دسته بندی را اپلود کنید`}
-                        textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        // textTwo={`سایز تصویر شما نباید از ۲۰۰ کیلو بایت بیشتر باشه`}
+                        selectedFile={selectedCategory}
+                        onFileSelect={setSelectedCategory}
+                        preview={preview}
+                        setPreview={setPreview}
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

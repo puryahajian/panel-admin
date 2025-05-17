@@ -8,6 +8,8 @@ import Products from '../molecules/products/products';
 import Management from '../molecules/management/management';
 import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
+import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
 
 function TabPanel({ children, step, index }) {
     return (
@@ -26,6 +28,14 @@ function TabPanel({ children, step, index }) {
 function MolPanel() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handleExit = () => {
+        setOpen(false); 
+        navigate('/login');
+        Cookies.remove('access');
+        Cookies.remove('refresh');
+    }
 
     return (
         <>
@@ -84,11 +94,17 @@ function MolPanel() {
         </div>
         <GeneralModal
             open={open}
-            handleClose={() => setOpen(false)}
+            handleClose={(e) => {
+                e.preventDefault();
+                setOpen(false)
+            }}
             title="آیا می خواهید از اکانت خود خارج شوید ؟"
             // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
             actionText="بله"
-            actionHandler={() => { setOpen(false); }}
+            actionHandler={(e) => { 
+                e.preventDefault();
+                handleExit()
+            }}
         />
         </>
     )

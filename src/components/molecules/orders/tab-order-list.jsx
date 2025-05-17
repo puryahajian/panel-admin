@@ -4,9 +4,20 @@ import Title from '../../atoms/title'
 import Text from '../../atoms/text'
 import TextBold from '../../atoms/text-bold'
 import UseGetAllActiveOrder from '../../db/use-get-all-active-order'
+import snap from '../../../assets/image/bike.svg'
+import post from '../../../assets/image/moving.svg'
 
 function TabOrderList() {
   const { data } = UseGetAllActiveOrder();
+  console.log(data)
+
+  const statusMap = {
+    0: <Text className={`text-orange-500`}>در انتظار تایید</Text>,
+    1: <Text className={`text-green-500`}>تایید شده</Text>,
+    2: <Text className={`text-red-500`}>رد شده</Text>,
+    3: <Text className={`text-green-500`}>تحویل داده شده</Text>,
+    4: <Text className={`text-red-500`}>لغو شده</Text>,
+  };
    
   return (
     <div className=''>
@@ -18,7 +29,7 @@ function TabOrderList() {
             <Title>قیمت</Title>
             <Title>سفارش دهنده</Title>
             <Title>تاریخ و ساعت</Title>
-            <Title className={`text-left`}>وضعیت سفارش</Title>
+            <Title className={`text-left ml-8`}>وضعیت سفارش</Title>
           </div>
           
         </div>
@@ -35,15 +46,13 @@ function TabOrderList() {
               orderer={item?.user?.name === null ? 'نامشخص' : item?.user?.name}
               date={item?.items?.map((it) => it?.product?.create_date)}
               orderStatus={
-                item?.items.some((it) => it.canceled) ? (
-                  <Text className="text-red-500">کنسل شده</Text>
-                ) : item?.items.some((it) => it.accepted) ? (
-                  <Text className="text-green-500">تایید شده</Text>
-                ) : item?.items.some((it) => it.delivered) ? (
-                  <Text className="text-yellow-500">تحویل داده شد</Text>
-                ) : (
-                  <Text className="text-yellow-500">در انتظار تایید</Text>
-                )        
+                <>
+                  {/* state */}
+                  {statusMap[item?.state] || 'نامشخص'}
+
+                  {/* delivery */}
+                  {item?.state === 0 ? <img src={post} className='w-8' alt="" /> : <img src={snap} className='w-8' alt="" /> }
+                </> 
               }
             />
           ))}

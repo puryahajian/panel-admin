@@ -8,6 +8,8 @@ import LinearProgressCom from '../linear-progress';
 import UseSalesReport from '../../db/use-sales-report';
 import UseGetAllOrder from '../../db/use-get-all-order'
 import DateShamsi from '../date-shamsi';
+import snap from '../../../assets/image/bike.svg'
+import post from '../../../assets/image/moving.svg'
 
 function Dashboard() {
   const { data } = UseSalesReport();
@@ -23,6 +25,7 @@ function Dashboard() {
     3: <Text className={`text-green-500`}>تحویل داده شده</Text>,
     4: <Text className={`text-red-500`}>لغو شده</Text>,
   };
+
   return (
     <div>
       <div className='grid grid-cols-3 gap-6'>
@@ -75,14 +78,14 @@ function Dashboard() {
 
       <div className=''>
       <div className='flex my-4'>
-          <Title>ردیف</Title>
-          <div className='grid grid-cols-6 mr-6 w-full'>
+          {/* <Title>ردیف</Title> */}
+          <div className='grid grid-cols-6 mr-[50px] w-full'>
             <Title className={``}>سفارش</Title>
             <Title className={``}>کد سفارش</Title>
             <Title>قیمت</Title>
             <Title>سفارش دهنده</Title>
             <Title>تاریخ و ساعت</Title>
-            <Title className={`text-left`}>وضعیت سفارش</Title>
+            <Title className={`text-left ml-8`}>وضعیت سفارش</Title>
           </div>
         </div>
         <div className='grid gap-2'>
@@ -98,7 +101,13 @@ function Dashboard() {
               price={`${dataGetAllOrder?.final_price.toLocaleString('fa-IR')} تومان`}
               orderer={dataGetAllOrder?.user?.name === null ? 'نامشخص' : dataGetAllOrder?.user?.name}
               date={<DateShamsi>{dataGetAllOrder?.items?.map((it) => it?.product?.create_date)}</DateShamsi>}
-              orderStatus={statusMap[dataGetAllOrder?.state] || 'نامشخص'}
+              orderStatus={
+                <>
+                {statusMap[dataGetAllOrder?.state] || 'نامشخص'}
+                
+                {dataGetAllOrder?.state === 0 ? <img src={post} className='w-8' alt="" /> : <img src={snap} className='w-8' alt="" /> }
+                </>
+              }
             />
           )}
          

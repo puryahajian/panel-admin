@@ -5,7 +5,6 @@ import GeneralModal from '../modal-general';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import StarFeedback from '../start-feedback';
 import CloseIcon from '@mui/icons-material/Close';
-// import { FormControl, MenuItem, Select } from '@mui/material';
 import UseGetListOrders from '../../db/use-get-list-orders';
 
 function TabOrderList() {
@@ -13,12 +12,7 @@ function TabOrderList() {
   const [openModalDetailOrders, setOpenModalDetailOrders] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedCommentOrderId, setSelectedCommentOrderId] = useState(null);
-  // const [age, setAge] = React.useState('');
   const { data } = UseGetListOrders();
-
-  // const handleChange = (event) => {
-  //   setAge(event.target.value);
-  // };
 
   const handleOpenModalDetailOrders = (event, orderId) => {
     if (event && event.preventDefault) event.preventDefault(); 

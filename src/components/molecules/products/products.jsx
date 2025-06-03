@@ -12,9 +12,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import UseCreateCategory from '../../db/use-create-category';
-import UseGetProductCategory from '../../db/use-get-product-category';
-import UseCreateProduct from '../../db/use-create-product';
+import useCreateCategory from '../../db/use-create-category';
+import useGetProductCategory from '../../db/use-get-product-category';
+import useCreateProduct from '../../db/use-create-product';
+import Loading from '../../atoms/loading';
 
 
 function TabProduct({ children, step, index }) {
@@ -35,9 +36,9 @@ function TabProduct({ children, step, index }) {
 function Products() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
-    const {mutate} = UseCreateCategory();
-    const { mutate: mutateCreatedProduct } = UseCreateProduct();
-    const { data: dataCategory } = UseGetProductCategory();
+    const {mutate, isLoading} = useCreateCategory();
+    const { mutate: mutateCreatedProduct } = useCreateProduct();
+    const { data: dataCategory } = useGetProductCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -47,8 +48,9 @@ function Products() {
     const [priceProduct, setPriceProduct] = useState();
     const [selectorCategory, setSelectorCategory] = useState();
     const [unitName, setUnitName] = useState();
+    const [offer, setOffer] = useState();
+    const [description, setDescription] = useState();
     const [nameCategory, setNameCategory] = useState('');
-
 
     const Buttons = [
         {label: "لیست محصولات" },
@@ -63,7 +65,6 @@ function Products() {
             },
             {
                 onSettled: (data) => {
-                    console.log(data)
                 }
             }
         )
@@ -72,10 +73,21 @@ function Products() {
     const handleCreateProduct = () => {
         mutateCreatedProduct(
             {
-                bgProduct, nameProduct, priceProduct, selectorCategory, unitName
+                bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description
             }
         )
     }
+
+    const formatNumber = (value) => {
+        const numericValue = value.replace(/,/g, ''); // حذف ویرگول‌های قبلی
+        return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // افزودن ویرگول سه‌رقمی
+    };
+
+    const handleChange = (e) => {
+        const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
+        if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
+        setPriceProduct(formatNumber(rawValue));
+    };
 
 
     return (
@@ -133,13 +145,16 @@ function Products() {
                 }}
             >
                 <div className='text-right'>
-                    <Uploader
-                        textOne={`تصویر محصول را آپلود کنید`}
-                        selectedFile={bgProduct}
-                        onFileSelect={setBgProduct}
-                        preview={previewProduct}
-                        setPreview={setPreviewProduct}
-                    />
+                    <div className='grid grid-cols-2 gap-4'>
+                        <Uploader
+                            textOne={`تصویر محصول را آپلود کنید`}
+                            selectedFile={bgProduct}
+                            onFileSelect={setBgProduct}
+                            preview={previewProduct}
+                            setPreview={setPreviewProduct}
+                        />
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+                    </div>
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
@@ -148,22 +163,30 @@ function Products() {
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>قیمت</Text>
                             <div>
-                                <p className='mt-3 mr-2 absolute font-sans text-xs'>ریال</p>
-                                <Input value={priceProduct} onChange={(e) => setPriceProduct(e.target.value)} className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                                <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
+                                {/* <Input value={priceProduct} onChange={(e) => setPriceProduct(e.target.value)} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/> */}
+                                <Input value={priceProduct} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
                             </div>
                         </div>                    
                     </div>
 
-                    <div className='text-right'>
-                        <Text className={`mt-4 mb-2`}>نام واحد</Text>
-                        <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                    <div className='grid grid-cols-2 gap-4'>
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>نام واحد</Text>
+                            <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام واحد را وارد کنید`}/>
+                        </div>
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>تخفیف</Text>
+                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20%`}/>
+                        </div>
                     </div>
 
                     <Text className={`mt-4 mb-2`}>دسته بندی</Text>
-                    <FormControl sx={{ minWidth: 120 }} className='w-full bg-bgInput !outline-none'>
+                    <FormControl sx={{ minWidth: 120, outline: 'none' }} className='w-full bg-bgInput !outline-none'>
                         <Select
                             className='!outline-none'
                             value={selectorCategory}
+                            sx={{outline: 'none'}}
                             onChange={(e) => setSelectorCategory(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
@@ -192,7 +215,7 @@ function Products() {
                     setOpenAddProduct(false)
                 }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="بله"
+                actionText={isLoading ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => {
                     e.preventDefault()
                     handleSendCategory();

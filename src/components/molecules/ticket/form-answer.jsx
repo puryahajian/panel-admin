@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonGeneral from '../../atoms/button-general';
-import UseCreateTicketMessage from '../../db/use-create-ticket-message';
+import useCreateTicketMessage from '../../db/use-create-ticket-message';
 import { useParams } from 'react-router-dom';
 import Loading from '../../atoms/loading';
 
 function FormAnswer() {
-    const { mutate, isPending } = UseCreateTicketMessage();
+    const { mutate, isPending } = useCreateTicketMessage();
     const [selectedFile, setSelectedFile] = useState(null);
     const [message, setMessage] = useState();
     

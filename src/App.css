@@ -77,3 +77,8 @@
     transform: rotate(360deg);
   }
 } 
+
+.rmdp-container{
+  width: 100% !important;
+
+}

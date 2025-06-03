@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuPanel from '../../lib/menu-panel';
 import Logo from '../../assets/image/logo.png'
 import Dashboard from '../molecules/dashboard/dashboard';
@@ -10,6 +10,7 @@ import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import useGetInfo from '../db/use-get-info';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -26,9 +27,19 @@ function TabPanel({ children, step, index }) {
 }
 
 function MolPanel() {
-    const [step, setStep] = useState(0);
+    const { data: dataInfo } = useGetInfo();
+
+    const [step, setStep] = useState(() => {
+        const savedStep = localStorage.getItem('activeStep');
+        return savedStep !== null ? parseInt(savedStep, 10) : 0;
+    });
+
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        localStorage.setItem('activeStep', step);
+    }, [step]);
 
     const handleExit = () => {
         setOpen(false); 
@@ -40,9 +51,9 @@ function MolPanel() {
     return (
         <>
         <div className='flex'>
-            <div className='w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border border-gray-400 sticky top-0'>
+            <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border border-gray-400 sticky top-0'>
                 <div>
-                    <img src={Logo} className='mb-10' alt="" />
+                    <img src={dataInfo?.logo} className='mb-10 w-16 m-auto' alt="" />
                     {MenuPanel.map((tab, index) => (
                         <button
                             key={index}

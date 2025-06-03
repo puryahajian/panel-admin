@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UseDeleteCategory() {
+function useDeleteCategory() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -11,9 +11,9 @@ function UseDeleteCategory() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['deleteCategory'] });
+            queryClient.removeQueries(['allCategory']);
         },
     });
 }
 
-export default UseDeleteCategory
+export default useDeleteCategory

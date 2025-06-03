@@ -1,33 +1,32 @@
 // components/atoms/BirthDateInput.jsx
 import React from "react";
-import jalaali from "jalaali-js";
-import Input from "../atoms/input";
+import "../../App.css";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 function BirthDate({ value, onChange, onGregorianChange }) {
+    const handleChange = (dateObject) => {
+      
+        // تاریخ شمسی به فرمت YYYY-MM-DD
+        const shamsiDate = dateObject.format("YYYY-MM-DD");
+        onChange(shamsiDate);
 
-    const persianToEnglishDigits = (str) =>
-        str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
-
-    const handleChange = (e) => {
-        const persianDate = persianToEnglishDigits(e.target.value);
-        onChange(persianDate);
-
-        const [jy, jm, jd] = persianDate.split("-").map(Number);
-        if (jy && jm && jd) {
-        const { gy, gm, gd } = jalaali.toGregorian(jy, jm, jd);
-        const formattedGregorian = `${gy}-${String(gm).padStart(2, "0")}-${String(gd).padStart(2, "0")}`;
+        // تبدیل به تاریخ میلادی
+        const gregorianDate = dateObject.toDate();
+        const formattedGregorian = gregorianDate.toISOString().split("T")[0];
         onGregorianChange(formattedGregorian);
-        } else {
-        onGregorianChange("");
-        }
     };
 
     return (
-        <Input
-        value={value}
-        onChange={handleChange}
-        className={`w-full text-left`}
-        placeholder={`۰۱ - ۰۱ - ۱۴۰۰`}
+        <DatePicker
+            value={value}
+            onChange={handleChange}
+            calendar={persian}
+            locale={persian_fa}
+            format="YYYY-MM-DD"
+            placeholder="تاریخ را انتخاب کنید"
+            inputClass="text-center flex justify-center h-[43px] rounded w-full !bg-bgInput p-1"
         />
     );
 }

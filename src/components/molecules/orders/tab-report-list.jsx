@@ -13,13 +13,12 @@ import ChartColumn from './chart-column'
 import ChartCircle from './chart-circle'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Card, CardContent, Typography } from '@mui/material'
 import TitleListSearch from './title-list-search'
 import ListSearch from './list-search'
-import UseSalesReport from '../../db/use-sales-report';
+import useSalesReport from '../../db/use-sales-report';
 
 function TabReportList () {
-    const { data } = UseSalesReport();
+    const { data } = useSalesReport();
     const lastItem = data.sales_data[data.sales_data.length - 1];
 
     const [page, setPage] = useState(1);

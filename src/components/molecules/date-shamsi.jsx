@@ -1,12 +1,18 @@
 import React from 'react';
-import moment from 'jalali-moment';
 
-function DateShamsi({ children }) {
-  const shamsiDate = moment(children, 'YYYY-MM-DDTHH:mm:ss')
-    .locale('fa')
-    .format('jYYYY/jMM/jDD');
+function DateShamsi({ date, hour, minute }) {
+    if (!date) return null;
 
-  return <span>{shamsiDate}</span>;
+    const shamsiDate = new Date(date).toLocaleString('fa-IR-u-ca-persian', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: hour,
+        minute: minute,
+        // hour: '2-digit',
+        // minute: '2-digit',
+    });
+
+    return <span>{shamsiDate}</span>;
 }
-
 export default DateShamsi;

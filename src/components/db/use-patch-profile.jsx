@@ -2,14 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UsePatchProfile() {
+function usePatchProfile() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ selectedLogo, nameShop, numberShop, numberSupportShop, openTime, closeTime, selectedBannerOne, selectedBannerTwo,lat,lng, telegram, whatsApp, instagram, aboutUse }) => {
         
             const data = new FormData();
-            data.append('name', nameShop);
+            if (nameShop) data.append('name', nameShop);
             data.append('phone', numberShop);
             data.append('open_time', openTime);
             data.append('close_time', closeTime);
@@ -28,9 +28,9 @@ function UsePatchProfile() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('editProfile');
+            queryClient.removeQueries(['getInfo']);
         },
     });
 }
 
-export default UsePatchProfile
+export default usePatchProfile

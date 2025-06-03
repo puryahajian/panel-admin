@@ -15,12 +15,12 @@ const options = {
   scales: {
     x: {
       ticks: {
-        maxTicksLimit: 3,
+        maxTicksLimit: 5,
       },
     },
     y: {
       ticks: {
-        maxTicksLimit: 3,
+        maxTicksLimit: 5,
       },
     },
   },

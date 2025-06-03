@@ -2,7 +2,7 @@ import React from 'react'
 import Text from '../../atoms/text'
 import Uploader from '../uploader'
 import Input from '../../atoms/input'
-import UseGetInfo from '../../db/use-get-info';
+import useGetInfo from '../../db/use-get-info';
 
 function TabRightDetail({
     preview,
@@ -16,11 +16,11 @@ function TabRightDetail({
     onChangeNumberSupport,
     valueNumberSupport
     }) {
-    const { data } = UseGetInfo();
+    const { data } = useGetInfo();
 
     return (
         <div>
-            <Text>لوگو سایت</Text>
+            <Text>لوگو </Text>
 
             <Uploader
                 className={`mt-2`}

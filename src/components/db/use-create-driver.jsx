@@ -3,7 +3,7 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UseCreateDriver() {
+function useCreateDriver() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -19,9 +19,9 @@ function UseCreateDriver() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('createDriver');
+            queryClient.removeQueries(['allRider']);
         },
     });
 }
 
-export default UseCreateDriver
+export default useCreateDriver

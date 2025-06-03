@@ -2,7 +2,7 @@ import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import interceptor from '../../lib/interceptor';
 
-function UseDeleteProduct() {
+function useDeleteProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -16,4 +16,4 @@ function UseDeleteProduct() {
     });
 }
 
-export default UseDeleteProduct
+export default useDeleteProduct

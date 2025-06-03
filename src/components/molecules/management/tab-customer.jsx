@@ -2,18 +2,16 @@ import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonEdit from '../../atoms/button-edit'
 import GeneralModal from '../modal-general';
-import UseGetAllCustomer from '../../db/use-get-all-customer';
-import UseDeleteCustomer from '../../db/use-delete-customer';
-import Uploader from '../uploader';
+import useGetAllCustomer from '../../db/use-get-all-customer';
+import useDeleteCustomer from '../../db/use-delete-customer';
 import Input from '../../atoms/input';
-import UseCreateCustomer from '../../db/use-create-customer';
-import UsePatchCustomer from '../../db/use-patch-customer';
-import UseGetInfo from '../../db/use-get-info';
+import usePatchCustomer from '../../db/use-patch-customer';
+import Loading from '../../atoms/loading';
 
 function TabCustomer() {
-    const { data } = UseGetAllCustomer();
-    const { mutate } = UseDeleteCustomer();
-    const { mutate: mutatePatchCustomer } = UsePatchCustomer();
+    const { data } = useGetAllCustomer();
+    const { mutate } = useDeleteCustomer();
+    const { mutate: mutatePatchCustomer, isLoading } = usePatchCustomer();
     const [openModal, setOpenModal] = useState(false);
     const [openModalAddCustomer, setOpenModalAddCustomer] = useState(false);
     const [selectIdCustomer, setSelectIdCustomer] = useState(null);
@@ -108,9 +106,10 @@ function TabCustomer() {
             <GeneralModal
                 open={openModal && selectIdCustomer}
                 handleClose={() => setOpenModal(false)}
-                title={`${selectIdCustomer} آیا می خواهید این مشتری را حذف کنید ؟`}
+                title={`آیا می خواهید این مشتری را حذف کنید ؟`}
                 actionText="بله"
-                actionHandler={() => { 
+                actionHandler={(e) => {
+                    e.preventDefault() 
                     handleDeleteCustomer(selectIdCustomer)
                     setOpenModal(false); 
                 }}
@@ -123,10 +122,11 @@ function TabCustomer() {
                     setOpenModalAddCustomer(false)
                 }}
                 title={selectIdCustomer}
-                actionText="ذخیره"
+                actionText={isLoading ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
                     e.preventDefault()
                     handlePatchCustomer(selectIdEdit)
+                    setOpenModalAddCustomer(false)
                     // console.log(selectIdEdit)
                     // setSelectId(selectIdEdit)
                 }}

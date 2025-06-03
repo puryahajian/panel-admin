@@ -3,33 +3,31 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UseCreateAdmin() {
+function useCreateAdmin() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({nameAdmin, phone, gregorianBirthDay, firstNameAdmin, unitName,address, nCode}) => {
-
             const data = JSON.stringify({
                 user: {
                     name: nameAdmin,
                     phone: phone,
-                    birth_day: gregorianBirthDay,
+                    birth_day: gregorianBirthDay.replaceAll('-', ''),
                     family: firstNameAdmin,
                     user_name: unitName,
                     address: address,
                 },
                 national_code: nCode,
                 state: 4
-
             });
 
             const res = await interceptor.post(`cashier/api/v1/cashiers/`, data);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('allAdmin')
+            queryClient.removeQueries('allAdmin')
         },
     });
 }
 
-export default UseCreateAdmin
+export default useCreateAdmin

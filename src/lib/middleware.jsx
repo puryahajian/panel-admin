@@ -5,13 +5,14 @@ import Cookies from "js-cookie";
 
 function Middleware() {
     const accessToken = Cookies.get('access');
+    const refreshToken = Cookies.get('refresh');
     const location = useLocation();
 
-    if (accessToken && location.pathname !== '/') {
+    if (accessToken && refreshToken && location.pathname !== '/') {
         return <Navigate to="/" replace />;
     }
 
-    if (!accessToken && location.pathname !== '/login') {
+    if (!accessToken && !refreshToken && location.pathname !== '/login') {
         return <Navigate to="/login" replace />;
     }
 

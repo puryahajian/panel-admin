@@ -1,32 +1,20 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query';
 import interceptor from '../../lib/interceptor';
 
-function UseGetAllCustomer() {
-    const queryClient = useQueryClient();
+function useGetAllCustomer() {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['allCustomer'],
+    queryFn: async () => {
+      const response = await interceptor.get('cashier/api/v1/customers/');
+      return response.data;
+    },
+  });
 
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['allCustomer'],
-        queryFn: async () => {
-          const response = await interceptor.get('cashier/api/v1/customers/');
-          return response.data;
-        },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries('allCustomer')
-        },
-    });
+  if (isLoading) return <div>loading</div>;
 
-    useEffect(() => {
-        if (data) {
-            queryClient.invalidateQueries('allCustomer')
-        }
-    }, [data]);
-
-    if (isLoading) return <div>loading</div>;
-
-    if (error){ return <div>Error: {error?.message}</div>};
-    
-    return {data}
+  if (error){ return <div>Error: {error?.message}</div>};
+  
+  return {data}
 }
 
-export default UseGetAllCustomer
+export default useGetAllCustomer

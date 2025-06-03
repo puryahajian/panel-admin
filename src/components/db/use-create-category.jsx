@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UseCreateCategory() {
+function useCreateCategory() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -16,9 +16,9 @@ function UseCreateCategory() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('allCategory')        
+            queryClient.removeQueries(['allCategory'])        
         },
     });
 }
 
-export default UseCreateCategory
+export default useCreateCategory

@@ -4,11 +4,11 @@ import Text from '../../atoms/text'
 import IconUser from '../../../assets/image/47abcc97c2763336a579eb7937d9c6bf.jpg'
 import HeaderTicket from './header-ticket'
 import FormAnswer from './form-answer'
-import UseGetTicketPage from '../../db/use-get-ticket-page'
+import useGetTicketPage from '../../db/use-get-ticket-page'
 import Img from '../../atoms/img'
 
 function Tickets() {
-    const { data } = UseGetTicketPage();
+    const { data } = useGetTicketPage();
     return (
         <div className=' h-full'>
             <div className='max-w-[800px] m-auto mt-6'>

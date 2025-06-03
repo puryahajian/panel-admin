@@ -3,7 +3,7 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import { useParams } from 'react-router-dom';
 
-function UseCreateTicketMessage() {
+function useCreateTicketMessage() {
     const queryClient = useQueryClient();
     const { id } = useParams();
 
@@ -24,4 +24,4 @@ function UseCreateTicketMessage() {
     });
 }
 
-export default UseCreateTicketMessage
+export default useCreateTicketMessage

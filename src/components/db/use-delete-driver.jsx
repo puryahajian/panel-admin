@@ -3,7 +3,7 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UseDeleteDriver() {
+function useDeleteDriver() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -13,9 +13,9 @@ function UseDeleteDriver() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('deleteDriver');
+            queryClient.removeQueries(['allRider']);
         },
     });
 }
 
-export default UseDeleteDriver
+export default useDeleteDriver

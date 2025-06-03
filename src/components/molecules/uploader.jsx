@@ -4,7 +4,6 @@ import iconImage from '../../assets/image/Huge-icon.png';
 import Title from '../atoms/title';
 
 function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview }) {
-    // const [preview, setPreview] = useState(null);
     const [localPreview, setLocalPreview] = useState('');
 
     const handleFileChange = (event) => {
@@ -28,18 +27,20 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
 
     return (
         <div
-            className={`upload-container !text-center ${className}`}
+            className={`upload-container flex min-h-52 !text-center ${className}`}
             style={{
             backgroundImage: getBackgroundImage(),
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             }}
         >
-            <div htmlFor="video-upload" className='grid gap-2 mt-2 w-full m-auto p-2 rounded-lg'>
-                <img src={iconImage} className="m-auto" alt="" />
-                <Title>{textOne}</Title>
-                <Title>{textTwo}</Title>
-            </div>
+            {!(localPreview || preview) && (
+                <div className='grid gap-2 w-full m-auto p-2 rounded-lg'>
+                    <img src={iconImage} className="m-auto" alt="" />
+                    <Title>{textOne}</Title>
+                    <Title>{textTwo}</Title>
+                </div>
+            )}
             <input
                 id="video-upload"
                 type="file"

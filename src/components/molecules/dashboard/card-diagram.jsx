@@ -9,7 +9,7 @@ function CardDiagram({contentTitle, children,contentFooter, contentBold, classNa
             <div className='flex justify-between items-start'>
                 <div className='block'>
                     <Text>{contentTitle}</Text>
-                    <TextBold>{contentBold}</TextBold>
+                    <TextBold >{contentBold}</TextBold>
 
                 </div>
                 <ErrorOutlineIcon/>

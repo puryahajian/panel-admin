@@ -5,7 +5,7 @@ import Mapp from '../mapp'
 function TabLeftMap() {
     return (
         <div>
-            <Text>ادرس سایت</Text>
+            <Text>موقعیت فروشگاه</Text>
             
             <div className=' mt-2 rounded-lg'>
                 <Mapp/>

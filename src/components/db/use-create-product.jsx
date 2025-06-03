@@ -1,27 +1,35 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
+import convertPriceToNumber from '../../lib/convert-to-number';
 
-function UseCreateProduct() {
+
+function useCreateProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName }) => {
+        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description }) => {
 
             const formData = new FormData();
-            formData.append('name', nameProduct || '');
-            formData.append('price', priceProduct || '');
-            formData.append('unit_name', unitName || '');
-            formData.append('category_id', selectorCategory || '');
-            formData.append('image_url', bgProduct || '');
+            if (nameProduct) formData.append('name', nameProduct);
+            if (priceProduct) formData.append('price', convertPriceToNumber(priceProduct));
+            if (unitName) formData.append('unit_name', unitName);
+            if (selectorCategory) formData.append('category_id', selectorCategory);
+            if (bgProduct) formData.append('image', bgProduct);
+            if (description) formData.append('details', description);
+            if (offer) formData.append('discount_percentage', offer);
 
             const res = await interceptor.post(`product/api/v1/product/`, formData);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('allProduct')
+            console.log(data)
+            queryClient.removeQueries('allProduct')
         },
+        onError: (err) => {
+            console.log(err)
+        }
     });
 }
 
-export default UseCreateProduct
+export default useCreateProduct

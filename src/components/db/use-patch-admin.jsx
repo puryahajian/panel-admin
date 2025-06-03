@@ -1,28 +1,30 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
-import qs from "qs";
 
-function UsePatchAdmin() {
+function usePatchAdmin() {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({nameAdmin, familyAdmin,addressAdmin, phoneAdmin,id}) => {
 
-            const data = JSON.stringify({
-                name: nameAdmin,
-                family: familyAdmin,
-                phone: phoneAdmin,
-                address: addressAdmin,
-            });
+            let data = JSON.stringify({
+                "user": {
+                    "phone": phoneAdmin,
+                    "name": nameAdmin,
+                    "family": familyAdmin,
+                    "address": addressAdmin
+                },
+                "state": 6
+            })
 
-            const res = await interceptor.patch(`courier/api/v1/cashier/riders/${id}/`, data);
+            const res = await interceptor.patch(`cashier/api/v1/cashiers/${id}/`, data);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('allAdmin')
+            queryClient.removeQueries('allAdmin')
         },
     });
 }
 
-export default UsePatchAdmin
+export default usePatchAdmin

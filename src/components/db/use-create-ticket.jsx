@@ -3,7 +3,7 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UseCreateTicket() {
+function useCreateTicket() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -26,4 +26,4 @@ function UseCreateTicket() {
     });
 }
 
-export default UseCreateTicket
+export default useCreateTicket

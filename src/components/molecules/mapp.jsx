@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../App.css';
 import neshan_map_loader from "./neshan_map_loader";
-import UseGetInfo from '../db/use-get-info';
+import useGetInfo from '../db/use-get-info';
 
 const Mapp = (props) => {
   const { style, options, onInit } = props;
   const mapEl = useRef(null);
   const markerRef = useRef(null);
-  const { data } = UseGetInfo();
+  const { data } = useGetInfo();
 
   // خواندن موقعیت آخرین مارکر از localStorage (اگر وجود داشته باشد)
   const savedLat = parseFloat(localStorage.getItem('lat'));
@@ -23,7 +23,7 @@ const Mapp = (props) => {
 
   const defaultStyle = {
     width: "100%",
-    height: "416px",
+    height: "472px",
     borderRadius: "8px",
     margin: 0,
     padding: 0,

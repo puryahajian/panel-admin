@@ -3,7 +3,7 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UsePatchCustomer() {
+function usePatchCustomer() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -20,9 +20,9 @@ function UsePatchCustomer() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('createCategory');
+            queryClient.removeQueries('allCustomer');
         },
     });
 }
 
-export default UsePatchCustomer
+export default usePatchCustomer

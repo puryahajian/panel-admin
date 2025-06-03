@@ -2,8 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UseGetAllActiveOrder() {
-    const queryClient = useQueryClient();
+function useGetAllActiveOrder() {
 
     const { data, error, isLoading } = useQuery({
         queryKey: ['activeOrder'],
@@ -11,16 +10,7 @@ function UseGetAllActiveOrder() {
           const response = await interceptor.get('order/api/v1/active-orders/');
           return response.data;
         },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries('activeOrder')
-        },
     });
-
-    useEffect(() => {
-        if (data) {
-            queryClient.invalidateQueries('activeOrder')
-        }
-    }, [data]);
 
     if (isLoading) return <div>loading</div>;
 
@@ -29,4 +19,4 @@ function UseGetAllActiveOrder() {
     return {data}
 }
 
-export default UseGetAllActiveOrder
+export default useGetAllActiveOrder

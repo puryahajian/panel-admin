@@ -2,21 +2,21 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const interceptor = axios.create({
-  baseURL: "https://baybiar.ir/",  
+  baseURL: "https://api.baybiar.ir/",  
 });
 
 interceptor.interceptors.request.use(
   (config) => {
     config.headers['Accept'] = 'application/json';
-
+    
     // تشخیص نوع داده و انتخاب Content-Type مناسب
     if (config.data instanceof FormData) {
       // اگر داده از نوع FormData باشه، Content-Type رو تنظیم نکن
       // مرورگر خودش مقدار مناسب می‌ذاره
       delete config.headers['Content-Type'];
     } else {
-      // اگر JSON عادی هست
       config.headers['Content-Type'] = 'application/json';
+      // اگر JSON عادی هست
     }
 
     const accessToken = Cookies.get('access');
@@ -41,7 +41,7 @@ interceptor.interceptors.response.use(
 
       if (refreshToken) {
         try {
-          const { data } = await axios.post('https://baybiar.ir/', { refresh: refreshToken });
+          const { data } = await axios.post('https://api.baybiar.ir/', { refresh: refreshToken });
           const newAccessToken = data.access;
           Cookies.set('access', newAccessToken, { expires: 7, path: '/' });
           originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;

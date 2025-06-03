@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UseCreateCustomer() {
+function useCreateCustomer() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ nameCustomer, numberCustomer, addressCustomer, lastNameCustomer}) => {
+        mutationFn: async ({ nameCustomer, numberCustomer, addressCustomer, lastNameCustomer,selectedFile}) => {
 
             const formData = new FormData();
             formData.append('name', nameCustomer || '');
@@ -18,9 +18,9 @@ function UseCreateCustomer() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('createCustomer');
+            queryClient.removeQueries('createCustomer');
         },
     });
 }
 
-export default UseCreateCustomer
+export default useCreateCustomer

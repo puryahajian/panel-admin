@@ -2,31 +2,37 @@ import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonEdit from '../../atoms/button-edit'
 import GeneralModal from '../modal-general';
-import UseGetDriver from '../../db/use-get-driver';
+import useGetDriver from '../../db/use-get-driver';
 import Input from '../../atoms/input';
-import UsePatchDriver from '../../db/use-patch-driver';
+import usePatchDriver from '../../db/use-patch-driver';
 import Loading from '../../atoms/loading'
-import UseDeleteDriver from '../../db/use-delete-driver';
+import useDeleteDriver from '../../db/use-delete-driver';
+import ButtonExisting from '../../atoms/button-existing';
 
 function TabCouriers() {
+    const { data } = useGetDriver();
+
+    const [selectData, setSelectData] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [id, setId] = useState(false);
     const [idDelete, setIdDelete] = useState(false);
-
-    const { mutate, isPending } = UsePatchDriver();
-    const { mutate: mutateDeleteDriver } = UseDeleteDriver()
+    const { mutate, isPending } = usePatchDriver();
+    const { mutate: mutateDeleteDriver } = useDeleteDriver()
     
-    const [nameDriver, setNameDriver] = useState('');
-    const [phoneDriver, setPhoneDriver] = useState('');
-    const [addressDriver, setAddressDriver] = useState('');
-    
-    const { data } = UseGetDriver();
+    const [nameDriver, setNameDriver] = useState(selectData?.name);
+    const [phoneDriver, setPhoneDriver] = useState(selectData?.phone);
+    const [addressDriver, setAddressDriver] = useState(selectData?.address);
+    const [inState, setInState] = useState(false);
 
-    const handlePatchDriver = (id) => {
+    
+
+    const handlePatchDriver = (id, inProcess) => {
+        const newValue = !inProcess;
+        setInState(newValue);
         mutate(
             {
-                nameDriver,phoneDriver,addressDriver, id
+                nameDriver,phoneDriver,addressDriver, id, inState: newValue
             }
         )
     }
@@ -62,8 +68,15 @@ function TabCouriers() {
                             <Text>{item?.address === null ? 'موجود نیست' : item?.address}</Text>
                         </div>
                         <div className=' col-span-2 flex justify-end gap-4'>
+                            <ButtonExisting
+                                onClick={() => handlePatchDriver(item.id, item.in_process)}
+                                className={`${item?.in_process === true ? '' : 'bg-red-500 border-transparent'}`}
+                            >
+                                {item?.in_process === true ? 'آنلاین' : 'آفلاین'}
+                            </ButtonExisting>
                             <ButtonEdit onClick={() => { 
                                 setId(item?.id)
+                                setSelectData(item)
                                 setOpenEdit(true)
                             }}>ویرایش</ButtonEdit>
                         </div>
@@ -115,17 +128,17 @@ function TabCouriers() {
                 <div className='grid grid-cols-2 gap-4'>
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>نام</Text>
-                        <Input value={nameDriver} onChange={(e) => setNameDriver(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                        <Input defaultValue={selectData?.name} value={nameDriver} onChange={(e) => setNameDriver(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                     </div>
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                        <Input value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                        <Input defaultValue={selectData?.phone} value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
                     </div>                    
                 </div>
 
                 <div className='text-right'>
                     <Text className={`mt-4 mb-2`}>آدرس</Text>
-                    <Input value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
+                    <Input defaultValue={selectData?.address} value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
                 </div> 
             </GeneralModal>
 

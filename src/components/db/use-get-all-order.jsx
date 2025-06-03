@@ -1,33 +1,20 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query';
 import interceptor from '../../lib/interceptor';
 
-function UseGetAllOrder() {
-    const queryClient = useQueryClient();
+function useGetAllOrder() {
+  const { data, error, isLoading } = useQuery({
+      queryKey: ['listOrders'],
+      queryFn: async () => {
+        const response = await interceptor.get('order/api/v1/');
+        return response.data;
+      },
+  });
 
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['listOrders'],
-        queryFn: async () => {
-          const response = await interceptor.get('order/api/v1/');
-          return response.data;
-        },
-        onSuccess: (data) => {
-            console.log(data)
-            queryClient.invalidateQueries('listOrders')
-        },
-    });
+  if (isLoading) return <div>loading</div>;
 
-    useEffect(() => {
-        if (data) {
-            queryClient.invalidateQueries('listOrders')
-        }
-    }, [data]);
-
-    if (isLoading) return <div>loading</div>;
-
-    if (error){ return <div>Error: {error?.message}</div>};
-    
-    return {data}
+  if (error){ return <div>Error: {error?.message}</div>};
+  
+  return {data}
 }
 
-export default UseGetAllOrder
+export default useGetAllOrder

@@ -1,31 +1,21 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
 import interceptor from '../../lib/interceptor';
 
-function UseGetDriver() {
-    const queryClient = useQueryClient();
+function useGetDriver() {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['allRider'],
+    queryFn: async () => {
+      const response = await interceptor.get('courier/api/v1/cashier/riders/');
+      return response.data;
+    },
+  });
 
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['allProduct'],
-        queryFn: async () => {
-          const response = await interceptor.get('courier/api/v1/cashier/riders/');
-          return response.data;
-        },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries('allProduct')
-        },
-    });
+  if (isLoading) return <div>loading</div>;
 
-    useEffect(() => {
-        if (data) {
-            queryClient.invalidateQueries('allProduct')
-        }
-    }, [data]);
+  if (error){ return <div>Error: {error?.message}</div>};
+  
+  return {data}
+}
 
-    if (isLoading) return <div>loading</div>;
-
-    if (error){ return <div>Error: {error?.message}</div>};
-    
-    return {data}}
-
-export default UseGetDriver
+export default useGetDriver

@@ -1,12 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
-import qs from "qs";
 import interceptor from '../../lib/interceptor';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 
 
-function UsePostLogin() {
+function usePostLogin() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
@@ -24,13 +23,13 @@ function UsePostLogin() {
             const access = data.access;
             const refresh = data.refresh;
 
-            Cookies.set("access", access, { expires: 7 });
-            Cookies.set("refresh", refresh, { expires: 7 });
+            Cookies.set("access", access, { expires: 365 });
+            Cookies.set("refresh", refresh, { expires: 365 });
             navigate('/')
-            queryClient.invalidateQueries('login');
+            queryClient.removeQueries('login');
         },
     });
 
 }
 
-export default UsePostLogin
+export default usePostLogin

@@ -2,25 +2,25 @@ import React, { useState } from 'react'
 import ButtonEdit from '../../atoms/button-edit'
 import Text from '../../atoms/text'
 import GeneralModal from '../modal-general';
-import UseGetAllCategory from '../../db/use-get-all-category';
+import useGetAllCategory from '../../db/use-get-all-category';
 import Uploader from '../uploader';
 import Input from '../../atoms/input';
-import UsePatchCategory from '../../db/use-patch-category';
-import UseDeleteCategory from '../../db/use-delete-category';
+import usePatchCategory from '../../db/use-patch-category';
+import useDeleteCategory from '../../db/use-delete-category';
 import { toast } from 'react-toastify';
 
 function TabCategory() {
     const [open, setOpen] = useState(false);
-    const { data } = UseGetAllCategory();
-    const { mutate } = UsePatchCategory();
-    const { mutate: mutateDeleteCategory } = UseDeleteCategory()
+    const { data } = useGetAllCategory();
+    const { mutate } = usePatchCategory();
+    const { mutate: mutateDeleteCategory } = useDeleteCategory()
     const [openEditCategory, setOpenEditCategory] = useState(false);
     const [openSelected, setOpenSelected] = useState(null);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [preview, setPreview] = useState();
-    const [nameCategory, setNameCategory] = useState('');
-    const [idCategoryDelete, setIdCategoryDelete] = useState(null);
     const selectedItem = data?.results.find((it) => it?.id === openSelected);
+    const [nameCategory, setNameCategory] = useState(selectedItem?.name);
+    const [idCategoryDelete, setIdCategoryDelete] = useState(null);
 
     
     const handleEditCategory = () => {
@@ -54,7 +54,7 @@ function TabCategory() {
         <div className='grid grid-cols-9 max-[1500px]:grid-cols-7 max-[1200px]:grid-cols-5 pt-4 gap-3'>
             {data?.results.map((item) => (
                 <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl max-w-40' key={item?.id}>
-                    <img src={item?.image} className='border border-grayTitle w-full h-24 rounded-xl' alt="" />
+                    <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
 
                     <Text className={`!font-bold`}>{item?.name}</Text>
 
@@ -79,7 +79,6 @@ function TabCategory() {
                     setOpen(false)
                 }}
                 title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
                 actionText="بله"
                 actionHandler={(e) => {
                     e.preventDefault()
@@ -113,7 +112,7 @@ function TabCategory() {
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input defaultValue={selectedItem?.name} value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

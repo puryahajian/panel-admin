@@ -9,24 +9,13 @@ import ButtonGeneral from '../atoms/button-general';
 import TextBold from '../atoms/text-bold';
 import Text from '../atoms/text';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 500,
-  textAlign: 'center',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  padding: '16px',
-  borderRadius: '16px'
-};
-
-const GeneralModal = ({ open, handleClose, title, children, actionText, actionHandler }) => {
+const GeneralModal = ({ open, handleClose, title, children, actionText, actionHandler, classAccept,classReject , sx, exitButton}) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
+      className='!outline-none'
+      sx={{outline: 'none'}}
       open={open}
       onClose={handleClose}
       closeAfterTransition
@@ -37,8 +26,8 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
         },
       }}
     >
-    <Fade in={open}>
-        <Box sx={style}>
+    <Fade in={open} className='outline-none'>
+        <Box sx={{outline: 'none' , position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', minWidth: '500px', maxWidth: '1200px', width: 'max-content', bgcolor: 'background.paper', boxShadow: 24, padding: '16px', borderRadius: '16px'}}>
           <form>
             <Text id="transition-modal-title">
                 {title}
@@ -46,9 +35,9 @@ const GeneralModal = ({ open, handleClose, title, children, actionText, actionHa
             {/* <Typography id="transition-modal-description" sx={{ mt: 2 }}> */}
                 {children}
             {/* </Typography> */}
-            <Box mt={2} display="flex" gap="16px" justifyContent="space-between">
-                {actionText && <ButtonGeneral className={`bg-customBlue text-white border-none w-full`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral>}
-                <ButtonGeneral className={` border border-red-600 text-red-600 w-full`} variant="outlined" onClick={handleClose}>خیر</ButtonGeneral>
+            <Box mt={2} sx={{ justifyContent: 'space-between', gap: '16px', display: 'flex', ...sx }}>
+                {actionText && <ButtonGeneral className={`bg-customBlue text-white border-none w-full ${classAccept}`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral>}
+                <ButtonGeneral className={` border border-red-600 text-red-600 w-full ${classReject}`} variant="outlined" onClick={handleClose}>{exitButton ? exitButton : 'خیر'}</ButtonGeneral>
             </Box>
           </form>
         </Box>

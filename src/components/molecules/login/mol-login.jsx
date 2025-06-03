@@ -8,14 +8,18 @@ import ButtonGeneral from '../../atoms/button-general'
 import { useState } from 'react'
 import Text from '../../atoms/text'
 import Loading from '../../atoms/loading'
-import UsePostLogin from '../../db/use-post-login'
+import usePostLogin from '../../db/use-post-login'
 import { useNavigate } from 'react-router-dom'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function MolLogin() {
-    const { mutate, isPending } = UsePostLogin();
+    const { mutate, isPending } = usePostLogin();
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [messageError, setMessageError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
 
     const handleSubmitLogin = () => {
@@ -39,7 +43,7 @@ function MolLogin() {
             <div>
                 <div className='text-center max-w-md m-auto'>
                     <TextBold>خوش آمدید!</TextBold>
-                    <Title>برای ورود نام کاربری و رمزعبور خود را وارد کنید</Title>
+                    <Title className={`mt-4`}>برای ورود نام کاربری و رمزعبور خود را وارد کنید</Title>
                     <div className='text-right mt-6'>
                         <Text className={`text-red-500 mb-2`}>{messageError}</Text>
                         <form>
@@ -47,8 +51,23 @@ function MolLogin() {
                             <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border mt-2 ${messageError ? 'border-red-500' : ''}`}/>
 
                             <Title className={`mt-4`}>رمزعبور</Title>
-                            <Input value={password} onChange={(e) => setPassword(e.target.value)} className={`w-full bg-transparent border mt-2 ${messageError ? 'border-red-500' : ''}`}/>
-
+                            <div className="relative mt-2">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className={`bg-transparent border w-full py-3 px-2 text-sm rounded-md outline-none placeholder:text-gray-400 ${
+                                    messageError ? "border-red-500" : ""
+                                    }`}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute top-[22px] left-2 transform -translate-y-1/2 text-sm text-gray-600"
+                                >
+                                    {showPassword ? <VisibilityOffIcon/> : <VisibilityIcon/>}
+                                </button>
+                            </div>
                             <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
                                 onClick={(e) =>{ 
                                     e.preventDefault()

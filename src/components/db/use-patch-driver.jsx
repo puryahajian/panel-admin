@@ -3,25 +3,26 @@ import React from 'react'
 import interceptor from '../../lib/interceptor';
 import qs from "qs";
 
-function UsePatchDriver() {
+function usePatchDriver() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({nameDriver,phoneDriver,addressDriver, id}) => {
+        mutationFn: async ({nameDriver,phoneDriver,addressDriver, id,inState}) => {
 
             const data = JSON.stringify({
                 name: nameDriver,
                 phone: phoneDriver,
                 address: addressDriver,
+                in_process: inState
             });
 
             const res = await interceptor.patch(`courier/api/v1/cashier/riders/${id}/`, data);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('patchDriver');
+            queryClient.removeQueries('allRider');
         },
     });
 }
 
-export default UsePatchDriver
+export default usePatchDriver

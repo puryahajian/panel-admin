@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ButtonGeneral from '../../atoms/button-general';
+import '../../../App.css'
 import TabAdmins from './tab-admins';
 import TabCustomer from './tab-customer';
 import TabCouriers from './tab-couriers';
@@ -13,16 +14,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Uploader from '../uploader';
 import ImgGift from '../../../assets/image/gift.png'
-import UseCreateCustomer from '../../db/use-create-customer';
-import UseCreateDriver from '../../db/use-create-driver';
+import useCreateCustomer from '../../db/use-create-customer';
+import useCreateDriver from '../../db/use-create-driver';
 import TabTickets from './tab-tickets';
-import UseCreateAdmin from '../../db/use-create-admin';
+import useCreateAdmin from '../../db/use-create-admin';
 import Loading from '../../atoms/loading';
 import jalaali from "jalaali-js";
 import BirthDate from '../birth-day';
 import { toast } from 'react-toastify';
-
-
 
 function TabManagement({ children, step, index }) {
     return (
@@ -62,15 +61,15 @@ function Management() {
     const [phoneDriver, setPhoneDriver] = useState('');
     const [addressDriver, setAddressDriver] = useState('');
 
-    const { mutate: mutateCreateCustomer } = UseCreateCustomer();
-    const { mutate: mutateCreateDriver, isPending} = UseCreateDriver();
-    const { mutate: mutateCreateAdmin } = UseCreateAdmin();
+    const { mutate: mutateCreateCustomer } = useCreateCustomer();
+    const { mutate: mutateCreateDriver, isPending} = useCreateDriver();
+    const { mutate: mutateCreateAdmin, isLoading } = useCreateAdmin();
     const [gregorianBirthDay, setGregorianBirthDay] = useState("");
 
     const handleCreateNewCustomer = () => {
         mutateCreateCustomer(
             {
-                nameCustomer, numberCustomer, addressCustomer, lastNameCustomer
+                nameCustomer, numberCustomer, addressCustomer, lastNameCustomer,selectedFile
             },
         )
     } 
@@ -91,6 +90,9 @@ function Management() {
             {
                 onSuccess: (data) => {
                     toast.success('ادمین اضافه شد')
+                },
+                onError: (err) => {
+                    console.log(err)
                 }
             }
         )
@@ -168,7 +170,7 @@ function Management() {
                     setOpenAddAdmin(false)
                 }}
                 // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="ثبت ادمین"
+                actionText={isLoading ? <Loading/> : 'ثبت ادمین'}
                 actionHandler={(e) => { 
                     e.preventDefault()
                     setOpenAddAdmin(false); 

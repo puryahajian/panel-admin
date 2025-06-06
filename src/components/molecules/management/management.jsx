@@ -102,7 +102,7 @@ function Management() {
     const Buttons = [
         {label: "ادمین ها" },
         {label: "مشتریان" },
-        {label: "پیک ها" },
+        // {label: "پیک ها" },
         {label: "پشتیبانی" },
     ];
 
@@ -138,11 +138,11 @@ function Management() {
                         افزودن مشتری
                     </ButtonGeneral>
                 )}
-                {step === 2 && (
+                {/* {step === 2 && (
                     <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border border-blue-500 !text-blue-500`}>
                         افزودن پیک
                     </ButtonGeneral>
-                )}
+                )} */}
             </div>
 
             <TabManagement step={step} index={0}>
@@ -153,11 +153,11 @@ function Management() {
                 <hr className='w-[95%] m-auto'/>
                 <TabCustomer/>
             </TabManagement>
-            <TabManagement step={step} index={2}>
+            {/* <TabManagement step={step} index={2}>
                 <hr className='w-[95%] m-auto'/>
                 <TabCouriers/>
-            </TabManagement>
-            <TabManagement step={step} index={3}>
+            </TabManagement> */}
+            <TabManagement step={step} index={2}>
                 <hr className='w-[95%] m-auto'/>
                 <TabTickets/>
             </TabManagement>

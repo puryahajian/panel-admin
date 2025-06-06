@@ -128,16 +128,7 @@ function Dashboard() {
             <ListOrders
               onClick={() => {
                 setGetData(item)
-                if (item?.state === 0) setOpenModalState(true)
-                if (item?.state === 2) {
-                  setOpenCustomerOrder(true);
-                  setActiveStep(2); 
-                };
-                if (item?.state === 5) {
-                  setOpenCustomerOrder(true)
-                  setActiveStep(3); 
-                }
-                if (item?.state === 4) setOpenModalState(true)
+                setOpenModalState(true)
               }}
               order={item?.items && item.items.length > 0 ? item.items.map((it) => it?.product?.name || 'نامشخص') : ['نامشخص']}
               orderCode={item?.id}
@@ -155,23 +146,23 @@ function Dashboard() {
       <GeneralModal
         open={openModalState}
         handleClose={(e) => {
-          if (getData?.state === 4) {
-            setOpenModalState(false)
-            return;
-          }
+          // if (getData?.state === 4) {
+          //   setOpenModalState(false)
+          //   return;
+          // }
           e.preventDefault();
           setOpenModalState(false)
-          handleAcceptOrder(getData?.id, 3);
+          // handleAcceptOrder(getData?.id, 3);
         }}
         title="مشاهده و تایید سفارش"
         actionText="تایید"
-        classAccept={getData?.state === 4 && 'hidden'}
-        exitButton={getData?.state === 4 ? 'بستن' : 'رد کردن'}
+        classAccept={`hidden`}
+        exitButton={`بستن`}
         actionHandler={(e) => { 
-          if (getData?.state === 4) setOpenModalState(false)
+          // if (getData?.state === 4) setOpenModalState(false)
           e.preventDefault();
           setOpenModalState(false)
-          handleAcceptOrder(getData?.id, 2);
+          // handleAcceptOrder(getData?.id, 2);
         }}
       >
         <div className="grid grid-cols-4 gap-3">
@@ -186,8 +177,7 @@ function Dashboard() {
         </div>
       </GeneralModal>
 
-      {/* modal setTime & setDriver */}
-      <GeneralModal
+      {/* <GeneralModal
         open={openCustomerOrder}
         handleClose={(e) => {
           e.preventDefault();
@@ -197,7 +187,6 @@ function Dashboard() {
         actionText={'تایید'}
         actionHandler={(e) => {
           e.preventDefault();
-          // setActiveStep((prev) => prev + 1);
           handleAcceptOrder(getData?.id, 5);
           setOpenCustomerOrder(false);
           if (activeStep === 3) {
@@ -210,7 +199,6 @@ function Dashboard() {
       >
         <hr className="my-4" />
 
-        {/* show items order */}
         <div className="grid grid-cols-11 gap-3 w-[1200px]">
           {getData?.items?.map((item) => (
             <div key={item?.product?.id}
@@ -227,7 +215,6 @@ function Dashboard() {
 
         <Stepperr activeStep={activeStep} setActiveStep={setActiveStep} />
 
-        {/* set time */}
         {activeStep === 2 && (
           <div className="mt-8 grid grid-cols-2 text-right">
             <div>
@@ -245,7 +232,6 @@ function Dashboard() {
           </div>
         )}
 
-        {/* set driver */}
         {activeStep === 3 && (
           <div className="flex justify-center mt-8 gap-4">
             {getDriver?.results?.map((item, index) => (
@@ -278,7 +264,7 @@ function Dashboard() {
             ))}
           </div>
         )}
-      </GeneralModal>
+      </GeneralModal> */}
     </div>
   )
 }

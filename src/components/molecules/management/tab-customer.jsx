@@ -21,9 +21,6 @@ function TabCustomer() {
     const [numberCustomer, setNumberCustomer] = useState();
     const [addressCustomer, setAddressCustomer] = useState();
   
-
-    // const handleOpenEdit = () => 
-
     const handleDeleteCustomer = (selectIdCustomer) => {
         mutate(
             {
@@ -38,7 +35,6 @@ function TabCustomer() {
     }
 
     const handlePatchCustomer = () => {
-        // console.log(nameCustomer, lastNameCustomer, numberCustomer, addressCustomer, selectIdEdit)
         mutatePatchCustomer(
             {
                 nameCustomer, lastNameCustomer, numberCustomer, addressCustomer, selectIdEdit
@@ -55,10 +51,6 @@ function TabCustomer() {
         setOpenModalAddCustomer(true);
     };
 
-
-
-    
-    
     return (
         <div>
             <div className='grid grid-cols-12 py-4'>
@@ -81,7 +73,7 @@ function TabCustomer() {
                         <div className='col-span-4'>
                             <Text>{item?.address === null || item?.address === '' ? 'ادرس موجود نیست' : item?.address}</Text>
                         </div>
-                        <div className=' col-span-2 flex justify-end gap-4'>
+                        <div className=' col-span-3 flex justify-end'>
                             <ButtonEdit onClick={() => {
                                 setSelectIdEdit(item?.id)
                                 handleOpenEdit(item)
@@ -90,14 +82,14 @@ function TabCustomer() {
                                     ویرایش
                             </ButtonEdit>
                         </div>
-                        <div className=' text-center'>
+                        {/* <div className=' text-center'>
                             <button onClick={() => {
                                 setSelectIdCustomer(item?.id)
                                 setOpenModal(true)
                                 }}>
                                 <Text className={`text-red-500`}>حذف</Text>
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 ))}
 

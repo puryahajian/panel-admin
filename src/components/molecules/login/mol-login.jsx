@@ -10,22 +10,41 @@ import Text from '../../atoms/text'
 import Loading from '../../atoms/loading'
 import usePostLogin from '../../db/use-post-login'
 import { useNavigate } from 'react-router-dom'
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import usePostVerify from '../../db/use-post-verify'
+import OTPInput from 'react-otp-input'
+import '../../../App.css'
 
 function MolLogin() {
     const { mutate, isPending } = usePostLogin();
+    const { mutate: mutateVerify, isPending: isPendingVerify } = usePostVerify();
+    const [step, setStep] = useState(1);
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [messageError, setMessageError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [otp, setOtp] = useState('');
 
     const navigate = useNavigate();
 
     const handleSubmitLogin = () => {
         mutate(
             {
-                userName, password
+                userName
+            },
+            {
+                onSuccess: () => {
+                    setStep(2)
+                },
+                onError: (error) => {
+                    setMessageError('نام کاربری یا کلمه عبور اشتباه است !')
+                },
+            }
+        )
+    }
+
+    const handleSubmitVerify = () => {
+        mutateVerify(
+            {
+                otp, userName
             },
             {
                 onSuccess: () => {
@@ -47,34 +66,66 @@ function MolLogin() {
                     <div className='text-right mt-6'>
                         <Text className={`text-red-500 mb-2`}>{messageError}</Text>
                         <form>
-                            <Title>نام کاربری</Title>
-                            <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border mt-2 ${messageError ? 'border-red-500' : ''}`}/>
+                            {step === 1 && (
+                                <>
+                                    <Title>نام کاربری</Title>
+                                    <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border mt-2 ${messageError ? 'border-red-500' : ''}`}/>
+                                </>
+                            )}
+                            {step === 2 && (
+                                <>
+                                    <Title className={`mt-4`}>رمزعبور</Title>
+                                    <div className="relative mt-2">
+                                        {/* <input
+                                            type={`text`}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className={`bg-transparent border w-full py-3 px-2 text-sm rounded-md outline-none placeholder:text-gray-400 ${
+                                            messageError ? "border-red-500" : ""
+                                            }`}
+                                        /> */}
+                                        <OTPInput
+                                            containerStyle={{
+                                                gap: '50px',
+                                                direction: 'ltr',
+                                                marginTop: '16px'
+                                            }}
+                                            value={otp}
+                                            onChange={setOtp}
+                                            numInputs={4}
+                                            renderInput={(props) => <input {...props} />}
+                                            inputStyle="otp-input"
+                                            shouldAutoFocus
+                                        />
+                                        {/* <button
+                                            type="button"
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            className="absolute top-[22px] left-2 transform -translate-y-1/2 text-sm text-gray-600"
+                                        >
+                                            {showPassword ? <VisibilityOffIcon/> : <VisibilityIcon/>}
+                                        </button> */}
+                                    </div>
+                                </>
+                            )}
 
-                            <Title className={`mt-4`}>رمزعبور</Title>
-                            <div className="relative mt-2">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className={`bg-transparent border w-full py-3 px-2 text-sm rounded-md outline-none placeholder:text-gray-400 ${
-                                    messageError ? "border-red-500" : ""
-                                    }`}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword((prev) => !prev)}
-                                    className="absolute top-[22px] left-2 transform -translate-y-1/2 text-sm text-gray-600"
-                                >
-                                    {showPassword ? <VisibilityOffIcon/> : <VisibilityIcon/>}
-                                </button>
-                            </div>
-                            <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
-                                onClick={(e) =>{ 
-                                    e.preventDefault()
-                                    handleSubmitLogin()
-                                }}>
-                                {isPending ? <Loading/> : "ورود به پنل"}
-                            </ButtonGeneral>
+                            {step === 1 && (
+                                <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
+                                    onClick={(e) =>{ 
+                                        e.preventDefault()
+                                        handleSubmitLogin()
+                                    }}>
+                                    {isPending ? <Loading/> : "دریافت کد تایید"}
+                                </ButtonGeneral>
+                            )}
+                            {step === 2 && (
+                                <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
+                                    onClick={(e) =>{ 
+                                        e.preventDefault()
+                                        handleSubmitVerify()
+                                    }}>
+                                    {isPendingVerify ? <Loading/> : "ورود"}
+                                </ButtonGeneral>
+                            )}
                             
                         </form>
                     </div>

@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import ListOrders from '../list-orders'
 import Title from '../../atoms/title'
 import Text from '../../atoms/text'
-import useGetAllActiveOrder from '../../db/use-get-all-active-order'
-import snap from '../../../assets/image/bike.svg'
-import post from '../../../assets/image/moving.svg'
 import DateShamsi from '../date-shamsi'
 import useGetAllOrder from '../../db/use-get-all-order'
 import GeneralModal from '../modal-general'
 import Img from '../../atoms/img'
+import Mapp from '../mapp'
 
 function TabOrderList() {
   const { data } = useGetAllOrder();
@@ -16,12 +14,16 @@ function TabOrderList() {
   const [ getData, setGetData ] = useState(''); 
 
   const statusMap = {
-    0: <Text className={`text-orange-500`}>در انتظار تایید</Text>,
-    1: <Text className={`text-green-500`}>تایید شده</Text>,
-    2: <Text className={`text-red-500`}>رد شده</Text>,
-    3: <Text className={`text-green-500`}>تحویل داده شده</Text>,
-    4: <Text className={`text-red-500`}>لغو شده</Text>,
-    8: <Text className={`text-green-500`}>ارسال شده</Text>,
+    8: <Text className={`text-green-500`}>تحویل داده شد</Text>,
+  };
+
+  const defaultStyle = {
+    width: '100%',
+    height: '120px',
+    borderRadius: '8px',
+    margin: 0,
+    padding: 0,
+    background: '#eee',
   };
    
   return (
@@ -62,26 +64,73 @@ function TabOrderList() {
               }
             />
           ))}
-         
+        </div>
+        <div className='text-center mt-6'>
+          {data?.length === 0 && <Text>سفارش موجود نیست</Text>}
         </div>
 
         <GeneralModal
           open={openModal}
-          handleClose={(e) => setOpenModal(false)}
+          handleClose={(e) => {
+            e.preventDefault()
+            setOpenModal(false)
+          }}
           title="مشاهده سفارشات"
           actionText="تایید"
           classAccept={`hidden`}
           exitButton={`بستن`}
         >
-          <div className="grid grid-cols-4 gap-3">
+          <hr className="my-4" />
+
+          {/* data user */}
+          <div className='grid grid-cols-2 items-center'>
+            <div className='grid gap-4 h-max '>
+              <div className='flex items-center gap-2 h-max'>
+                <Title>نام و نام خانوادگی : </Title>
+                <Text>{getData?.user?.name ? getData?.user?.name : 'موجود نیست'} {getData?.user?.family}</Text>
+              </div>
+              <div className='flex items-center gap-2 h-max'>
+                <Title>شماره مشتری : </Title>
+                <Text>{getData?.user?.phone ? getData?.user?.phone : 'موجود نیست'}</Text>
+              </div>
+              <div className='flex items-center gap-2 h-max'>
+                <Title>آدرس مشتری : </Title>
+                <Text>{getData?.user?.address ? getData?.user?.address : 'موجود نیست'}</Text>
+              </div>
+            </div>
+            <div>
+              <Mapp
+                savedLat={getData?.user?.latitude ? getData?.user?.latitude : 35.699739}
+                savedLng={getData?.user?.longitude ? getData?.user?.longitude : 51.338097}
+                defaultStyle={defaultStyle}
+              />
+            </div>
+          </div>
+
+          <Text className={`text-right mt-6`}>سفارش مشتری</Text>
+          <hr className="my-4" />
+
+          {/* show items order */}
+          <div className="w-full overflow-scroll gap-3">
             {getData?.items?.map((item) => (
               <div key={item?.product?.id}
-                className="border border-gray-400 grid justify-center min-w-24 p-2 rounded-xl"
+                className="border border-gray-400 flex justify-start items-center gap-2 w-max p-2 rounded-xl"
               >
                 <Img className="m-auto border-none" src={item?.product?.image} />
-                <Text className="mt-4">{item?.product?.name || 'نامشخص'}</Text>
+                <div>
+                  <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
+
+                  <div className='flex items-center gap-1 mt-1 justify-between'>
+                    <Text className="w-max text-xs">تعداد سفارش : </Text>
+                    <Text>{item?.quantity}</Text>
+                  </div>
+                </div>
+
               </div>
             ))}
+          </div>
+          <div className="my-5">
+            {getData?.items?.length === 0 && <Text>سفارش موجود نیست</Text>}
           </div>
         </GeneralModal>
       </div>

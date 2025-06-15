@@ -10,25 +10,28 @@ function usePatchProfile() {
         
             const data = new FormData();
             if (nameShop) data.append('name', nameShop);
-            data.append('phone', numberShop);
-            data.append('open_time', openTime);
-            data.append('close_time', closeTime);
-            data.append('logo', selectedLogo);
-            data.append('support_phone', numberSupportShop);
-            data.append('banner_one', selectedBannerOne);
-            data.append('banner_two', selectedBannerTwo);
-            data.append('lat', lat);
-            data.append('lng', lng);
-            data.append('telegram', telegram);
-            data.append('instagram', instagram);
-            data.append('whatsApp', whatsApp);
-            data.append('about_us', aboutUse);
+            if (numberShop) data.append('phone', numberShop);
+            if (openTime) {
+                const formattedOpenTime = `${openTime}:00`;
+                data.append('open_time', formattedOpenTime);
+            }
+            if (closeTime) data.append('close_time', closeTime);
+            if (selectedLogo) data.append('logo', selectedLogo);
+            if (numberSupportShop) data.append('support_phone', numberSupportShop);
+            if (selectedBannerOne) data.append('banner_one', selectedBannerOne);
+            if (selectedBannerTwo) data.append('banner_two', selectedBannerTwo);
+            if (lat) data.append('lat', lat);
+            if (lng) data.append('lng', lng);
+            if (telegram) data.append('telegram', telegram);
+            if (instagram) data.append('instagram', instagram);
+            if (whatsApp) data.append('whatsApp', whatsApp);
+            if (aboutUse) data.append('about_us', aboutUse);
 
             const res = await interceptor.patch(`option/api/v1/cashier/store-info/`, data);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.removeQueries(['getInfo']);
+            queryClient.removeQueries('getInfo');
         },
     });
 }

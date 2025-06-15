@@ -13,27 +13,21 @@ import Loading from '../../atoms/loading'
 function Setting() {
     const { data: dataInfo } = useGetInfo();
 
-    // clean data undefined
-    const cleanData = Object.keys(dataInfo).reduce((acc, key) => {
-        acc[key] = dataInfo[key] === "undefined" ? "" : dataInfo[key];
-        return acc;
-    }, {});
+    const { mutate , isPending } = usePatchProfile();
 
-    const { mutate , isLoading } = usePatchProfile();
+    const [ nameShop, setNameShop ] = useState(dataInfo?.name);
+    const [ numberShop, setNumberShop ] = useState(dataInfo?.phone);
+    const [ numberSupportShop, setNumberSupportShop ] = useState(dataInfo?.support_phone);
+    const [ openTime, setOpenTime ] = useState(dataInfo?.open_time.slice(0, -3));
+    const [ closeTime, setCloseTime ] = useState(dataInfo?.close_time.slice(0, -3));
+    const [ aboutUse, setAboutUse ] = useState(dataInfo?.about_us);
 
-    const [ nameShop, setNameShop ] = useState(cleanData?.name);
-    const [ numberShop, setNumberShop ] = useState(cleanData?.phone);
-    const [ numberSupportShop, setNumberSupportShop ] = useState(cleanData?.support_phone);
-    const [ openTime, setOpenTime ] = useState(cleanData?.open_time);
-    const [ closeTime, setCloseTime ] = useState(cleanData?.close_time);
-    const [ aboutUse, setAboutUse ] = useState(cleanData?.about_us);
-
-    const [ telegram, setTelegram ] = useState(cleanData?.telegram);
-    const [ whatsApp, setWhatsApp ] = useState(cleanData?.whatsApp);
-    const [ instagram, setInstagram ] = useState(cleanData?.instagram);
+    const [ telegram, setTelegram ] = useState(dataInfo?.telegram);
+    const [ whatsApp, setWhatsApp ] = useState(dataInfo?.whatsApp);
+    const [ instagram, setInstagram ] = useState(dataInfo?.instagram);
 
     const [ selectedLogo, setSelectedLogo ] = useState('');
-    const [ preview, setPreview ] = useState(cleanData?.logo);
+    const [ preview, setPreview ] = useState(dataInfo?.logo);
 
     // Banner One
     const [ previewBannerOne, setPreviewBannerOne ] = useState('');
@@ -83,7 +77,7 @@ function Setting() {
                     <Uploader
                         textOne={'تصویر بنر اول'}
                         // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
-                        preview={cleanData?.banner_one || previewBannerOne}
+                        preview={dataInfo?.banner_one || previewBannerOne}
                         setPreview={setPreviewBannerOne}
                         onFileSelect={setSelectedBannerOne}
                         selectedFile={selectedBannerOne}
@@ -92,7 +86,7 @@ function Setting() {
                     <Uploader
                         textOne={'تصوبر بنر دوم'}
                         // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
-                        preview={cleanData?.banner_two || previewBannerTwo}
+                        preview={dataInfo?.banner_two || previewBannerTwo}
                         setPreview={setPreviewBannerTwo}
                         onFileSelect={setSelectedBannerTwo}
                         selectedFile={selectedBannerTwo}
@@ -103,7 +97,7 @@ function Setting() {
 
                 <div className=' my-6 grid grid-cols-2 gap-4'>
                     <TabRightDetail
-                        preview={cleanData?.logo || preview}
+                        preview={dataInfo?.logo || preview}
                         setPreview={setPreview}
                         onFileSelect={setSelectedLogo}
                         selectedFile={selectedLogo}
@@ -126,14 +120,15 @@ function Setting() {
                     </div>
                     <div className='flex gap-10'>
                         <div className='flex gap-4 items-center'>
+                             
                             <Text>از ساعت</Text>
                             {/* <Input/> */}
-                            <Input type={'time'} defaultValue={cleanData?.open_time} value={openTime} onChange={(e) => setOpenTime(e.target.value)} name="" id="" />
+                            <Input type={'text'} defaultValue={dataInfo?.open_time?.slice(0, -3)} value={openTime} onChange={(e) => setOpenTime(e.target.value)} name="" id="" />
                         </div>
                         <div className='flex gap-4 items-center'>
                             <Text>تا ساعت</Text>
                             {/* <Input/> */}
-                            <Input type={'time'} defaultValue={cleanData?.close_time} value={closeTime} onChange={(e) => setCloseTime(e.target.value)} name="" id="" />
+                            <Input type={'text'} defaultValue={dataInfo?.close_time?.slice(0, -3)} value={closeTime} onChange={(e) => setCloseTime(e.target.value)} name="" id="" />
                         </div>
                     </div>
                 </div>
@@ -148,15 +143,15 @@ function Setting() {
                     <div className='grid grid-cols-3 mt-4 gap-10'>
                         <div className='grid grid-cols-5 gap-4 items-center'>
                             <Text>اینستاگرام</Text>
-                            <Input defaultValue={cleanData?.instagram} value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-4`}/>
+                            <Input defaultValue={dataInfo?.instagram} value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-4`}/>
                         </div>
                         <div className='grid grid-cols-5 gap-4 items-center'>
                             <Text>واتس اپ</Text>
-                            <Input defaultValue={cleanData?.whatsApp} value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-4`}/>
+                            <Input defaultValue={dataInfo?.whatsApp} value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-4`}/>
                         </div>
                         <div className='grid grid-cols-5 gap-4 items-center'>
                             <Text>تلگرام</Text>
-                            <Input defaultValue={cleanData?.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-4`}/>
+                            <Input defaultValue={dataInfo?.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-4`}/>
                         </div>
                     </div>
                 </div>
@@ -165,7 +160,7 @@ function Setting() {
 
                 <div className='mt-6'>
                     <Text>متن درباره ما</Text>
-                    <textarea defaultValue={cleanData?.about_us} value={aboutUse} onChange={(e) => setAboutUse(e.target.value)} className='w-full mt-2 p-2 rounded-lg h-80 outline-none bg-bgInput resize-none' name="" id=""></textarea>
+                    <textarea defaultValue={dataInfo?.about_us} value={aboutUse} onChange={(e) => setAboutUse(e.target.value)} className='w-full mt-2 p-2 rounded-lg h-80 outline-none bg-bgInput resize-none' name="" id=""></textarea>
                 </div>
 
                 <div className='mt-6 flex justify-end gap-4'>
@@ -173,7 +168,7 @@ function Setting() {
                         e.preventDefault()
                         handlePatchProfile()
                         }}>
-                            {isLoading ? <Loading/> : 'ثبت و اعمال'}
+                            {isPending ? <Loading/> : 'ثبت و اعمال'}
                         </ButtonGeneral>
                     <ButtonGeneral className={`!px-16 border-red-500 text-red-500`}>انصراف</ButtonGeneral>
                 </div>

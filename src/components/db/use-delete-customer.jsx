@@ -12,7 +12,7 @@ function useDeleteCustomer() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.removeQueries(['allCustomer']);
+            queryClient.removeQueries('allCustomer');
         },
     });
 }

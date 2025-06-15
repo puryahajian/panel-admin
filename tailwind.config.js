@@ -14,7 +14,8 @@ module.exports = {
         customBlue: "#6669F9",
         bgInput: "#E6E6E6",
         buttomExiting: "#5DCDC2",
-
+        bgAcceptOrder: "#F9FFEE",
+        bgRejectOrder: "#FFF2EE",
       },
       fontFamily: {
         sans: ["sans"],

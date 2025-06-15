@@ -17,6 +17,7 @@ function TabRightDetail({
     valueNumberSupport
     }) {
     const { data } = useGetInfo();
+    console.log(data)
 
     return (
         <div>

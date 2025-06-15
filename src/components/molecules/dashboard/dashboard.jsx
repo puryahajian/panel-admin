@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CardDiagram from './card-diagram'
 import Text from '../../atoms/text'
 import Title from '../../atoms/title';
 import ListOrders from '../list-orders';
 import ChartComponent from '../chart';
-import LinearProgressCom from '../linear-progress';
 import useSalesReport from '../../db/use-sales-report';
-import useGetAllOrder from '../../db/use-get-all-order'
 import DateShamsi from '../date-shamsi';
 import GeneralModal from '../modal-general';
 import Stepperr from './stepper';
@@ -16,39 +14,37 @@ import Input from '../../atoms/input';
 import useGetDriver from '../../db/use-get-driver';
 import usePatchOrder from '../../db/use-patch-order';
 import useGetAllActiveOrder from '../../db/use-get-all-active-order';
+import Mapp from '../mapp';
 
 function Dashboard() {
   const { data } = useSalesReport();
   const { data: dataGetAllOrder } = useGetAllActiveOrder();
   const { mutate } = usePatchOrder();
   const { data: getDriver } = useGetDriver();
-  const [giveIdDriver, setGiveIdDriver] = useState(null); 
+  const [giveIdDriver, setGiveIdDriver] = useState(''); 
   const [openModalState, setOpenModalState] = useState(false);
   const [openCustomerOrder, setOpenCustomerOrder] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [timeDelivery, setTimeDelivery] = useState('');
   const [getData, setGetData] = useState(null);
+  console.log(getData)
 
-  const lastItem = Array.isArray(data?.sales_data) && data.sales_data.length > 0
-    ? data.sales_data[data.sales_data.length - 1]
+  const lastItem = Array.isArray(data?.sales_data) && data?.sales_data.length > 0
+    ? data?.sales_data[data?.sales_data.length - 1]
     : null;
 
   const statusMap = {
     0: <Text className={`text-orange-500`}>در انتظار تایید</Text>,
-    // 1: <Text className={`text-green-500`}>درحال ارسال</Text>,
-    2: <Text className={`text-green-500`}>درحال اماده سازی</Text>,
+    1: <Text className={`text-orange-500`}>درحال پرداخت</Text>,
+    2: <Text className={`text-orange-500`}>درحال اماده سازی</Text>,
     3: <Text className={`text-red-500`}>لغو شده</Text>,
-    4: <Text className={`text-green-500`}>درحال ارسال</Text>,
-    5: <Text className={`text-green-500`}>درحال تحویل به پیک</Text>,
+    4: <Text className={`text-green-500`}>ارسال شده</Text>,
+    5: <Text className={`text-orange-500`}>در انتظار انتخاب پیک</Text>,
+    8: <Text className={`text-green-500`}>تحویل داده شد</Text>,
 
-  };
-
-  const cellStyle = {
-    border: '1px solid #f2f2f2',
   };
 
   const handleAcceptOrder = (id, state) => {
-    console.log('time', timeDelivery, 'driver', giveIdDriver, 'idproduct', id, 'state', state);
     mutate(
       {
         timeDelivery,
@@ -58,6 +54,15 @@ function Dashboard() {
       }
     )
   }
+  
+  const defaultStyle = {
+    width: '100%',
+    height: '120px',
+    borderRadius: '8px',
+    margin: 0,
+    padding: 0,
+    background: '#eee',
+  };
 
   return (
     <div>
@@ -67,10 +72,10 @@ function Dashboard() {
                 'جمع فروش'
             }
             contentFooter={
-                `فروش روزانه ${lastItem?.total_sales} ريال`
+                `فروش روزانه ${lastItem?.total_sales?.toLocaleString('fa-IR') } تومان`
             }
             contentBold={
-              `${data?.sales_data[0].total_sales} تومان`
+              `${data?.sales_data[0]?.total_sales.toLocaleString('fa-IR')} تومان`
             }
         >
             {/* <Text>تغییر  10%</Text>
@@ -83,10 +88,10 @@ function Dashboard() {
                 'جمع فروش'
             }
             contentFooter={
-                `فروش روزانه ${lastItem?.total_sales} ريال`
+                `فروش روزانه ${lastItem?.total_sales?.toLocaleString('fa-IR')} ريال`
             }
             contentBold={
-              `${data?.sales_data[0].total_sales} تومان`
+              `${data?.sales_data[0]?.total_sales?.toLocaleString('fa-IR')} تومان`
             }
         >
           <ChartComponent data={data}/>
@@ -114,18 +119,19 @@ function Dashboard() {
           {/* <Title>ردیف</Title> */}
           {/* title */}
           <div className='grid grid-cols-6 mr-[50px] w-full'>
-            <Title className={``}>سفارش</Title>
-            <Title className={``}>کد سفارش</Title>
-            <Title>قیمت</Title>
+            {/* <Title className={``}>سفارش</Title> */}
             <Title>سفارش دهنده</Title>
+            <Title>قیمت</Title>
+            <Title className={``}>کد سفارش</Title>
             <Title>تاریخ و ساعت</Title>
-            <Title className={`text-left ml-8`}>وضعیت سفارش</Title>
+            <Title className={`col-span-2 text-left ml-8`}>وضعیت سفارش</Title>
           </div>
         </div>
         <div className='grid gap-2'>
           {/* data list */}
           {dataGetAllOrder?.map((item) => (
             <ListOrders
+              className={`bg-bgAcceptOrder ${item?.state === 3 && 'bg-bgRejectOrder'}`}
               onClick={() => {
                 setGetData(item)
                 if (item?.state === 0) setOpenModalState(true)
@@ -139,15 +145,16 @@ function Dashboard() {
                 }
                 if (item?.state === 4) setOpenModalState(true)
               }}
-              order={item?.items && item.items.length > 0 ? item.items.map((it) => it?.product?.name || 'نامشخص') : ['نامشخص']}
               orderCode={item?.id}
               price={`${item?.final_price?.toLocaleString('fa-IR')} تومان`}
-              orderer={item?.user?.name === '' ? 'نامشخص' : item?.user?.name}
+              orderer={`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}
               date={<DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/>}
               orderStatus={statusMap[item?.state] || 'نامشخص'}
             />
           ))}
-         
+        </div>
+        <div className='text-center mt-6'>
+          {dataGetAllOrder?.length === 0 && <Text>سفارش موجود نیست</Text>}
         </div>
       </div>
 
@@ -155,34 +162,89 @@ function Dashboard() {
       <GeneralModal
         open={openModalState}
         handleClose={(e) => {
+          e.preventDefault();
           if (getData?.state === 4) {
             setOpenModalState(false)
             return;
           }
-          e.preventDefault();
           setOpenModalState(false)
-          handleAcceptOrder(getData?.id, 3);
+          handleAcceptOrder(getData?.id, 3)
         }}
-        title="مشاهده و تایید سفارش"
+        onClose={(e) => {
+          e.preventDefault()
+          setOpenModalState(false)
+        }}
+        width={`100%`}
+        title="مشخصات مشتری"
+        classTitle={`text-right`}
         actionText="تایید"
-        classAccept={getData?.state === 4 && 'hidden'}
+        classAccept={`!w-[250px] ${getData?.state === 4 && 'hidden'}`}
         exitButton={getData?.state === 4 ? 'بستن' : 'رد کردن'}
         actionHandler={(e) => { 
-          if (getData?.state === 4) setOpenModalState(false)
           e.preventDefault();
+          if (getData?.state === 4) setOpenModalState(false)
           setOpenModalState(false)
           handleAcceptOrder(getData?.id, 2);
         }}
+        classReject="!w-[250px]"
+        sx={{ justifyContent: 'end' }}
       >
-        <div className="grid grid-cols-4 gap-3">
+        <hr className="my-4" />
+
+        {/* data user */}
+        <div className='grid grid-cols-2 items-center'>
+          <div className='grid gap-4 h-max '>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>نام و نام خانوادگی : </Title>
+              <Text>{getData?.user?.name ? getData?.user?.name : 'موجود نیست'} {getData?.user?.family}</Text>
+            </div>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>شماره مشتری : </Title>
+              <Text>{getData?.user?.phone ? getData?.user?.phone : 'موجود نیست'}</Text>
+            </div>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>آدرس مشتری : </Title>
+              <Text>{getData?.user?.address ? getData?.user?.address : 'موجود نیست'}</Text>
+            </div>
+          </div>
+          <div>
+            {getData?.user?.latitude && (
+              <Mapp
+                savedLat={getData?.user?.latitude}
+                savedLng={getData?.user?.longitude}
+                centerLat={getData?.user?.latitude}
+                centerLng={getData?.user?.longitude}
+                defaultStyle={defaultStyle}
+              />
+            )}
+            {getData?.user?.latitude === "" && <Text>آدرس یافت نشد</Text>}
+          </div>
+        </div>
+
+        <Text className={`text-right mt-6`}>سفارش مشتری</Text>
+        <hr className="my-4" />
+
+        <div className="w-full overflow-scroll gap-3">
           {getData?.items?.map((item) => (
             <div key={item?.product?.id}
-              className="border border-gray-400 grid justify-center min-w-24 p-2 rounded-xl"
+              className="border border-gray-400 flex gap-2 justify-start items-center w-max p-2 rounded-xl"
             >
               <Img className="m-auto border-none" src={item?.product?.image} />
-              <Text className="mt-4">{item?.product?.name || 'نامشخص'}</Text>
+              <div>
+                <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
+
+                <div className='flex items-center gap-1 mt-1 justify-between'>
+                  <Text className="w-max text-xs">تعداد سفارش : </Text>
+                  <Text>{item?.quantity}</Text>
+                </div>
+              </div>
+
             </div>
           ))}
+        </div>
+
+        <div className='my-6'>
+          {getData?.items?.length === 0 && <Text>سفارش موجود نیست</Text>}
         </div>
       </GeneralModal>
 
@@ -193,7 +255,13 @@ function Dashboard() {
           e.preventDefault();
           setOpenCustomerOrder(false);
         }}
-        title="سفارشات مشتری"
+        onClose={(e) => {
+          e.preventDefault()
+          setOpenCustomerOrder(false)
+        }}
+        width={`100%`}
+        title="مشخصات مشتری"
+        classTitle={`text-right`}
         actionText={'تایید'}
         actionHandler={(e) => {
           e.preventDefault();
@@ -202,22 +270,59 @@ function Dashboard() {
           setOpenCustomerOrder(false);
           if (activeStep === 3) {
             handleAcceptOrder(getData?.id, 4);
-          }
+            if (giveIdDriver === '') handleAcceptOrder(getData?.id, 4);   
+          }       
         }}
-        classAccept="!w-[250px]"
+        classAccept='!w-[250px]'
         classReject="!w-[250px]"
         sx={{ justifyContent: 'end' }}
       >
         <hr className="my-4" />
 
+        {/* data user */}
+        <div className='grid grid-cols-2 items-center'>
+          <div className='grid gap-4 h-max '>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>نام و نام خانوادگی : </Title>
+              <Text>{getData?.user?.name ? getData?.user?.name : 'موجود نیست'} {getData?.user?.family}</Text>
+            </div>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>شماره مشتری : </Title>
+              <Text>{getData?.user?.phone ? getData?.user?.phone : 'موجود نیست'}</Text>
+            </div>
+            <div className='flex items-center gap-2 h-max'>
+              <Title>آدرس مشتری : </Title>
+              <Text>{getData?.user?.address ? getData?.user?.address : 'موجود نیست'}</Text>
+            </div>
+          </div>
+          <div>
+            <Mapp
+              savedLat={getData?.user?.latitude ? getData?.user?.latitude : 35.699739}
+              savedLng={getData?.user?.longitude ? getData?.user?.longitude : 51.338097}
+              defaultStyle={defaultStyle}
+            />
+          </div>
+        </div>
+
+        <Text className={`text-right mt-6`}>سفارش مشتری</Text>
+        <hr className="my-4" />
+
         {/* show items order */}
-        <div className="grid grid-cols-11 gap-3 w-[1200px]">
+        <div className="w-full overflow-scroll gap-3">
           {getData?.items?.map((item) => (
             <div key={item?.product?.id}
-              className="border border-gray-400 grid justify-center min-w-24 p-2 rounded-xl"
+              className="border border-gray-400 flex gap-2 justify-start items-center w-max p-2 rounded-xl"
             >
               <Img className="m-auto border-none" src={item?.product?.image} />
-              <Text className="mt-4">{item?.product?.name || 'نامشخص'}</Text>
+              <div>
+                <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
+
+                <div className='flex items-center gap-1 mt-1 justify-between'>
+                  <Text className="w-max text-xs">تعداد سفارش : </Text>
+                  <Text>{item?.quantity}</Text>
+                </div>
+              </div>
+
             </div>
           ))}
         </div>
@@ -229,18 +334,19 @@ function Dashboard() {
 
         {/* set time */}
         {activeStep === 2 && (
-          <div className="mt-8 grid grid-cols-2 text-right">
+          <div className="mt-8 flex gap-2 text-right items-center">
             <div>
               <Text className="text-lg font-bold mb-2">زمان تقریبی</Text>
               <Text>زمان تقریبی برای تحویل سفارش به مشتری</Text>
             </div>
             <div className="flex items-center gap-2">
-              <Text>زمان تقریبی برحسب دقیقه</Text>
               <Input
                 value={timeDelivery}
                 onChange={(e) => setTimeDelivery(e.target.value)}
                 type="text"
-              />
+                className={`w-20 border border-gray-900`}
+                />
+              <Text>دقیقه</Text>
             </div>
           </div>
         )}
@@ -251,7 +357,11 @@ function Dashboard() {
             {getDriver?.results?.map((item, index) => (
               <div
                 key={item?.id}
-                onClick={() => item?.in_process !== false && setGiveIdDriver(item?.id)}
+                onClick={() => {
+                  if (item?.in_process !== '') {
+                    setGiveIdDriver(giveIdDriver === item?.id ? '' : item?.id);
+                  }
+                }}
                 className={`flex cursor-pointer items-center gap-4 border border-gray-400 rounded-2xl p-3 
                   ${item?.in_process === false ? 'border-red-500 cursor-not-allowed' : ''} 
                   ${giveIdDriver === item?.id ? 'border-green-500' : ''}

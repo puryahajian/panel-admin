@@ -19,7 +19,7 @@ function useCreateDriver() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.removeQueries(['allRider']);
+            queryClient.removeQueries('allRider');
         },
     });
 }

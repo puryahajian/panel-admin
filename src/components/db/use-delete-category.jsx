@@ -11,7 +11,7 @@ function useDeleteCategory() {
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.removeQueries(['allCategory']);
+            queryClient.removeQueries('allCategory');
         },
     });
 }

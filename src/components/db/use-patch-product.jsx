@@ -38,7 +38,7 @@ function usePatchProduct() {
         },
         onSuccess: (data) => {
             toast.success('محصول ویرایش شد') 
-            queryClient.removeQueries(['allProduct']);
+            queryClient.removeQueries('allProduct');
         },
         
     });

@@ -71,21 +71,21 @@ function TabAdmins() {
                             <div className='w-max pr-1'>
                                 <Text>{<DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/>}</Text>
                             </div>
-                            <div className=" flex justify-end gap-4 col-span-2">
+                            <div className=" flex justify-end gap-4 col-span-3">
                                 <ButtonEdit onClick={() => {
                                     setId(item?.id)
                                     setOpenModalEdit(true)
                                     setSelectDataAdmin(item)
                                 }}>ویرایش</ButtonEdit>
                             </div>
-                            <div className=" text-center">
+                            {/* <div className=" text-center">
                                 <button onClick={() => {
                                     setId(item?.id)
                                     setOpenModal(true)
                                 }}>
                                     <Text className={`text-red-500`}>حذف</Text>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}

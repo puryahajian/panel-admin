@@ -55,7 +55,7 @@ function Products() {
 
     const Buttons = [
         {label: "لیست محصولات" },
-        {label: "دسته بندی ها" },
+        // {label: "دسته بندی ها" },
     ];
   
 
@@ -117,11 +117,14 @@ function Products() {
                         <ButtonGeneral onClick={() => setOpen(true)} className={` border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن محصول
                         </ButtonGeneral>
-                    ) : (
-                        <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
-                            افزودن دسته بندی
-                        </ButtonGeneral>
+                    ):(
+                        <></>
                     )}
+                     {/* : (
+                         <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                             افزودن دسته بندی
+                         </ButtonGeneral>
+                     )} */}
                 </div>
             </div>
             <TabProduct step={step} index={0}>
@@ -130,7 +133,7 @@ function Products() {
             </TabProduct>
             <TabProduct step={step} index={1}>
                 <hr className='w-[95%] m-auto'/>
-                <TabCategory/>
+                {/* <TabCategory/> */}
             </TabProduct>
 
             <GeneralModal

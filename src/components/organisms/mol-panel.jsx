@@ -83,16 +83,16 @@ function MolPanel() {
             </div>
             <HeaderResponsive step={step} setStep={setStep}/>
             <div className=' grow max-[1024px]:mt-[60px]'>
-                <TabPanel step={step} index={0}>
+                {/* <TabPanel step={step} index={0}>
                     <Dashboard/>
-                </TabPanel>
-                <TabPanel step={step} index={1}>
+                </TabPanel> */}
+                {/* <TabPanel step={step} index={1}>
                     <Orders/>
-                </TabPanel>
-                <TabPanel step={step} index={2}>
+                </TabPanel> */}
+                <TabPanel step={step} index={0}>
                     <Products/>
                 </TabPanel>
-                <TabPanel step={step} index={3}>
+                {/* <TabPanel step={step} index={3}>
                     <Management/>
                 </TabPanel>
                 <TabPanel step={step} index={4}>
@@ -103,7 +103,7 @@ function MolPanel() {
                 </TabPanel>
                 <TabPanel step={step} index={6}>
                     7
-                </TabPanel>
+                </TabPanel> */}
             </div>
         </div>
         <GeneralModal

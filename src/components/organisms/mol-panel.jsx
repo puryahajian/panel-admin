@@ -53,7 +53,7 @@ function MolPanel() {
 
     return (
         <>
-        <div className='flex'>
+        {/* <div className='flex'>
             <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0 max-[1024px]:hidden'>
                 <div>
                     <img src={dataInfo?.logo} className='mb-10 w-16 m-auto' alt="" />
@@ -119,7 +119,7 @@ function MolPanel() {
                 e.preventDefault();
                 handleExit()
             }}
-        />
+        /> */}
         </>
     )
 }

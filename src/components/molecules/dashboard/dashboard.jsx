@@ -124,15 +124,16 @@ function Dashboard() {
             <Title>سفارش دهنده</Title>
             <Title>قیمت</Title>
             <Title className={``}>کد سفارش</Title>
-            <Title>تاریخ و ساعت</Title>
+            <Title className={`mr-3`}>تاریخ و ساعت</Title>
             <Title className={`col-span-2 text-left ml-8`}>وضعیت سفارش</Title>
           </div>
         </div>
         <div className='grid gap-2'>
           {/* data list */}
           {dataGetAllOrder?.map((item) => (
-            <ListOrders
-              className={`bg-bgAcceptOrder max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'}`}
+            <>
+            <div
+              className={`bg-bgAcceptOrder rounded-lg py-2 max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'}`}
               classNameResponse={`bg-bgAcceptOrder ${item?.state === 3 && 'bg-bgRejectOrder'}`}
               onClick={() => {
                 setGetData(item)
@@ -147,12 +148,63 @@ function Dashboard() {
                 }
                 if (item?.state === 4) setOpenModalState(true)
               }}
-              orderCode={item?.id}
-              price={`${item?.final_price?.toLocaleString('fa-IR')} تومان`}
-              orderer={`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}
-              date={<DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/>}
-              orderStatus={statusMap[item?.state] || 'نامشخص'}
-            />
+            >
+              <ul className='grid grid-cols-6 items-center mr-[35px] w-full'>
+                <li className='pr-3'>
+                  <Text>{`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}</Text>
+                </li>
+                <li className='pr-2'>
+                  <Text>{`${item?.final_price?.toLocaleString('fa-IR')} تومان`}</Text>
+                </li>
+                <li>
+                  <Text className={`truncate w-20`}>{item?.id}</Text>
+                </li>
+                <li>
+                  <Text><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
+                </li>
+                <li className='text-left col-span-2 pl-20 flex justify-end items-center'>
+                  <Text className={`flex items-center gap-2`}>{statusMap[item?.state] || 'نامشخص'}</Text>
+                </li>
+              </ul>
+            </div>
+
+            <div className={`bg-bgAcceptOrder p-4 rounded-lg hidden max-[1024px]:block ${item?.state === 3 && 'bg-bgRejectOrder'}`} 
+              onClick={() => {
+                setGetData(item)
+                if (item?.state === 0) setOpenModalState(true)
+                if (item?.state === 2) {
+                  setOpenCustomerOrder(true);
+                  setActiveStep(2); 
+                };
+                if (item?.state === 5) {
+                  setOpenCustomerOrder(true)
+                  setActiveStep(3); 
+                }
+                if (item?.state === 4) setOpenModalState(true)
+              }}
+              >
+                <div className='flex justify-between items-center'>
+                  <Title>سفارش دهنده</Title>
+                  <Text>{`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}</Text>
+                </div>
+                <div className='flex justify-between items-center mt-2'>
+                  <Title>قیمت</Title>
+                  <Text>{`${item?.final_price?.toLocaleString('fa-IR')} تومان`}</Text>
+                </div>
+                <div className='flex justify-between items-center mt-2'>
+                  <Title>کد سفارش</Title>
+                  <Text className={`truncate w-20`}>{item?.id}</Text>
+                </div>
+                <div className='flex justify-between items-center mt-2'>
+                  <Title>تاریخ و ساعت</Title>
+                  <Text><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
+                </div>
+                <div className='flex justify-between items-center mt-2'>
+                  <Title>وضعیت سفارش</Title>
+                  <Text className={`flex items-center gap-2`}>{statusMap[item?.state] || 'نامشخص'}</Text>
+                </div>
+            </div>
+            </>
           ))}
         </div>
         <div className='text-center mt-6'>

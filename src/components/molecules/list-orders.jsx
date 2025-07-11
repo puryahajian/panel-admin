@@ -10,22 +10,25 @@ function ListOrders({momber,order,orderCode,price,orderer,date,orderStatus, clas
                     <Text>{momber}</Text>
                 </div>
                 <ul className='grid grid-cols-6 items-center mr-[35px] w-full'>
-                    {/* <li>
-                        <Text className={`truncate w-28`}>{order}</Text>
-                    </li> */}
                     <li>
-                        <Text className={classOrderer}>{orderer}</Text>
+                        <Text className={`truncate w-28`}>{order}</Text>
+                    </li>
+                    <li>
+                        {/* <Text className={classOrderer}>{orderer}</Text> */}
+                        <Text className={`truncate w-20`}>{orderCode}</Text>
                     </li>
                     <li>
                         <Text className={classPrice}>{price}</Text>
                     </li>
                     <li>
-                        <Text className={`truncate w-20`}>{orderCode}</Text>
+                        {/* <Text className={classDate}>{date}</Text> */}
+                        <Text className={classOrderer}>{orderer}</Text>
                     </li>
                     <li>
+                        {/* <Text className={`truncate w-20`}>{orderCode}</Text> */}
                         <Text className={classDate}>{date}</Text>
                     </li>
-                    <li className='text-left col-span-2 flex justify-end items-center'>
+                    <li className='text-left col-span-1 flex justify-end items-center'>
                         <Text className={`flex items-center pl-8 gap-2`}>{orderStatus}</Text>
                     </li>
                 </ul>

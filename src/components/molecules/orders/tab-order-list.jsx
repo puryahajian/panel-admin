@@ -10,6 +10,7 @@ import Mapp from '../mapp'
 
 function TabOrderList() {
   const { data } = useGetAllOrder();
+  console.log(data)
   const [ openModal, setOpenModal ] = useState(false); 
   const [ getData, setGetData ] = useState(''); 
 

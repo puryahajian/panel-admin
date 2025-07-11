@@ -51,9 +51,9 @@ function TabCategory() {
 
     return (
         <>
-        <div className='grid grid-cols-9 max-[1500px]:grid-cols-7 max-[1200px]:grid-cols-5 pt-4 gap-3'>
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3'>
             {data?.results.map((item) => (
-                <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl max-w-40' key={item?.id}>
+                <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' key={item?.id}>
                     <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
 
                     <Text className={`!font-bold`}>{item?.name}</Text>
@@ -85,6 +85,16 @@ function TabCategory() {
                     handleDeleteCategory()
                     setOpen(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpen(false); 
+                }}
+                sx={{
+                    width: '400px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             />
 
             <GeneralModal
@@ -93,12 +103,21 @@ function TabCategory() {
                     e.preventDefault()
                     setOpenEditCategory(false)
                 }}
-                // title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
-                actionText="بله"
+                actionText="ذخیره"
                 actionHandler={(e) => {
                     e.preventDefault()
                     handleEditCategory()
                     setOpenEditCategory(false); 
+                }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenEditCategory(false);
+                }}
+                sx={{
+                    width: '300px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
                 }}
             >
                 <div className=' text-right'>
@@ -109,10 +128,11 @@ function TabCategory() {
                         onFileSelect={setSelectedCategory}
                         preview={selectedItem?.image || preview}
                         setPreview={setPreview}
+                        className={`h-64`}
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input defaultValue={selectedItem?.name} value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input defaultValue={selectedItem?.name} value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

@@ -24,7 +24,7 @@ function TabRightDetail({
             <Text>لوگو </Text>
 
             <Uploader
-                className={`mt-2`}
+                className={`mt-2 h-[155px] min-h-9`}
                 textOne={'تصوبر لوگو سایت'}
                 // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
                 preview={preview}
@@ -37,10 +37,10 @@ function TabRightDetail({
             <Input defaultValue={data?.name} value={valueNameShop} onChange={onChangeNameShop} placeholder={`نام فروشگاه خود را وارد کنید`} className={`w-full mt-2`}/>
 
             <Text className={`mt-4`}>شماره فروشگاه</Text>
-            <Input defaultValue={data?.phone} value={valueNumberShop} onChange={onChangeNumberShop} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
+            <Input defaultValue={data?.phone} value={valueNumberShop} onChange={onChangeNumberShop} type={`number`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
 
             <Text className={`mt-4`}>شماره پشتیبانی</Text>
-            <Input value={valueNumberSupport} onChange={onChangeNumberSupport} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
+            <Input value={valueNumberSupport} onChange={onChangeNumberSupport} type={`number`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
         </div>
     )
 }

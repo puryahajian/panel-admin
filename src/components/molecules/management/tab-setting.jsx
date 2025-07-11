@@ -15,11 +15,11 @@ function TabSetting() {
                 <div className='flex gap-10'>
                     <div className='flex gap-4 items-center'>
                         <Text>از ساعت</Text>
-                        <Input/>
+                        <Input type={`number`}/>
                     </div>
                     <div className='flex gap-4 items-center'>
                         <Text>تا ساعت</Text>
-                        <Input/>
+                        <Input type={`number`}/>
                     </div>
                 </div>
             </div>

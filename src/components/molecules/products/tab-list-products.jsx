@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import Uploader from '../uploader'
 import Loading from '../../atoms/loading';
 import DateShamsi from '../date-shamsi'
+import Title from '../../atoms/title'
 
 
 function TabListProducts() {
@@ -79,7 +80,7 @@ function TabListProducts() {
 
     return (
         <div>
-            <div className='flex items-center'>
+            <div className='flex items-center max-[992px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-7 items-center w-full py-4'>
                     <Text className={`col-span-2 pr-10`}>محصول</Text>
@@ -92,7 +93,7 @@ function TabListProducts() {
                 {data?.results.map((item, index) => {
                     const category = dataCategory?.results.find((c) => c?.id === item?.category_id)
                     return(
-                        <div className='flex items-center border border-grayTitle rounded-2xl' key={item?.id}>
+                        <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
                             <div className='px-8'>{index + 1}</div>
                             <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
                                 <div className=' col-span-2 flex items-center gap-6'>
@@ -136,6 +137,61 @@ function TabListProducts() {
                     )
                 })}
             </div>
+
+            {/* size tablet & mobile */}
+            <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
+                {data?.results.map((item, index) => {
+                    const category = dataCategory?.results.find((c) => c?.id === item?.category_id)
+                    return(
+                        <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
+                            <div className='flex gap-4'>
+                                <img src={item?.image} className={`min-w-16 h-16 rounded-lg`} alt="" />
+                                <div className='w-full grid gap-1'>
+                                    <div className='flex justify-between items-center'>
+                                        <Title>دسته بندی :</Title>
+                                        <Text>{category?.name}</Text>
+                                    </div>
+
+                                    <div className='flex justify-between items-center'>
+                                        <Title>محصول :</Title>
+                                        <Text>{item?.name}</Text>
+                                    </div>
+                                    <div className='flex justify-between items-center'>
+                                        <Title>قیمت :</Title>
+                                        <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='grid grid-cols-3 gap-3 mt-4'>
+                                <ButtonExisting 
+                                    onClick={() => handleEditProduct(item.id, item.exist)}
+                                    className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
+                                    >
+                                        {item?.exist === true ? 'فعال' : 'غیر فعال'}
+                                </ButtonExisting>
+                            
+                                <ButtonEdit onClick={() => {
+                                    setIdEdit(item)
+                                    setOpenEdit(true)
+                                    setSelectIdProduct(item?.id)
+                                    }}>
+                                        ویرایش
+                                </ButtonEdit>
+
+                                <button onClick={() => { 
+                                    setOpen(true)
+                                    setSelectedItemId(item?.id)
+                                    }}>
+                                    <Text className={`text-red-500`}>
+                                        حذف
+                                    </Text>
+                                </button>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+
             <div className='flex justify-center mt-4'>
                 {data?.count === 0 && <Text>محصول موجود نیست</Text>}
             </div>
@@ -154,6 +210,16 @@ function TabListProducts() {
                     handleDeleteProduct()
                     setOpen(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpen(false)}
+                }
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             />
 
             <GeneralModal
@@ -162,33 +228,44 @@ function TabListProducts() {
                     e.preventDefault()
                     setOpenEdit(false)
                 }}
-                actionText={isLoading ? <Loading/> : 'یله'}
+                actionText={isLoading ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
                     e.preventDefault()
                     handleEditProduct(idEdit?.id)
                     setOpenEdit(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenEdit(false)}
+                }
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
-                <div className='grid grid-cols-2 gap-4'>
+                <div className='grid grid-cols-2 max-[550px]:grid-cols-1 gap-4'>
                     <Uploader
                         textOne={`عکس محصول را انتخاب کنید`}
                         selectedFile={selectedFile}
                         onFileSelect={setSelectedFile}
                         preview={selectedItem?.image || preview}
                         setPreview={setPreview}
+                        className={`h-[155px] min-h-9 max-h-[155px]`}
                     />
-                    <textarea defaultValue={selectedItem?.details} value={descriptionEdit} onChange={(e) => setDescriptionEdit(e.target.value)} className='border rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+                    <textarea defaultValue={selectedItem?.details} value={descriptionEdit} onChange={(e) => setDescriptionEdit(e.target.value)} className='border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
                 </div>
                 <div className='grid grid-cols-2 text-right mt-4 gap-2'>
                     <div>
                         <Text>نام محصول</Text>
-                        <Input defaultValue={selectedItem?.name} value={nameEditProduct} onChange={(e) => setNameEditProduct(e.target.value)} className={`w-full mt-2 bg-transparent border border-gray-400`}/>
+                        <Input defaultValue={selectedItem?.name} value={nameEditProduct} onChange={(e) => setNameEditProduct(e.target.value)} className={`w-full mt-2 bg-transparent border border-gray-300`}/>
                     </div>
                     <div>
                         <Text>قیمت</Text>
                         <div>
                             <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>    
-                            <Input defaultValue={selectedItem?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-400`}/>
+                            <Input type={`number`} defaultValue={selectedItem?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                         </div>
                     </div>
                 </div>
@@ -197,13 +274,13 @@ function TabListProducts() {
                     <div>
                         <Text className={`text-right mb-2`}>دسته بندی</Text>
                         <Select
-                            className='!outline-none !text-gray-400 text-right w-full'
+                            className='!outline-none !text-gray-400 !rounded-lg text-right w-full'
                             value={selectorCategory}
                             onChange={(e) => setSelectorCategory(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                             >
-                                <MenuItem value="">
+                                <MenuItem value="" className=' !py-3'>
                                     <Text className={`text-gray-400`}>
                                         {dataCategory?.results?.find(c => c?.id === selectedItem?.category_id)?.name || 'انتخاب کنید'}
                                     </Text>
@@ -219,14 +296,14 @@ function TabListProducts() {
                     </div>
                     <div>
                         <Text className={`text-right`}>تخفیف</Text>
-                        <Input defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[56px] text-left bg-transparent border border-gray-400`}/>
+                        <Input type={`number`} defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300`}/>
                     </div>
 
                 </div>
 
                 <Text className={`mt-4 text-right mb-2`}>وضعیت محصول</Text>
                 <Select
-                    className='!outline-none !text-gray-400 text-right w-full'
+                    className='!outline-none !text-gray-400 text-right !rounded-lg w-full mb-4'
                     value={selectorState}
                     onChange={(e) => setSelectorState(e.target.value)}
                     displayEmpty

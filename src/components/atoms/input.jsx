@@ -2,7 +2,16 @@ import React from 'react'
 
 function Input({className, placeholder,onChange,value,defaultValue, type, min}) {
     return (
-        <input min={min} placeholder={placeholder} defaultValue={defaultValue} onChange={onChange} value={value} className={`bg-bgInput py-3 px-2 text-sm rounded-lg outline-none placeholder:text-gray-400 ${className}`} type={type} />
+        <input 
+            min={min} 
+            placeholder={placeholder} 
+            defaultValue={defaultValue} 
+            onChange={onChange} 
+            inputMode={type === 'number' ? 'numeric' : 'text'}
+            value={value} 
+            className={`bg-bgInput font-sans py-3 px-2 text-sm rounded-lg outline-none placeholder:text-gray-400 ${className}`} 
+            type={type} 
+        />
     )
 }
 

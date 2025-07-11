@@ -16,6 +16,7 @@ import useCreateCategory from '../../db/use-create-category';
 import useGetProductCategory from '../../db/use-get-product-category';
 import useCreateProduct from '../../db/use-create-product';
 import Loading from '../../atoms/loading';
+import '../../../App.css'
 
 
 function TabProduct({ children, step, index }) {
@@ -93,7 +94,7 @@ function Products() {
     return (
         <div>
             <div className='flex justify-between'>
-                <div className='flex gap-4'>
+                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2'>
                     {Buttons.map((tab, index) => (
                         <button
                             key={index}
@@ -111,15 +112,17 @@ function Products() {
                     ))}
                 </div>
 
-                {step === 0 ? (
-                    <ButtonGeneral onClick={() => setOpen(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن محصول
-                    </ButtonGeneral>
-                ) : (
-                    <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن دسته بندی
-                    </ButtonGeneral>
-                )}
+                <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95'>
+                    {step === 0 ? (
+                        <ButtonGeneral onClick={() => setOpen(true)} className={` border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                            افزودن محصول
+                        </ButtonGeneral>
+                    ) : (
+                        <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                            افزودن دسته بندی
+                        </ButtonGeneral>
+                    )}
+                </div>
             </div>
             <TabProduct step={step} index={0}>
                 <hr className='w-[95%] m-auto'/>
@@ -137,15 +140,27 @@ function Products() {
                     setOpen(false)
                 }}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
-                actionText="بله"
+                actionText="ذخیره"
                 actionHandler={(e) => { 
                     e.preventDefault()
                     handleCreateProduct()
                     setOpen(false); 
                 }}
+                classBtn={`mt-4`}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpen(false)}
+                }
+                // width={`w-[300px]`}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                 <div className='text-right'>
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-2 max-[1037px]:grid-cols-1 gap-4'>
                         <Uploader
                             textOne={`تصویر محصول را آپلود کنید`}
                             selectedFile={bgProduct}
@@ -153,7 +168,7 @@ function Products() {
                             preview={previewProduct}
                             setPreview={setPreviewProduct}
                         />
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
                     </div>
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='text-right'>
@@ -177,7 +192,7 @@ function Products() {
                         </div>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>تخفیف</Text>
-                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20%`}/>
+                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`20%`}/>
                         </div>
                     </div>
 
@@ -221,6 +236,16 @@ function Products() {
                     handleSendCategory();
                     setOpenAddProduct(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddProduct(false);  
+                }}
+                sx={{
+                    width: '400px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                 <div className=' text-right'>
                     <Uploader
@@ -230,10 +255,11 @@ function Products() {
                         onFileSelect={setSelectedCategory}
                         preview={preview}
                         setPreview={setPreview}
+                        className={`h-[260px]`}
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

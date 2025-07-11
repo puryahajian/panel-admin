@@ -27,7 +27,7 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
 
     return (
         <div
-            className={`upload-container flex min-h-52 !text-center ${className}`}
+            className={`upload-container flex !text-center ${className}`}
             style={{
             backgroundImage: getBackgroundImage(),
             backgroundSize: 'cover',

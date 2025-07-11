@@ -27,7 +27,6 @@ function Dashboard() {
   const [activeStep, setActiveStep] = useState(1);
   const [timeDelivery, setTimeDelivery] = useState('');
   const [getData, setGetData] = useState(null);
-  console.log(getData)
 
   const lastItem = Array.isArray(data?.sales_data) && data?.sales_data.length > 0
     ? data?.sales_data[data?.sales_data.length - 1]
@@ -66,7 +65,7 @@ function Dashboard() {
 
   return (
     <div>
-      <div className='grid grid-cols-2 gap-6'>
+      <div className='grid grid-cols-2 gap-6 max-[1024px]:grid-cols-1'>
         <CardDiagram 
             contentTitle={
                 'جمع فروش'
@@ -114,8 +113,10 @@ function Dashboard() {
 
       <hr className='border border-gray-300 m-auto w-[93%] my-6'/>
 
+      <Text className={`hidden mb-4 max-[930px]:flex`}>لیست سفارشات فعال</Text>
+
       <div className=''>
-        <div className='flex my-4'>
+        <div className='flex my-4 max-[930px]:hidden'>
           {/* <Title>ردیف</Title> */}
           {/* title */}
           <div className='grid grid-cols-6 mr-[50px] w-full'>
@@ -131,7 +132,8 @@ function Dashboard() {
           {/* data list */}
           {dataGetAllOrder?.map((item) => (
             <ListOrders
-              className={`bg-bgAcceptOrder ${item?.state === 3 && 'bg-bgRejectOrder'}`}
+              className={`bg-bgAcceptOrder max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'}`}
+              classNameResponse={`bg-bgAcceptOrder ${item?.state === 3 && 'bg-bgRejectOrder'}`}
               onClick={() => {
                 setGetData(item)
                 if (item?.state === 0) setOpenModalState(true)
@@ -174,7 +176,6 @@ function Dashboard() {
           e.preventDefault()
           setOpenModalState(false)
         }}
-        width={`100%`}
         title="مشخصات مشتری"
         classTitle={`text-right`}
         actionText="تایید"
@@ -186,13 +187,18 @@ function Dashboard() {
           setOpenModalState(false)
           handleAcceptOrder(getData?.id, 2);
         }}
-        classReject="!w-[250px]"
-        sx={{ justifyContent: 'end' }}
+        classReject="!w-[250px] max-[430px]:!w-full"
+        sx={{
+          width: '80%', 
+          '@media (max-width: 600px)': {
+            width: '92%',
+          },
+        }}
       >
         <hr className="my-4" />
 
         {/* data user */}
-        <div className='grid grid-cols-2 items-center'>
+        <div className='grid grid-cols-2 items-center max-[680px]:grid-cols-1 max-[680px]:gap-4'>
           <div className='grid gap-4 h-max '>
             <div className='flex items-center gap-2 h-max'>
               <Title>نام و نام خانوادگی : </Title>
@@ -259,7 +265,7 @@ function Dashboard() {
           e.preventDefault()
           setOpenCustomerOrder(false)
         }}
-        width={`100%`}
+        // width={`100%`}
         title="مشخصات مشتری"
         classTitle={`text-right`}
         actionText={'تایید'}
@@ -275,12 +281,18 @@ function Dashboard() {
         }}
         classAccept='!w-[250px]'
         classReject="!w-[250px]"
-        sx={{ justifyContent: 'end' }}
+        // sx={{ justifyContent: 'end' }}
+        sx={{
+          width: '80%', 
+          '@media (max-width: 600px)': {
+            width: '92%',
+          },
+        }}
       >
         <hr className="my-4" />
 
         {/* data user */}
-        <div className='grid grid-cols-2 items-center'>
+        <div className='grid grid-cols-2 items-center max-[680px]:grid-cols-1 max-[680px]:gap-4'>
           <div className='grid gap-4 h-max '>
             <div className='flex items-center gap-2 h-max'>
               <Title>نام و نام خانوادگی : </Title>
@@ -295,7 +307,7 @@ function Dashboard() {
               <Text>{getData?.user?.address ? getData?.user?.address : 'موجود نیست'}</Text>
             </div>
           </div>
-          <div>
+          <div className='max-[680px]:hidden'>
             <Mapp
               savedLat={getData?.user?.latitude ? getData?.user?.latitude : 35.699739}
               savedLng={getData?.user?.longitude ? getData?.user?.longitude : 51.338097}
@@ -334,17 +346,18 @@ function Dashboard() {
 
         {/* set time */}
         {activeStep === 2 && (
-          <div className="mt-8 flex gap-2 text-right items-center">
+          <div className="mt-8 flex gap-2 text-right items-center mb-4">
             <div>
               <Text className="text-lg font-bold mb-2">زمان تقریبی</Text>
-              <Text>زمان تقریبی برای تحویل سفارش به مشتری</Text>
+              <Text className={`max-[480px]:text-[11px]`}>زمان تقریبی برای تحویل سفارش به مشتری</Text>
             </div>
             <div className="flex items-center gap-2">
               <Input
                 value={timeDelivery}
                 onChange={(e) => setTimeDelivery(e.target.value)}
-                type="text"
+                type="number"
                 className={`w-20 border border-gray-900`}
+                inputMode='numeric'
                 />
               <Text>دقیقه</Text>
             </div>
@@ -353,7 +366,7 @@ function Dashboard() {
 
         {/* set driver */}
         {activeStep === 3 && (
-          <div className="flex justify-center mt-8 gap-4">
+          <div className="flex justify-center max-[450px]:grid max-[450px]:grid-cols-2 max-[450px]:gap-4 my-8 gap-4">
             {getDriver?.results?.map((item, index) => (
               <div
                 key={item?.id}
@@ -370,14 +383,14 @@ function Dashboard() {
                 <img src={cycle} alt="پیک" />
                 <div className="text-right">
                   <Text
-                    className={`${item?.in_process === false ? 'text-red-500' : ''} 
+                    className={`max-[680px]:text-xs ${item?.in_process === false ? 'text-red-500' : ''} 
                       ${giveIdDriver === item?.id ? 'text-green-500' : ''}
                     `}
                   >
                     پیک شماره {index + 1}
                   </Text>
                   <Text
-                    className={`${item?.in_process === false ? 'text-red-500' : ''} 
+                    className={`max-[680px]:text-xs ${item?.in_process === false ? 'text-red-500 ' : ''} 
                       ${giveIdDriver === item?.id ? 'text-green-500' : ''}
                     `}
                   >

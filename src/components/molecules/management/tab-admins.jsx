@@ -8,6 +8,7 @@ import useDeleteAdmin from '../../db/use-delete-admin'
 import usePatchAdmin from '../../db/use-patch-admin'
 import Input from '../../atoms/input'
 import DateShamsi from '../date-shamsi'
+import Title from '../../atoms/title'
 
 function TabAdmins() {
     const { data } = useGetAllAdmin();
@@ -41,8 +42,8 @@ function TabAdmins() {
     }
 
     return (
-        <div className=''>
-            <div className='flex py-4'>
+        <div>
+            <div className='flex py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-8 w-full mr-6'>
                     <Text className={`col-span-2 pr-2`}>نام</Text>
@@ -52,7 +53,7 @@ function TabAdmins() {
                 </div>
             </div>
 
-            <div className='grid gap-2'>
+            <div className='grid gap-2 max-[990px]:hidden'>
                 {data?.results.map((item, index) => (
                     <div className='flex border border-grayTitle items-center p-4 rounded-2xl' key={item?.id}>
                         <div>
@@ -91,6 +92,33 @@ function TabAdmins() {
                 ))}
             </div>
 
+            {/* size tablet & mobile */}
+            <div className='hidden grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid'>
+                {data?.results.map((item) => (
+                    <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
+                        <div className='flex justify-between items-center'>
+                            <Title>نام :</Title>
+                            <Text>{item?.user.name === null || item?.user.name === "" ? 'ناموجود' : item?.user.name} {item?.user.family}</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>سطح دسترسی :</Title>
+                            <Text>صندوقدار</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>شماره تماس :</Title>
+                            <Text>{item?.user.phone === null || item?.user.phone === "" ? 'ناموجود' : item?.user.phone}</Text>
+                        </div>
+                        <ButtonEdit
+                            className={`w-full mt-4 py-4`}
+                            onClick={() => {
+                                setId(item?.id)
+                                setOpenModalEdit(true)
+                                setSelectDataAdmin(item)
+                        }}>ویرایش</ButtonEdit>
+                    </div>
+                ))}
+            </div>
+
             <div className='flex justify-center mt-4'>
                 {data?.results.length === 0 && <Text>دسته بندی موجود نیست</Text>}
             </div>
@@ -123,6 +151,16 @@ function TabAdmins() {
                     handlePatchAdmin(id)
                     setOpenModalEdit(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenModalEdit(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                  <div className=' text-right'>
 
@@ -139,10 +177,10 @@ function TabAdmins() {
 
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                        <Input defaultValue={selectDataAdmin?.user?.phone} value={phoneAdmin} onChange={(e) => setPhoneAdmin(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                        <Input defaultValue={selectDataAdmin?.user?.phone} type={`number`} value={phoneAdmin} onChange={(e) => setPhoneAdmin(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
                     </div>                    
 
-                    <div className='text-right'>
+                    <div className='text-right mb-4'>
                         <Text className={`mt-4 mb-2`}>آدرس</Text>
                         <Input defaultValue={selectDataAdmin?.user?.address} value={addressAdmin} onChange={(e) => setAddressAdmin(e.target.value)} className={`w-full text-right`} placeholder={`آدرس`}/>
                     </div> 

@@ -35,14 +35,14 @@ function FormAnswer() {
     }
 
     return (
-        <div className='max-w-[800px] m-auto mt-6 shadow-lg p-6'>
+        <div className='max-w-[800px] m-auto mt-6 shadow-lg p-6 max-[680px]:max-w-full'>
             <Text>ارسال پاسخ</Text>
             <Text className={`!text-xs !text-gray-500 mt-2`}>برای ارسال پاسخ به این تیکت، از فرم زیر استفاده کنید.</Text>
             <form action="">
                 <textarea value={message} onChange={(e) => setMessage(e.target.value)} className='w-full border outline-none resize-none h-[300px] rounded-lg mt-4 p-2' placeholder='توضیحات' name="" id=""></textarea>
 
-                <div className='flex justify-between'>
-                    <div dir="rtl" className="flex items-center text-right gap-4 rounded-full border border-gray-200 shadow-sm px-3 py-2 w-full max-w-md">
+                <div className='flex justify-between max-[680px]:block'>
+                    <div dir="rtl" className="flex items-center text-right gap-4 rounded-full border border-gray-200 shadow-sm px-3 py-2 w-full max-w-md max-[680px]:max-w-full">
                         <label className="text-gray-500 text-xs cursor-pointer w-max min-w-max bg-gray-200 px-3 py-1 rounded-xl">
                             پیوست فایل
                             <input type="file" onChange={handleFileChange} className="hidden" />
@@ -51,11 +51,12 @@ function FormAnswer() {
                             {selectedFile ? selectedFile.name : 'موردی انتخاب نشده است.'}
                         </span>
                     </div>
-
-                    <ButtonGeneral onClick={(e) => {
-                        e.preventDefault()
-                        handlePostMessage()
-                        }} className={`bg-customBlue border-none text-white`}>{isPending ? <Loading/> : 'ارسال پاسخ' }</ButtonGeneral>
+                    <div className='max-[680px]:w-full max-[680px]:flex max-[680px]:justify-end'>
+                        <ButtonGeneral onClick={(e) => {
+                            e.preventDefault()
+                            handlePostMessage()
+                            }} className={`bg-customBlue border-none text-white max-[680px]:justify-end max-[680px]:mt-4`}>{isPending ? <Loading/> : 'ارسال پاسخ' }</ButtonGeneral>
+                    </div>
                 </div>
             </form>
         </div>

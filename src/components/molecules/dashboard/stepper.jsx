@@ -16,7 +16,7 @@ function Stepper({ activeStep, setActiveStep }) {
             {steps.map((step, index) => (
                 <React.Fragment key={index}>
                     <div
-                        className={`flex w-full flex-col items-center ${
+                        className={`flex w-full max-[1080px]:w-max flex-col items-center ${
                             step.id <= activeStep ? 'text-customBlue' : 'text-gray-500'
                         }`}
                     >
@@ -40,7 +40,7 @@ function Stepper({ activeStep, setActiveStep }) {
                             </Text>
                         </div>
                         <Text
-                            className={`mt-2 w-full ${
+                            className={`mt-2 w-full max-[1024px]:text-xs max-[480px]:text-[10px] ${
                                 step.id <= activeStep ? '!text-customBlue' : '!text-gray-400'
                             }`}
                             >
@@ -49,7 +49,7 @@ function Stepper({ activeStep, setActiveStep }) {
                     </div>
                     {step.id !== 5 && (
                         <hr
-                            className={`${
+                            className={`max-[1080px]:hidden ${
                                 step.id < activeStep ? 'border-customBlue' : 'border-gray-400'
                             } w-full border`}
                         />

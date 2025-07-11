@@ -10,7 +10,7 @@ import Img from '../../atoms/img'
 function Tickets() {
     const { data } = useGetTicketPage();
     return (
-        <div className=' h-full'>
+        <div className=' h-full max-[830px]:mx-4'>
             <div className='max-w-[800px] m-auto mt-6'>
                 <HeaderTicket/>
             </div>

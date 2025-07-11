@@ -11,6 +11,8 @@ import GeneralModal from '../molecules/modal-general';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import useGetInfo from '../db/use-get-info';
+import HeaderResponsive from '../molecules/header-responsive';
+import Discount from '../molecules/discount/discount';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -19,7 +21,8 @@ function TabPanel({ children, step, index }) {
             hidden={step !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
-            style={{ padding: '32px', backgroundColor: 'white', color: 'black', borderRadius: '8px' }}
+            className='p-4'
+            style={{backgroundColor: 'white', color: 'black', borderRadius: '8px', width: '100%' }}
         >
             {step === index && <div>{children}</div>}
         </div>
@@ -51,7 +54,7 @@ function MolPanel() {
     return (
         <>
         <div className='flex'>
-            <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0'>
+            <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0 max-[1024px]:hidden'>
                 <div>
                     <img src={dataInfo?.logo} className='mb-10 w-16 m-auto' alt="" />
                     {MenuPanel.map((tab, index) => (
@@ -71,15 +74,15 @@ function MolPanel() {
                     ))}
                     
                 </div>
-                    <button
-                        className='border border-red-600 text-right p-4 rounded-lg'
-                        onClick={() => setOpen(true)}
-                    >
-                       <Text className={`text-red-500`}> خروج از حساب</Text>
-                    </button>
-
+                <button
+                    className='border border-red-600 text-right py-3 px-2 rounded-lg'
+                    onClick={() => setOpen(true)}
+                >
+                    <Text className={`text-red-500`}> خروج از حساب</Text>
+                </button>
             </div>
-            <div className=' max-[990px]:ml-0 max-[990px]:mt-4 grow'>
+            <HeaderResponsive step={step} setStep={setStep}/>
+            <div className=' grow max-[1024px]:mt-[60px]'>
                 <TabPanel step={step} index={0}>
                     <Dashboard/>
                 </TabPanel>
@@ -96,7 +99,7 @@ function MolPanel() {
                     <Setting/>
                 </TabPanel>
                 <TabPanel step={step} index={5}>
-                    6
+                    <Discount/>
                 </TabPanel>
                 <TabPanel step={step} index={6}>
                     7

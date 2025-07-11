@@ -7,6 +7,7 @@ import useDeleteCustomer from '../../db/use-delete-customer';
 import Input from '../../atoms/input';
 import usePatchCustomer from '../../db/use-patch-customer';
 import Loading from '../../atoms/loading';
+import Title from '../../atoms/title';
 
 function TabCustomer() {
     const { data } = useGetAllCustomer();
@@ -53,14 +54,14 @@ function TabCustomer() {
 
     return (
         <div>
-            <div className='grid grid-cols-12 py-4'>
+            <div className='grid grid-cols-12 py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <Text className={`col-span-2 mr-2`}>نام</Text>
                 <Text className={`col-span-2 mr-2`}> شماره تماس</Text>
                 <Text>آدرس</Text>
             </div>
 
-            <div className='grid gap-2'>
+            <div className='grid gap-2 max-[990px]:hidden'>
                 {data?.results.map((item, index) => (
                     <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4' key={item?.id}>
                         <div>{index + 1}</div>
@@ -92,9 +93,36 @@ function TabCustomer() {
                         </div> */}
                     </div>
                 ))}
-
             </div>
 
+            {/* size tablet & mobile */}
+            <div className='hidden gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid max-[990px]:mb-14'>
+                {data?.results.map((item) => (
+                    <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
+                        <div className='flex justify-between items-center'>
+                            <Title>نام :</Title>
+                            <Text>{item?.name === null || item?.name === '' ? 'ناشناس' : item?.name} {item?.family}</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>شماره تماس :</Title>
+                            <Text>{item?.phone === null ? 'ناموجود' : item?.phone}</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>آدرس :</Title>
+                            <Text className={`truncate w-24`}>{item?.address === null || item?.address === '' ? 'ادرس موجود نیست' : item?.address}</Text>
+                        </div>
+                        <ButtonEdit
+                            className={`w-full mt-4 py-4`}
+                            onClick={() => {
+                                setSelectIdEdit(item?.id)
+                                handleOpenEdit(item)
+                                setOpenModalAddCustomer(true)
+                        }}>ویرایش</ButtonEdit>
+                    </div>
+                ))}
+            </div>
+
+            {/* delete customer */}
             <GeneralModal
                 open={openModal && selectIdCustomer}
                 handleClose={() => setOpenModal(false)}
@@ -107,6 +135,7 @@ function TabCustomer() {
                 }}
             />
 
+            {/* edit customer */}
             <GeneralModal
                 open={openModalAddCustomer && selectIdEdit}
                 handleClose={(e) => {
@@ -122,8 +151,18 @@ function TabCustomer() {
                     // console.log(selectIdEdit)
                     // setSelectId(selectIdEdit)
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenModalAddCustomer(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
-                <div className='flex w-full gap-4 mt-4'>
+                <div className='flex w-full gap-4 mt-4 max-[600px]:grid'>
                     <div className='w-full text-right'>
                         <Text className={`text-right mt-4`}>نام</Text>
                         <Input value={nameCustomer} onChange={(e) => setNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام مشتری را وارد کنید`}/>
@@ -135,10 +174,10 @@ function TabCustomer() {
                 </div> 
 
                 <Text className={`mt-4 text-right`}>شماره</Text>
-                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} className={`w-full text-left mt-2`} placeholder={`09111111111`}/>
+                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} type={`number`} className={`w-full text-left mt-2`} placeholder={`09111111111`}/>
 
                 <Text className={`text-right mt-4`}>آدرس</Text>
-                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`آدرس را وارد کنید`}/>
+                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2 mb-4`} placeholder={`آدرس را وارد کنید`}/>
             </GeneralModal>
         </div>
     )

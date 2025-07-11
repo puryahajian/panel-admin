@@ -28,7 +28,7 @@ function TabOrderList() {
    
   return (
     <div className=''>
-        <div className='flex my-4'>
+        <div className='flex my-4 max-[1024px]:hidden'>
           <Title>ردیف</Title>
           <div className='grid grid-cols-6 w-full'>
             <Title className={`pr-6`}>سفارش</Title>
@@ -79,11 +79,22 @@ function TabOrderList() {
           actionText="تایید"
           classAccept={`hidden`}
           exitButton={`بستن`}
+          classReject={`w-[250px] max-[600px]:w-full`}
+          onClose={(e) => {
+            e.preventDefault()
+            setOpenModal(false)
+          }}
+          sx={{
+            width: '80%', 
+            '@media (max-width: 600px)': {
+              width: '92%',
+            },
+          }}
         >
           <hr className="my-4" />
 
           {/* data user */}
-          <div className='grid grid-cols-2 items-center'>
+          <div className='grid grid-cols-2 max-[990px]:grid-cols-1 items-center'>
             <div className='grid gap-4 h-max '>
               <div className='flex items-center gap-2 h-max'>
                 <Title>نام و نام خانوادگی : </Title>
@@ -98,7 +109,7 @@ function TabOrderList() {
                 <Text>{getData?.user?.address ? getData?.user?.address : 'موجود نیست'}</Text>
               </div>
             </div>
-            <div>
+            <div className='max-[990px]:mt-4'>
               <Mapp
                 savedLat={getData?.user?.latitude ? getData?.user?.latitude : 35.699739}
                 savedLng={getData?.user?.longitude ? getData?.user?.longitude : 51.338097}

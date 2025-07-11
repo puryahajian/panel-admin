@@ -19,7 +19,6 @@ function MolLogin() {
     const { mutate: mutateVerify, isPending: isPendingVerify } = usePostVerify();
     const [step, setStep] = useState(1);
     const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
     const [messageError, setMessageError] = useState('');
     const [otp, setOtp] = useState('');
 
@@ -58,24 +57,24 @@ function MolLogin() {
     }
 
     return (
-        <div className='grid grid-cols-2 h-dvh items-center'>
+        <div className='flex flex-row h-dvh justify-center gap-32 items-center max-[1024px]:flex-col-reverse'>
             <div>
-                <div className='text-center max-w-md m-auto'>
+                <div className='text-center m-auto max-[990px]:w-[325px]'>
                     <TextBold>خوش آمدید!</TextBold>
                     <Title className={`mt-4`}>برای ورود نام کاربری و رمزعبور خود را وارد کنید</Title>
                     <div className='text-right mt-6'>
                         <Text className={`text-red-500 mb-2`}>{messageError}</Text>
-                        <form>
+                        <form className='max-w-[325px] max-[580px]:max-w-[100%] w-[325px] max-[580px]:w-full'>
                             {step === 1 && (
                                 <>
                                     <Title>نام کاربری</Title>
-                                    <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border mt-2 ${messageError ? 'border-red-500' : ''}`}/>
+                                    <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
                                 </>
                             )}
                             {step === 2 && (
-                                <>
+                                <div>
                                     <Title className={`mt-4`}>رمزعبور</Title>
-                                    <div className="relative mt-2">
+                                    <div className="relative mt-4">
                                         {/* <input
                                             type={`text`}
                                             value={password}
@@ -85,31 +84,20 @@ function MolLogin() {
                                             }`}
                                         /> */}
                                         <OTPInput
-                                            containerStyle={{
-                                                gap: '50px',
-                                                direction: 'ltr',
-                                                marginTop: '16px'
-                                            }}
+                                            containerStyle="otp-container"
                                             value={otp}
                                             onChange={setOtp}
                                             numInputs={4}
-                                            renderInput={(props) => <input {...props} />}
+                                            renderInput={(props) => <input {...props} type='number' inputMode='numeric'/>}
                                             inputStyle="otp-input"
                                             shouldAutoFocus
                                         />
-                                        {/* <button
-                                            type="button"
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            className="absolute top-[22px] left-2 transform -translate-y-1/2 text-sm text-gray-600"
-                                        >
-                                            {showPassword ? <VisibilityOffIcon/> : <VisibilityIcon/>}
-                                        </button> */}
                                     </div>
-                                </>
+                                </div>
                             )}
 
                             {step === 1 && (
-                                <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
+                                <ButtonGeneral className={`bg-customBlue w-full min-w-[150px] max-[680px]:w-[100%] border-none text-white mt-6 py-4`} 
                                     onClick={(e) =>{ 
                                         e.preventDefault()
                                         handleSubmitLogin()
@@ -118,7 +106,7 @@ function MolLogin() {
                                 </ButtonGeneral>
                             )}
                             {step === 2 && (
-                                <ButtonGeneral className={`bg-customBlue w-full border-none text-white mt-6 py-4`} 
+                                <ButtonGeneral className={`bg-customBlue w-full min-w-[150px] max-[680px]:w-[100%] border-none text-white mt-6 py-4`} 
                                     onClick={(e) =>{ 
                                         e.preventDefault()
                                         handleSubmitVerify()
@@ -131,8 +119,8 @@ function MolLogin() {
                     </div>
                 </div>
             </div>
-            <div>
-                <img src={ImgLogin} alt="" />
+            <div className='flex justify-center'>
+                <img src={ImgLogin} className='max-[680px]:w-[224px] max-[680px]:h-[200px] w-[400px] h-[400px]' alt="" />
             </div>
         </div>
     )

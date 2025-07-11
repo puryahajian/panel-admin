@@ -8,6 +8,7 @@ import usePatchDriver from '../../db/use-patch-driver';
 import Loading from '../../atoms/loading'
 import useDeleteDriver from '../../db/use-delete-driver';
 import ButtonExisting from '../../atoms/button-existing';
+import Title from '../../atoms/title';
 
 function TabCouriers() {
     const { data } = useGetDriver();
@@ -47,14 +48,14 @@ function TabCouriers() {
 
     return (
         <div>
-            <div className='grid grid-cols-12 py-4'>
+            <div className='grid grid-cols-12 py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <Text className={`col-span-2 mr-2`}>نام</Text>
                 <Text className={`col-span-2 mr-2`}> شماره تماس</Text>
                 <Text>آدرس</Text>
             </div>
 
-            <div className='grid gap-2'>
+            <div className='grid gap-2 max-[990px]:hidden'>
                 {data?.results.map((item, index) => (
                     <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4' key={item?.id}>
                         <div>{index + 1}</div>
@@ -92,6 +93,48 @@ function TabCouriers() {
                 ))}
             </div>
 
+            {/* size tablet & mobile */}
+            <div className='hidden gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid'>
+                {data?.results.map((item) => (
+                    <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
+                        <div className='flex justify-between items-center'>
+                            <Title>نام :</Title>
+                            <Text>{item?.name}</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>شماره تماس :</Title>
+                            <Text>{item?.phone}</Text>
+                        </div>
+                        <div className='flex justify-between items-center'>
+                            <Title>آدرس :</Title>
+                            <Text className={`truncate w-24`}>{item?.address === null ? 'موجود نیست' : item?.address}</Text>
+                        </div>
+                        <div className='grid grid-cols-3 gap-2 mt-4'> 
+                            <ButtonExisting
+                                onClick={() => handlePatchDriver(item.id, item.in_process)}
+                                className={`${item?.in_process === true ? '' : 'bg-red-500 border-transparent'}`}
+                            >
+                                {item?.in_process === true ? 'آنلاین' : 'آفلاین'}
+                            </ButtonExisting>
+                            <ButtonEdit onClick={() => { 
+                                    setId(item?.id)
+                                    setSelectData(item)
+                                    setOpenEdit(true)
+                                }}
+                            >
+                                ویرایش
+                            </ButtonEdit>
+                            <button onClick={() => {
+                                setIdDelete(item?.id)
+                                setOpenModal(true)
+                            }}>
+                                <Text className={`text-red-500`}>حذف</Text>
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             <div className='flex justify-center mt-4'>
                 {data?.results.length === 0 && <Text>دسته بندی موجود نیست</Text>}
             </div>
@@ -109,6 +152,16 @@ function TabCouriers() {
                     handleDeleteDriver(idDelete)
                     setOpenModal(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenModal(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '93%',
+                    },
+                }}
             />
 
             <GeneralModal
@@ -124,19 +177,29 @@ function TabCouriers() {
                     handlePatchDriver(id)
                     setOpenEdit(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenEdit(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
-                <div className='grid grid-cols-2 gap-4'>
+                <div className='grid grid-cols-2 gap-4 max-[600px]:grid-cols-1'>
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>نام</Text>
                         <Input defaultValue={selectData?.name} value={nameDriver} onChange={(e) => setNameDriver(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                     </div>
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                        <Input defaultValue={selectData?.phone} value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                        <Input defaultValue={selectData?.phone} value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
                     </div>                    
                 </div>
 
-                <div className='text-right'>
+                <div className='text-right mb-4'>
                     <Text className={`mt-4 mb-2`}>آدرس</Text>
                     <Input defaultValue={selectData?.address} value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
                 </div> 

@@ -110,57 +110,67 @@ function Management() {
     return (
         <div>
             <div className='flex justify-between'>
-                <div className='flex gap-4'>
-                    {Buttons.map((tab, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setStep(index)}
-                            className={`px-7 py-3 rounded-lg text-sm font-sans text-grayText ${
-                                step === index
-                                    ? 'bg-grayText text-white'
-                                    : 'border border-gray-600 text-grayText'
-                            }`}
-                            aria-controls={`vertical-tabpanel-${index}`}
-                        >
-                            <span className='font-sans text-sm '>{tab.label}</span>
-                            
-                        </button>
-                    ))}
+                <div className='flex gap-4 max-[560px]:fixed max-[560px]:top-[73px] max-[560px]:w-[92vw] max-[560px]:bg-white max-[560px]:opacity-95'>
+                    <div className='flex overflow-auto w-max gap-4 max-[560px]:pb-4 max-[560px]:pt-1'>
+                        {Buttons.map((tab, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setStep(index)}
+                                className={`px-10 py-3 w-max rounded-lg text-grayText ${
+                                    step === index
+                                        ? 'bg-grayText text-white'
+                                        : 'border border-gray-600 text-grayText'
+                                }`}
+                                aria-controls={`vertical-tabpanel-${index}`}
+                            >
+                                <Text className={`w-max ${
+                                    step === index
+                                        ? 'text-white'
+                                        : 'text-grayText'
+                                }`}>{tab.label}</Text>
+                                
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {step === 0 && (
-                    <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن ادمین
-                    </ButtonGeneral>
-                )}
-                {step === 1 && (
-                    <ButtonGeneral onClick={() => setOpenAddCustomer(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن مشتری
-                    </ButtonGeneral>
-                )}
-                {step === 2 && (
-                    <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border border-blue-500 !text-blue-500`}>
-                        افزودن پیک
-                    </ButtonGeneral>
-                )}
+                <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95'>
+                    {step === 0 && (
+                        <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                            افزودن ادمین
+                        </ButtonGeneral>
+                    )}
+                    {step === 1 && (
+                        <ButtonGeneral onClick={() => setOpenAddCustomer(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                            افزودن مشتری
+                        </ButtonGeneral>
+                    )}
+                    {step === 2 && (
+                        <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                            افزودن پیک
+                        </ButtonGeneral>
+                    )}
+                </div>
             </div>
-
-            <TabManagement step={step} index={0}>
-                <hr className='w-[95%] m-auto'/>
-                <TabAdmins/>
-            </TabManagement>
-            <TabManagement step={step} index={1}>
-                <hr className='w-[95%] m-auto'/>
-                <TabCustomer/>
-            </TabManagement>
-            <TabManagement step={step} index={2}>
-                <hr className='w-[95%] m-auto'/>
-                <TabCouriers/>
-            </TabManagement>
-            <TabManagement step={step} index={3}>
-                <hr className='w-[95%] m-auto'/>
-                <TabTickets/>
-            </TabManagement>
+            
+            <div className=' max-[560px]:mt-[70px]'>
+                <TabManagement step={step} index={0}>
+                    <hr className='w-[95%] m-auto max-[990px]:hidden'/>
+                    <TabAdmins/>
+                </TabManagement>
+                <TabManagement step={step} index={1}>
+                    <hr className='w-[95%] m-auto max-[990px]:hidden'/>
+                    <TabCustomer/>
+                </TabManagement>
+                <TabManagement step={step} index={2}>
+                    <hr className='w-[95%] m-auto max-[990px]:hidden'/>
+                    <TabCouriers/>
+                </TabManagement>
+                <TabManagement step={step} index={3}>
+                    <hr className='w-[95%] m-auto max-[990px]:hidden'/>
+                    <TabTickets/>
+                </TabManagement>
+            </div>
 
             {/* add admin */}
             <GeneralModal
@@ -176,13 +186,23 @@ function Management() {
                     setOpenAddAdmin(false); 
                     handleCreateAdmin()
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddAdmin(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                 <div className=' text-right'>
                     <div className='m-auto text-center'>
                         <PersonIcon className='!text-6xl'/>
                     </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-2 gap-4 max-[600px]:grid-cols-1'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
                             <Input value={nameAdmin} onChange={(e) => setNameAdmin(e.target.value)} className={`w-full`} placeholder={`نام ادمین `}/>
@@ -205,7 +225,7 @@ function Management() {
                         </div>  
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                            <Input value={phone} onChange={(e) => setPhone(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
+                            <Input value={phone} onChange={(e) => setPhone(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
                         </div>                    
                     </div>
 
@@ -214,7 +234,7 @@ function Management() {
                         <Input value={nCode} onChange={(e) => setNcode(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
                     </div>
 
-                    <div className='text-right'>
+                    <div className='text-right mb-4'>
                         <Text className={`mt-4 mb-2`}>آدرس</Text>
                         <Input value={address} onChange={(e) => setAddress(e.target.value)} className={`w-full`} placeholder={`نام خانوادگی `}/>
                     </div>
@@ -235,6 +255,16 @@ function Management() {
                     handleCreateNewCustomer(); 
                     setOpenAddCustomer(false) 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddCustomer(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                <Uploader
                     textOne={`لیست مشتریان خود را آپلود کنید`}
@@ -245,7 +275,7 @@ function Management() {
                     setPreview={setPreview}
                 />
 
-                <div className='flex w-full gap-4 mt-4'>
+                <div className='flex w-full gap-4 mt-4 max-[600px]:grid'>
                     <div className='w-full text-right'>
                         <Text>نام</Text>
                         <Input value={nameCustomer} onChange={(e) => setNameCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`نام مشتری را وارد کنید`}/>
@@ -257,10 +287,10 @@ function Management() {
                 </div>
 
                 <Text className={`text-right mt-4`}>شماره</Text>
-                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} className={`w-full text-left`} placeholder={`09111111111`}/>
+                <Input value={numberCustomer} onChange={(e) => setNumberCustomer(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`09111111111`}/>
 
                 <Text className={`text-right mt-4`}>آدرس</Text>
-                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2`} placeholder={`آدرس را وارد کنید`}/>
+                <Input value={addressCustomer} onChange={(e) => setAddressCustomer(e.target.value)} className={`w-full mt-2 mb-4`} placeholder={`آدرس را وارد کنید`}/>
             </GeneralModal>
 
             {/* add couriers */}
@@ -277,26 +307,36 @@ function Management() {
                     handleCreateNewDriver();
                     setOpenAddCouriers(false); 
                 }}
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpenAddCouriers(false);  
+                }}
+                sx={{
+                    width: '500px', 
+                    '@media (max-width: 600px)': {
+                        width: '92%',
+                    },
+                }}
             >
                 <div className=' text-right'>
                     <div className='m-auto text-center'>
                         <img src={ImgGift} className='m-auto my-8'  alt="" />
                     </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-2 gap-4 max-[600px]:grid-cols-1'>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>نام</Text>
                             <Input value={nameDriver} onChange={(e) => setNameDriver(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
                         </div>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                            <Input value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
+                            <Input value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`۰۹۱۲۳۴۵۶۷۸۹`}/>
                         </div>                    
                     </div>
 
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>آدرس</Text>
-                        <Input value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
+                        <Input value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right mb-4`} placeholder={`آدرس پیک را وارد کنید`}/>
                     </div> 
 
                 </div>

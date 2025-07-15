@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MenuPanel from '../../lib/menu-panel';
-import Logo from '../../assets/image/logo.png'
+// import Logo from '../../assets/image/logo.png'
 import Dashboard from '../molecules/dashboard/dashboard';
 import Text from '../atoms/text';
 import Orders from '../molecules/orders/orders'
@@ -8,6 +8,7 @@ import Products from '../molecules/products/products';
 import Management from '../molecules/management/management';
 import Setting from '../molecules/setting.jsx/setting';
 import GeneralModal from '../molecules/modal-general';
+import Logo from '../../assets/image/logoIrani.png';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import useGetInfo from '../db/use-get-info';
@@ -56,7 +57,11 @@ function MolPanel() {
         <div className='flex'>
             <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0 max-[1024px]:hidden'>
                 <div>
-                    <img src={dataInfo?.logo} className='mb-10 w-16 m-auto' alt="" />
+                    <div className='flex items-center gap-2 w-full justify-center'>
+                        <Text className={`mb-8 text-center`}>پنل فروشندگان ایرانی شاپ</Text>
+                        <img src={Logo} className='mb-10 w-6' alt="" />
+                    </div>
+                    
                     {MenuPanel.map((tab, index) => (
                         <button
                             key={index}
@@ -118,6 +123,13 @@ function MolPanel() {
             actionHandler={(e) => { 
                 e.preventDefault();
                 handleExit()
+            }}
+            onClose={()=> setOpen(false)}
+            sx={{
+                width: '500px', 
+                '@media (max-width: 840px)': {
+                    width: '92%',
+                },
             }}
         />
         </>

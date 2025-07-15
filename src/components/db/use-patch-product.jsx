@@ -8,7 +8,27 @@ function usePatchProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idEdit, selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
+        mutationFn: async ({ idEdit, 
+            selectorCategory, 
+            selectorState, 
+            nameEditProduct, 
+            priceEditProduct, 
+            selectedFile, 
+            inState, 
+            newImage1 ,
+            newImage2 ,
+            newImage3 ,
+            newImage4 ,
+            newImage5 ,
+            wholPrice,
+            isCheckedAmazon,
+            isCheckedSoqMaftoh,
+            productTol,
+            productArz,
+            productErtefa,
+            isCheckedNon,
+            stockNumber
+        }) => {
             
             const formData = new FormData();
 
@@ -32,8 +52,29 @@ function usePatchProduct() {
             }           
 
             if (selectedFile) formData.append('image', selectedFile);
-    
-            const res = await interceptor.patch(`product/api/v1/product/${idEdit}/`, formData);
+
+            if (newImage1) formData.append('image1', newImage1);
+            if (newImage1) formData.append('image1', newImage1);
+            if (newImage2) formData.append('image2', newImage2);
+            if (newImage3) formData.append('image3', newImage3);
+            if (newImage4) formData.append('image4', newImage4);
+            if (newImage5) formData.append('image5', newImage5);
+            if (productTol && productArz && productErtefa) {
+                const size = `${productTol}x${productArz}x${productErtefa}`; // ترکیب مقادیر به‌صورت رشته
+                formData.append('size', size);
+            }   
+            
+            if (productTol) formData.append('tole', productTol);
+            if (productArz) formData.append('arze', productArz);
+            if (productErtefa) formData.append('ertefahe', productErtefa);
+
+            if (wholPrice) formData.append('wholesale_price', wholPrice);
+            if (isCheckedSoqMaftoh) formData.append('soghol_maftoh', isCheckedSoqMaftoh);
+            if (isCheckedAmazon) formData.append('amazon', isCheckedAmazon);
+            if (isCheckedNon) formData.append('non', isCheckedNon);
+            if (stockNumber) formData.append('stock', stockNumber);
+
+            const res = await interceptor.patch(`product/admin/api/v1/products/${idEdit}/`, formData);
             return res.data;
         },
         onSuccess: (data) => {

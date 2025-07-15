@@ -7,6 +7,7 @@ import MenuPanel from '../../lib/menu-panel';
 import GeneralModal from './modal-general';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
+import Text from '../atoms/text';
 
 
 function HeaderResponsive({step, setStep}) {
@@ -53,7 +54,9 @@ function HeaderResponsive({step, setStep}) {
                 </div>
             </OffcanvasMenu>
 
-            <img src={data?.logo} className='w-[40px] h-[40px] z-20' alt="" />
+            {/* <img src={data?.logo} className='w-[40px] h-[40px] z-20' alt="" /> */}
+            <Text className={` text-center`}>پنل فروشندگان ایرانی شاپ</Text>
+
             
             <button onClick={handleUserClick}>
                 <img src={User} className='w-6 h-6 z-20 rotate-180' alt="" />

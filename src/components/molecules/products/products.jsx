@@ -17,6 +17,9 @@ import useGetProductCategory from '../../db/use-get-product-category';
 import useCreateProduct from '../../db/use-create-product';
 import Loading from '../../atoms/loading';
 import '../../../App.css'
+import useDeleteImageProduct from '../../db/use-delete-image-product';
+import UseAddImagesProduct from '../../db/use-add-images-product';
+import { toast } from 'react-toastify';
 
 
 function TabProduct({ children, step, index }) {
@@ -38,26 +41,82 @@ function Products() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
     const {mutate, isLoading} = useCreateCategory();
+    const { mutate: mutateDeleteImage } = useDeleteImageProduct();
     const { mutate: mutateCreatedProduct } = useCreateProduct();
+    const { mutate: mutateAddImage } = UseAddImagesProduct();
     const { data: dataCategory } = useGetProductCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
-    const [ bgProduct, setBgProduct ] = useState();
+    const [ bgProduct, setBgProduct ] = useState(null);
+    const [ errCreate, setErrCreate ] = useState(null);
+
     const [preview, setPreview] = useState();
+    const [ selectedFile, setSelectedFile ] = useState('');
     const [previewProduct, setPreviewProduct] = useState();
-    const [nameProduct, setNameProduct] = useState();
-    const [priceProduct, setPriceProduct] = useState();
+    const [ selectedImage1, setSelectedImage1 ] = useState('');
+    const [previewImage1, setPreviewImage1] = useState('');
+
+    const [ selectedImage2, setSelectedImage2 ] = useState('');
+    const [previewImage2, setPreviewImage2] = useState('');
+
+    const [ selectedImage3, setSelectedImage3 ] = useState('');
+    const [previewImage3, setPreviewImage3] = useState('');
+
+    const [ selectedImage4, setSelectedImage4 ] = useState('');
+    const [previewImage4, setPreviewImage4] = useState('');
+
+    const [ selectedImage5, setSelectedImage5 ] = useState('');
+    const [previewImage5, setPreviewImage5] = useState('');
+
+    const [priceNumber, setPriceNumber] = useState();
+    const [count, setCount] = useState();
+    const [unitWeigth, setUnitWeigth] = useState();
+
+    const [nameProduct, setNameProduct] = useState('');
+    const [priceProduct, setPriceProduct] = useState('');
     const [selectorCategory, setSelectorCategory] = useState();
     const [unitName, setUnitName] = useState();
     const [offer, setOffer] = useState();
-    const [description, setDescription] = useState();
+    const [description, setDescription] = useState('');
     const [nameCategory, setNameCategory] = useState('');
+    const [ productTol, setProductTol ] = useState('');
+    const [ productArz, setProductArz ] = useState('');
+    const [ productErtefa, setProductErtefa ] = useState('');
+
+    const [ wholPrice, setWholPrice ] = useState('');
+    const [isCheckedAmazon, setIsCheckedAmazon] = useState(false);
+    const [isCheckedSoqMaftoh, setIsCheckedSoqMaftoh] = useState(false);
+    const [isCheckedNon, setIsCheckedNon] = useState(false);
+    
+
+    const handleCheckboxChangeAmazon = () => {
+        const valueAmazon = !isCheckedAmazon;
+        setIsCheckedAmazon(valueAmazon); 
+    };
+
+    const handleCheckboxChangeSoqMaftoh = () => {
+        const valueSoqMaftoh = !isCheckedSoqMaftoh;
+        setIsCheckedSoqMaftoh(valueSoqMaftoh); 
+    };
+
+    const handleCheckboxChangeNon = () => {
+        const valueNon = !isCheckedNon;
+        setIsCheckedNon(valueNon); 
+    };
 
     const Buttons = [
         {label: "لیست محصولات" },
         // {label: "دسته بندی ها" },
     ];
-  
+
+    const [uploaderCount, setUploaderCount] = useState(1); 
+    
+    // const handleAddUploader = (e) => {
+    //     e.preventDefault();
+    //     if (uploaderCount < 5) {
+    //         setUploaderCount(prev => prev + 1);
+    //     }
+    // };
 
     const handleSendCategory = () => {
         mutate(
@@ -72,12 +131,67 @@ function Products() {
     }
 
     const handleCreateProduct = () => {
+
+        if (bgProduct === undefined && selectedFile === undefined) {
+            const errorMessage = 'لطفاً حداقل یک تصویر برای محصول انتخاب کنید';
+            setErrCreate({ message: errorMessage });
+            toast.info('تصویر را انتخاب کنید');
+            return;
+        } else if (nameProduct === '' || priceProduct === '' ) {
+            setErrCreate({ message: 'فیلدهای نام، قیمت, عکس الزامی هستند' });
+            toast.info('فیلدهای نام، قیمت الزامی هستند');
+            return;
+        }
+
         mutateCreatedProduct(
             {
-                bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description
+                selectedFile,
+                bgProduct,
+                nameProduct, 
+                priceProduct, 
+                // selectorCategory, 
+                unitName,
+                offer, 
+                description, 
+                selectedImage1,
+                selectedImage2,
+                selectedImage3,
+                wholPrice,
+                isCheckedAmazon,
+                isCheckedSoqMaftoh,
+                isCheckedNon,
+                productTol,
+                productArz,
+                productErtefa,
+                count
+            },
+            {
+                onSuccess: (data) => {
+                    setOpen(false); 
+                    setSelectedFile(null);
+                    setBgProduct(null);
+                    setNameProduct('');
+                    setPriceProduct('');
+                    // setSelectorCategory('');
+                    setUnitName('');
+                    setOffer('');
+                    setDescription('');
+                    setSelectedImage1(null);
+                    setSelectedImage2(null);
+                    setSelectedImage3(null);
+                    setWholPrice('');
+                    setIsCheckedAmazon(false);
+                    setIsCheckedSoqMaftoh(false);
+                    setIsCheckedNon(false);
+                    setProductTol('');
+                    setProductArz('');
+                    setProductErtefa('');
+                    setErrCreate(null)
+                },
             }
         )
     }
+
 
     const formatNumber = (value) => {
         const numericValue = value.replace(/,/g, ''); // حذف ویرگول‌های قبلی
@@ -88,6 +202,11 @@ function Products() {
         const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
         if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
         setPriceProduct(formatNumber(rawValue));
+    };
+    const handleChangePriceNumber = (e) => {
+        const wholValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
+        if (!/^\d*$/.test(wholValue)) return; // فقط اعداد مجاز باشن
+        setWholPrice(formatNumber(wholValue));
     };
 
 
@@ -147,83 +266,260 @@ function Products() {
                 actionHandler={(e) => { 
                     e.preventDefault()
                     handleCreateProduct()
-                    setOpen(false); 
                 }}
                 classBtn={`mt-4`}
                 onClose={(e) => {
                     e.preventDefault()
                     setOpen(false)}
                 }
-                // width={`w-[300px]`}
                 sx={{
-                    width: '500px', 
-                    '@media (max-width: 600px)': {
+                    width: '800px', 
+                    '@media (max-width: 840px)': {
                         width: '92%',
                     },
                 }}
             >
-                <div className='text-right'>
-                    <div className='grid grid-cols-2 max-[1037px]:grid-cols-1 gap-4'>
-                        <Uploader
-                            textOne={`تصویر محصول را آپلود کنید`}
-                            selectedFile={bgProduct}
-                            onFileSelect={setBgProduct}
-                            preview={previewProduct}
-                            setPreview={setPreviewProduct}
-                        />
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
-                    </div>
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
+                <div className='grid grid-cols-2 max-[840px]:grid-cols-1 gap-4'>
+                    <div className=''> 
+                        <div className='h-max max-[840px]:hidden'>
+                            <Uploader
+                                textOne={`عکس محصول را انتخاب کنید`}
+                                selectedFile={selectedFile}
+                                onFileSelect={setSelectedFile}
+                                preview={preview} 
+                                setPreview={setPreview}
+                                clssBtnDelete={`hidden`}
+                                className={`h-[200px] min-h-9 max-h-[200px] ${errCreate ? '!border-red-500' : ''}`}
+                            />
                         </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>قیمت</Text>
-                            <div>
-                                <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
-                                {/* <Input value={priceProduct} onChange={(e) => setPriceProduct(e.target.value)} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/> */}
-                                <Input value={priceProduct} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                        <form className='mt-4 max-[840px]:!mt-0'>
+                            <div className='grid grid-cols-3 gap-4 max-[840px]:hidden'>
+                                <Uploader
+                                    // textOne={`عکس محصول را انتخاب کنید`}
+                                    selectedFile={selectedImage1}
+                                    onFileSelect={setSelectedImage1}
+                                    preview={previewImage1}
+                                    setPreview={setPreviewImage1}
+                                    clssBtnDelete={`hidden`}
+                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                />
+                                <Uploader
+                                    // textOne={`عکس محصول را انتخاب کنید`}
+                                    selectedFile={selectedImage2}
+                                    onFileSelect={setSelectedImage2}
+                                    preview={previewImage2}
+                                    setPreview={setPreviewImage2}
+                                    clssBtnDelete={`hidden`}
+                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                />
+                                <Uploader
+                                    // textOne={`عکس محصول را انتخاب کنید`}
+                                    selectedFile={selectedImage3}
+                                    onFileSelect={setSelectedImage3}
+                                    preview={previewImage3}
+                                    setPreview={setPreviewImage3}
+                                    clssBtnDelete={`hidden`}
+                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                />
                             </div>
-                        </div>                    
+
+                            <div className='text-right mt-2 max-[840px]:hidden'>
+                                <Text>اجازه فروش در :</Text>
+                                
+                               <div className='grid grid-cols-3 max-[840px]:hidden'>
+                                    <div className='flex justify-start items-center gap-2 mt-2'>
+                                        <input type="checkbox" 
+                                            checked={isCheckedAmazon}
+                                            onChange={handleCheckboxChangeAmazon} 
+                                        />
+                                        <Text>آمازون</Text>
+                                    </div>
+                                    <div className='flex justify-start items-center gap-2 mt-2'>
+                                        <input type="checkbox" 
+                                            checked={isCheckedSoqMaftoh}
+                                            onChange={handleCheckboxChangeSoqMaftoh} 
+                                        />
+                                        <Text>سوق المفتوح</Text>
+                                    </div>
+                                    <div className='flex justify-start items-center gap-2 mt-2'>
+                                        <input type="checkbox" 
+                                            checked={isCheckedNon}
+                                            onChange={handleCheckboxChangeNon} 
+                                        />
+                                        <Text>نون</Text>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                       
+                    </div>
+                    <div className='max-[840px]:h-[500px] max-[840px]:overflow-x-hidden max-[840px]:overflow-y-auto'>  
+                        <div className='grid grid-cols-2 gap-4'>
+                            <div className='text-right'>
+                                <Text className={` mb-2`}>نام</Text>
+                                <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`نام محصول را وارد کنید`}/>
+                            </div>
+                            <div className='text-right'>
+                                <Text className={`mb-2`}>قیمت تکی</Text>
+                                <div className='relative'>
+                                    <p className='mt-[13px] mr-2 absolute font-sans text-xs'>تومان</p>
+                                    <Input value={priceProduct} onChange={handleChange} inputMode={`numbric`} className={`w-full text-left ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`۳۰۰۰`}/>
+                                </div>
+                            </div>                    
+                        </div>
+
+                        <div className='grid grid-cols-2 text-right mt-6 gap-4'>
+                            <div>
+                                <Text>قیمت عمده</Text>
+                                <div className=' relative'>
+                                    <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
+                                    <Input value={wholPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} inputMode={`numbric`} placeholder={`۳۰۰۰۰`} onChange={handleChangePriceNumber} className={`w-full mt-2 !bg-bgInput !text-left bg-transparent border border-gray-300`}/>
+                                </div>
+                            </div>
+                            <div>
+                                <Text>تعداد موجود</Text>
+                                <div>
+                                    <Input value={count} inputMode={`numbric`} onChange={(e) => setCount(e.target.value)} className={`w-full !bg-bgInput !text-left mt-2 bg-transparent border border-gray-300`}/>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* <div className='text-right mt-4 gap-4'>
+                            <Text className={`mb-2`}>دسته بندی</Text>
+                            <FormControl sx={{ minWidth: 120, outline: 'none' }} className={`w-full bg-bgInput !rounded-lg !outline-none ${errCreate ? 'border !border-red-500' : ''}`}>
+                                <Select
+                                    className={`!outline-none !rounded-lg ${errCreate ? 'border !border-red-500' : ''}`}
+                                    value={selectorCategory}
+                                    sx={{
+                                        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                                        '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                                        outline: 'none'
+                                    }}
+                                    onChange={(e) => setSelectorCategory(e.target.value)}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                    >
+                                    {dataCategory?.map((item) => (
+                                        <MenuItem key={item?.id} value={item?.id}>
+                                            <Text>
+                                                {item?.name}
+                                            </Text>    
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div> */}
+
+                        <div className='grid grid-cols-2 text-right mt-6 gap-4'>
+                            <div>
+                                <Text className={`text-right`}>تخفیف</Text>
+                                <div className='relative mt-2'>
+                                    <p className='mt-[13px] mr-3 absolute font-sans text-sm'>٪</p>  
+                                    <Input value={offer} inputMode={`numbric`} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20`}/>
+                                </div>
+                            </div>
+                            <div>
+                                <Text>وزن واحد</Text>
+                                <div className='relative'>
+                                    <p className='mt-[21px] mr-2 absolute font-sans text-xs'>gr</p>    
+                                    <Input value={unitWeigth} inputMode={`numbric`} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 !bg-bgInput text-left bg-transparent`}/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <Text className={`text-right mt-5`}>ابعاد واحد cm</Text>
+                        <div className='grid grid-cols-3 text-right mt-2 gap-2'>
+                            <div className='relative'>
+                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>طول</p>    
+                                <Input value={productTol} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                            </div>
+                            <div className='relative'>
+                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>عرض</p>    
+                                <Input value={productArz} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                            </div>
+                            <div className='relative'>
+                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>ارتفاع</p>    
+                                <Input value={productErtefa} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                            </div>
+                        </div>
+
+
+                        <div className='max-[840px]:block mt-6 hidden'>
+                            <div className='max-[840px]:mb-4'>
+                                <Uploader
+                                    textOne={`تصویر محصول را آپلود کنید`}
+                                    selectedFile={bgProduct}
+                                    onFileSelect={setBgProduct}
+                                    preview={previewProduct}
+                                    setPreview={setPreviewProduct}
+                                    className={`h-[274px]`}
+                                />
+                            </div>
+                        </div>
+                        <div className=' grid-cols-3 gap-4 hidden max-[840px]:grid'>
+                            <Uploader
+                                // textOne={`عکس محصول را انتخاب کنید`}
+                                selectedFile={selectedImage1}
+                                onFileSelect={setSelectedImage1}
+                                preview={previewImage1}
+                                setPreview={setPreviewImage1}
+                                clssBtnDelete={`hidden`}
+                                className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-24 min-h-9 max-h-[80px]`}
+                            />
+                            <Uploader
+                                // textOne={`عکس محصول را انتخاب کنید`}
+                                selectedFile={selectedImage2}
+                                onFileSelect={setSelectedImage2}
+                                preview={previewImage2}
+                                setPreview={setPreviewImage2}
+                                clssBtnDelete={`hidden`}
+                                className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-24 min-h-9 max-h-[80px]`}
+                            />
+                            <Uploader
+                                // textOne={`عکس محصول را انتخاب کنید`}
+                                selectedFile={selectedImage3}
+                                onFileSelect={setSelectedImage3}
+                                preview={previewImage3}
+                                setPreview={setPreviewImage3}
+                                clssBtnDelete={`hidden`}
+                                className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-24 min-h-9 max-h-[80px]`}
+                            />
+                        </div>
+
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border h-[130px] bg-bgInput w-full font-sans hidden max-[840px]:block rounded-xl p-2 my-4 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+
+                        <div className='text-right my-6 hidden max-[840px]:block'>
+                            <Text>اجازه فروش در :</Text>
+                            
+                            <div className='grid-cols-3 hidden max-[840px]:grid'>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedAmazon}
+                                        onChange={handleCheckboxChangeAmazon} 
+                                    />
+                                    <Text>آمازون</Text>
+                                </div>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedSoqMaftoh}
+                                        onChange={handleCheckboxChangeSoqMaftoh} 
+                                    />
+                                    <Text>سوق المفتوح</Text>
+                                </div>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedNon}
+                                        onChange={handleCheckboxChangeNon} 
+                                    />
+                                    <Text>نون</Text>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>نام واحد</Text>
-                            <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام واحد را وارد کنید`}/>
-                        </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>تخفیف</Text>
-                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`20%`}/>
-                        </div>
-                    </div>
-
-                    <Text className={`mt-4 mb-2`}>دسته بندی</Text>
-                    <FormControl sx={{ minWidth: 120, outline: 'none' }} className='w-full bg-bgInput !outline-none'>
-                        <Select
-                            className='!outline-none'
-                            value={selectorCategory}
-                            sx={{outline: 'none'}}
-                            onChange={(e) => setSelectorCategory(e.target.value)}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            >
-                                <MenuItem value="">
-                                    <Text>
-                                        دسته بندی را انتخاب کنید
-                                    </Text>
-                                </MenuItem>
-                            {dataCategory?.results.map((item) => (
-                                <MenuItem key={item?.id} value={item?.id}>
-                                    <Text>
-                                        {item?.name}
-                                    </Text>    
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
                 </div>
+                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border h-[130px] bg-bgInput w-full font-sans max-[840px]:hidden rounded-xl p-2 mt-4 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
             </GeneralModal>
 
             <GeneralModal

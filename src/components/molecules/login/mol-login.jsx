@@ -56,18 +56,22 @@ function MolLogin() {
         )
     }
 
+    const handleGoRegister = () => {
+        window.open("https://register.iranishop.om/", "_blank");
+    }
+
     return (
         <div className='flex flex-row h-dvh justify-center gap-32 items-center max-[1024px]:flex-col-reverse'>
             <div>
                 <div className='text-center m-auto max-[990px]:w-[325px]'>
                     <TextBold>خوش آمدید!</TextBold>
-                    <Title className={`mt-4`}>برای ورود نام کاربری و رمزعبور خود را وارد کنید</Title>
+                    <Title className={`mt-4`}>برای ورود شماره تلفن خود را وارد کنید</Title>
                     <div className='text-right mt-6'>
                         <Text className={`text-red-500 mb-2`}>{messageError}</Text>
                         <form className='max-w-[325px] max-[580px]:max-w-[100%] w-[325px] max-[580px]:w-full'>
                             {step === 1 && (
                                 <>
-                                    <Title>نام کاربری</Title>
+                                    <Title>شماره تلفن را وارد کنید</Title>
                                     <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
                                 </>
                             )}
@@ -88,7 +92,7 @@ function MolLogin() {
                                             value={otp}
                                             onChange={setOtp}
                                             numInputs={4}
-                                            renderInput={(props) => <input {...props} type='number' inputMode='numeric'/>}
+                                            renderInput={(props) => <input {...props} inputMode='numeric'/>}
                                             inputStyle="otp-input"
                                             shouldAutoFocus
                                         />
@@ -114,6 +118,10 @@ function MolLogin() {
                                     {isPendingVerify ? <Loading/> : "ورود"}
                                 </ButtonGeneral>
                             )}
+
+                            <div className='mt-6 mb-2 text-center w-full m-auto'>
+                                <Text className={`flex gap-2 text-center m-auto w-full justify-center`}>آیا ثبت نام نیستید ؟<div className='text-customBlue font-bold cursor-pointer' onClick={handleGoRegister}> ثبت نام</div></Text>
+                            </div>
                             
                         </form>
                     </div>

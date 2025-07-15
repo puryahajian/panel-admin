@@ -5,9 +5,12 @@ function useGetAllCategory() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['allCategory'],
     queryFn: async () => {
-      const response = await interceptor.get('product/api/v1/category/');
+      const response = await interceptor.get('product/admin/api/v1/categories/');
       return response.data;
     },
+    onError: (err) => {
+      console.log(err)
+    }
   });
   
   if (isLoading) return <div>loading</div>;

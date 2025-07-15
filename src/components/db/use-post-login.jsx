@@ -13,12 +13,15 @@ function usePostLogin() {
                 phone: userName,
             });
 
-            const res = await interceptor.post(`account/api/v1/login/`, data);
+            const res = await interceptor.post(`account/mobile/api/v1/login/`, data);
             return res.data;
         },
         onSuccess: (data) => {
          
         },
+        onError: (err) => {
+            console.log(err)
+        }
     });
 
 }

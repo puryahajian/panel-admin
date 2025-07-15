@@ -16,8 +16,8 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <HashRouter>
       <App />
-      <ToastContainer/>
     </HashRouter>
+    <ToastContainer/>
   </QueryClientProvider>
 );
 

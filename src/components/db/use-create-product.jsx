@@ -16,9 +16,9 @@ function useCreateProduct() {
             count,
             offer, 
             description, 
-            newImage1,
-            newImage2,
-            newImage3,
+            selectedImage1,
+            selectedImage2,
+            selectedImage3,
             wholPrice,
             productTol,
             productArz,
@@ -39,9 +39,9 @@ function useCreateProduct() {
             } else if (bgProduct) {
                 formData.append('image', bgProduct);
             }
-            if (newImage1) formData.append('image1', newImage1);
-            if (newImage2) formData.append('image2', newImage2);
-            if (newImage3) formData.append('image3', newImage3);
+            if (selectedImage1) formData.append('image1', selectedImage1);
+            if (selectedImage2) formData.append('image2', selectedImage2);
+            if (selectedImage3) formData.append('image3', selectedImage3);
             // if (newImage4) formData.append('image4', newImage4);
             // if (newImage5) formData.append('image5', newImage5);
             if (wholPrice) formData.append('wholesale_price', wholPrice?.replace(/,/g, ""));

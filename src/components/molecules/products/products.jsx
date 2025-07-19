@@ -20,6 +20,7 @@ import '../../../App.css'
 import useDeleteImageProduct from '../../db/use-delete-image-product';
 import UseAddImagesProduct from '../../db/use-add-images-product';
 import { toast } from 'react-toastify';
+import InputNumberic from '../../atoms/input-numberic';
 
 
 function TabProduct({ children, step, index }) {
@@ -42,7 +43,7 @@ function Products() {
     const [open, setOpen] = useState(false);
     const {mutate, isLoading} = useCreateCategory();
     const { mutate: mutateDeleteImage } = useDeleteImageProduct();
-    const { mutate: mutateCreatedProduct } = useCreateProduct();
+    const { mutate: mutateCreatedProduct, isPending } = useCreateProduct();
     const { mutate: mutateAddImage } = UseAddImagesProduct();
     const { data: dataCategory } = useGetProductCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
@@ -50,17 +51,17 @@ function Products() {
     const [ bgProduct, setBgProduct ] = useState(null);
     const [ errCreate, setErrCreate ] = useState(null);
 
-    const [preview, setPreview] = useState();
-    const [ selectedFile, setSelectedFile ] = useState('');
-    const [previewProduct, setPreviewProduct] = useState();
-    const [ selectedImage1, setSelectedImage1 ] = useState('');
-    const [previewImage1, setPreviewImage1] = useState('');
+    const [preview, setPreview] = useState(null);
+    const [ selectedFile, setSelectedFile ] = useState(null);
+    const [previewProduct, setPreviewProduct] = useState(null);
+    const [ selectedImage1, setSelectedImage1 ] = useState(null);
+    const [previewImage1, setPreviewImage1] = useState(null);
 
-    const [ selectedImage2, setSelectedImage2 ] = useState('');
-    const [previewImage2, setPreviewImage2] = useState('');
+    const [ selectedImage2, setSelectedImage2 ] = useState(null);
+    const [previewImage2, setPreviewImage2] = useState(null);
 
-    const [ selectedImage3, setSelectedImage3 ] = useState('');
-    const [previewImage3, setPreviewImage3] = useState('');
+    const [ selectedImage3, setSelectedImage3 ] = useState(null);
+    const [previewImage3, setPreviewImage3] = useState(null);
 
     const [ selectedImage4, setSelectedImage4 ] = useState('');
     const [previewImage4, setPreviewImage4] = useState('');
@@ -132,7 +133,11 @@ function Products() {
 
     const handleCreateProduct = () => {
 
-        if (bgProduct === undefined && selectedFile === undefined) {
+        console.log(selectedImage1,
+                selectedImage2,
+                selectedImage3,)
+
+        if (!bgProduct && !selectedFile) {
             const errorMessage = 'لطفاً حداقل یک تصویر برای محصول انتخاب کنید';
             setErrCreate({ message: errorMessage });
             toast.info('تصویر را انتخاب کنید');
@@ -168,17 +173,17 @@ function Products() {
             {
                 onSuccess: (data) => {
                     setOpen(false); 
-                    setSelectedFile(null);
-                    setBgProduct(null);
+                    setPreviewProduct(null);
+                    setPreview(null);
                     setNameProduct('');
                     setPriceProduct('');
                     // setSelectorCategory('');
                     setUnitName('');
                     setOffer('');
                     setDescription('');
-                    setSelectedImage1(null);
-                    setSelectedImage2(null);
-                    setSelectedImage3(null);
+                    setPreviewImage1(null);
+                    setPreviewImage2(null);
+                    setPreviewImage3(null);
                     setWholPrice('');
                     setIsCheckedAmazon(false);
                     setIsCheckedSoqMaftoh(false);
@@ -262,10 +267,10 @@ function Products() {
                     setOpen(false)
                 }}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
-                actionText="ذخیره"
+                actionText={isPending ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
                     e.preventDefault()
-                    handleCreateProduct()
+                    handleCreateProduct();
                 }}
                 classBtn={`mt-4`}
                 onClose={(e) => {
@@ -282,6 +287,7 @@ function Products() {
                 <div className='grid grid-cols-2 max-[840px]:grid-cols-1 gap-4'>
                     <div className=''> 
                         <div className='h-max max-[840px]:hidden'>
+                            <Text className={`text-right text-sm mb-1`}>سایز تصویر باید ۲۰۰ * ۲۰۰ پیکسل باشد</Text>
                             <Uploader
                                 textOne={`عکس محصول را انتخاب کنید`}
                                 selectedFile={selectedFile}
@@ -363,7 +369,7 @@ function Products() {
                                 <Text className={`mb-2`}>قیمت تکی</Text>
                                 <div className='relative'>
                                     <p className='mt-[13px] mr-2 absolute font-sans text-xs'>تومان</p>
-                                    <Input value={priceProduct} onChange={handleChange} inputMode={`numbric`} className={`w-full text-left ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`۳۰۰۰`}/>
+                                    <InputNumberic value={priceProduct} onChange={handleChange} className={`w-full text-left ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`۳۰۰۰`}/>
                                 </div>
                             </div>                    
                         </div>
@@ -373,14 +379,12 @@ function Products() {
                                 <Text>قیمت عمده</Text>
                                 <div className=' relative'>
                                     <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
-                                    <Input value={wholPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} inputMode={`numbric`} placeholder={`۳۰۰۰۰`} onChange={handleChangePriceNumber} className={`w-full mt-2 !bg-bgInput !text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic value={wholPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} placeholder={`۳۰۰۰۰`} onChange={handleChangePriceNumber} className={`w-full mt-2 !bg-bgInput !text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                             <div>
                                 <Text>تعداد موجود</Text>
-                                <div>
-                                    <Input value={count} inputMode={`numbric`} onChange={(e) => setCount(e.target.value)} className={`w-full !bg-bgInput !text-left mt-2 bg-transparent border border-gray-300`}/>
-                                </div>
+                                <InputNumberic value={count} onChange={(e) => setCount(e.target.value)} className={`w-full !bg-bgInput !text-left mt-2 bg-transparent border border-gray-300`}/>
                             </div>
                         </div>
 
@@ -416,14 +420,14 @@ function Products() {
                                 <Text className={`text-right`}>تخفیف</Text>
                                 <div className='relative mt-2'>
                                     <p className='mt-[13px] mr-3 absolute font-sans text-sm'>٪</p>  
-                                    <Input value={offer} inputMode={`numbric`} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20`}/>
+                                    <InputNumberic value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20`}/>
                                 </div>
                             </div>
                             <div>
                                 <Text>وزن واحد</Text>
                                 <div className='relative'>
                                     <p className='mt-[21px] mr-2 absolute font-sans text-xs'>gr</p>    
-                                    <Input value={unitWeigth} inputMode={`numbric`} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 !bg-bgInput text-left bg-transparent`}/>
+                                    <InputNumberic value={unitWeigth} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 !bg-bgInput text-left bg-transparent`}/>
                                 </div>
                             </div>
                         </div>
@@ -432,21 +436,22 @@ function Products() {
                         <div className='grid grid-cols-3 text-right mt-2 gap-2'>
                             <div className='relative'>
                                 <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>طول</p>    
-                                <Input value={productTol} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                                <InputNumberic value={productTol} placeholder={`20`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
                             </div>
                             <div className='relative'>
                                 <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>عرض</p>    
-                                <Input value={productArz} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                                <InputNumberic value={productArz} placeholder={`20`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
                             </div>
                             <div className='relative'>
                                 <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>ارتفاع</p>    
-                                <Input value={productErtefa} placeholder={`20`} inputMode={`numbric`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
+                                <InputNumberic value={productErtefa} placeholder={`20`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
                             </div>
                         </div>
 
 
                         <div className='max-[840px]:block mt-6 hidden'>
                             <div className='max-[840px]:mb-4'>
+                                <Text className={`text-right text-sm mb-4`}>سایز تصویر باید ۲۰۰ * ۲۰۰ پیکسل باشد</Text>
                                 <Uploader
                                     textOne={`تصویر محصول را آپلود کنید`}
                                     selectedFile={bgProduct}

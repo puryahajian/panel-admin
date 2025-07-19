@@ -16,6 +16,7 @@ import DateShamsi from '../date-shamsi'
 import Title from '../../atoms/title'
 import UseAddImagesProduct from '../../db/use-add-images-product'
 import useDeleteImageProduct from '../../db/use-delete-image-product'
+import InputNumberic from '../../atoms/input-numberic'
 
 
 function TabListProducts() {
@@ -209,7 +210,7 @@ function TabListProducts() {
                                         <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
                                     </div>
                                 </div>
-                                <Text>{item?.stock}</Text>
+                                <Text>{item?.stock === null ? 1 : item?.stock}</Text>
                                 <Text>{<DateShamsi date={item?.create_date}/>}</Text>
                                 <div className=' col-span-2 flex justify-end gap-4'>
                                     <ButtonExisting 
@@ -254,7 +255,7 @@ function TabListProducts() {
                                 <div className='w-full grid gap-1'>
                                     <div className='flex justify-between items-center'>
                                         <Title>تعداد :</Title>
-                                        <Text>{item?.stock}</Text>
+                                        <Text>{item?.stock === null ? 1 : item?.stock}</Text>
                                     </div>
 
                                     <div className='flex justify-between items-center'>
@@ -447,7 +448,7 @@ function TabListProducts() {
                                 <Text>قیمت تکی</Text>
                                 <div className=' relative'>
                                     <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
-                                    <Input inputMode={`numbric`} defaultValue={selectedItem?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic defaultValue={selectedItem?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                         </div>
@@ -457,13 +458,13 @@ function TabListProducts() {
                                 <Text>قیمت عمده</Text>
                                 <div className=' relative'>
                                     <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
-                                    <Input inputMode={`numbric`} defaultValue={selectedItem?.wholesale_price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={wholPrice} placeholder={`۳۰۰۰۰`} onChange={handleChangeWhol} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic defaultValue={selectedItem?.wholesale_price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={wholPrice} placeholder={`۳۰۰۰۰`} onChange={handleChangeWhol} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                             <div>
                                 <Text>تعداد موجود</Text>
                                 <div>
-                                    <Input inputMode={`numbric`} defaultValue={selectedItem?.stock} value={stockNumber} onChange={(e) => setStockNumber(e.target.value)} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic defaultValue={selectedItem?.stock} value={stockNumber} onChange={(e) => setStockNumber(e.target.value)} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                         </div>
@@ -507,7 +508,7 @@ function TabListProducts() {
                                 <Text className={`text-right`}>تخفیف</Text>
                                 <div className='relative'>
                                     <p className='mt-[22px] mr-3 absolute font-sans text-sm'>٪</p>    
-                                    <Input inputMode={`numbric`} defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                             {/* <div>
@@ -541,7 +542,7 @@ function TabListProducts() {
                                 <Text>وزن واحد</Text>
                                 <div className='relative'>
                                     <p className='mt-[22px] mr-3 absolute font-sans text-xs'>gr</p>    
-                                    <Input inputMode={`numbric`} defaultValue={selectedItem?.unit_weight} value={unitWeigth} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
+                                    <InputNumberic defaultValue={selectedItem?.unit_weight} value={unitWeigth} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
                         </div>
@@ -550,15 +551,15 @@ function TabListProducts() {
                         <div className='grid grid-cols-3 text-right mt-2 gap-2'>
                             <div className='relative'>
                                 <p className='!mt-[15px] mr-2 absolute font-sans text-xs'>طول</p>    
-                                <Input inputMode={`numbric`} defaultValue={selectedItem?.tole} value={productTol} placeholder={`20`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                <InputNumberic defaultValue={selectedItem?.tole} value={productTol} placeholder={`20`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
                             </div>
                             <div className='relative'>
                                 <p className='!mt-[15px] mr-2 absolute font-sans text-xs'>عرض</p>    
-                                <Input inputMode={`numbric`} defaultValue={selectedItem?.arze} value={productArz} placeholder={`20`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                <InputNumberic defaultValue={selectedItem?.arze} value={productArz} placeholder={`20`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
                             </div>
                             <div className='relative'>
                                 <p className='!mt-[15px] mr-2 absolute font-sans text-xs'>ارتفاع</p>    
-                                <Input inputMode={`numbric`} defaultValue={selectedItem?.ertefahe} value={productErtefa} placeholder={`20`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                <InputNumberic defaultValue={selectedItem?.ertefahe} value={productErtefa} placeholder={`20`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
                             </div>
                         </div>
 

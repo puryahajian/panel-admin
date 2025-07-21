@@ -19,7 +19,7 @@ interceptor.interceptors.request.use(
       // اگر JSON عادی هست
     }
 
-    const accessToken = Cookies.get('access');
+    const accessToken = localStorage.getItem('access');
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -37,7 +37,7 @@ interceptor.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      const refreshToken = Cookies.get('refresh');
+      const refreshToken = localStorage.getItem('refresh');;
 
       if (refreshToken) {
         try {
@@ -48,9 +48,9 @@ interceptor.interceptors.response.use(
 
           return interceptor(originalRequest);
         } catch (refreshError) {
-          console.error('Error refreshing token:', refreshError);
-          Cookies.remove('access');
-          Cookies.remove('refresh');
+          // console.error('Error refreshing token:', refreshError);
+          localStorage.removeItem('access');
+          localStorage.removeItem('refresh');
           // Optionally redirect user to login page
         }
       }

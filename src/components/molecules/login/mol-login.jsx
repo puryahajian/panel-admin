@@ -47,7 +47,7 @@ function MolLogin() {
             },
             {
                 onSuccess: () => {
-                    navigate('/')
+                    // navigate('/')
                 },
                 onError: (error) => {
                     setMessageError('نام کاربری یا کلمه عبور اشتباه است !')
@@ -72,7 +72,7 @@ function MolLogin() {
                             {step === 1 && (
                                 <>
                                     <Title>شماره تلفن را وارد کنید</Title>
-                                    <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
+                                    <Input value={userName} inputMode={`numeric`} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
                                 </>
                             )}
                             {step === 2 && (

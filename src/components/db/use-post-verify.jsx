@@ -20,11 +20,15 @@ function usePostVerify() {
             return res.data;
         },
         onSuccess: (data) => {
+            // console.log(data)
             const access = data.access;
             const refresh = data.refresh;
 
-            Cookies.set("access", access, { expires: 365 });
-            Cookies.set("refresh", refresh, { expires: 365 });
+            localStorage.setItem('access', access);
+            localStorage.setItem('refresh', refresh);
+
+            // Cookies.set("access", access, { expires: 365 });
+            // Cookies.set("refresh", refresh, { expires: 365 });
             navigate('/')
             queryClient.removeQueries('login');
         },

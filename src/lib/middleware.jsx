@@ -4,8 +4,8 @@ import Cookies from "js-cookie";
 
 
 function Middleware() {
-    const accessToken = Cookies.get('access');
-    const refreshToken = Cookies.get('refresh');
+    const accessToken = localStorage.getItem('access');
+    const refreshToken = localStorage.getItem('refresh');
     const location = useLocation();
 
     if (accessToken && refreshToken && location.pathname !== '/') {

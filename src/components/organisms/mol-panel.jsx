@@ -47,9 +47,10 @@ function MolPanel() {
 
     const handleExit = () => {
         setOpen(false); 
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
         navigate('/login');
-        Cookies.remove('access');
-        Cookies.remove('refresh');
+
     }
 
     return (

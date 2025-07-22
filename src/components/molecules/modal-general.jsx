@@ -38,7 +38,7 @@ const GeneralModal = ({ open,onClose, handleClose, title, children, actionText, 
                 {children} 
               </Typography> 
               <div className={`flex justify-end gap-4 mt-4 ${classBtn}`} data-testid="button-group">
-                <ButtonGeneral className={`bg-customBlue text-white border-none w-full ${classAccept}`} variant="contained" onClick={actionHandler}>{actionText}</ButtonGeneral> 
+                <ButtonGeneral className={`bg-customBlue text-white border-none w-full ${classAccept}`} onClick={actionHandler}>{actionText}</ButtonGeneral> 
                 <ButtonGeneral className={` border border-red-600 text-red-600 w-full ${classReject}`} variant="outlined" onClick={handleClose}>{exitButton ? exitButton : 'خیر'}</ButtonGeneral> 
               </div>
           </form> 

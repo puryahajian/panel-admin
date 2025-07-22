@@ -215,7 +215,7 @@ function TabListProducts() {
                                 <div className=' col-span-2 flex justify-end gap-4'>
                                     <ButtonExisting 
                                         onClick={() => handleEditProduct(item.id, item.exist)}
-                                        className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
+                                        className={`hover:scale-95 transition-all duration-300 ${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
                                         >
                                             {item?.exist === true ? 'فعال' : 'غیر فعال'}
                                     </ButtonExisting>
@@ -344,6 +344,7 @@ function TabListProducts() {
                     e.preventDefault()
                     setOpenEdit(false)}
                 }
+                // classAccept={`shadow-[0px_10px_10px_0px_rgba(255,255,255,0.15)]`}
                 sx={{
                     width: '800px', 
                     '@media (max-width: 840px)': {

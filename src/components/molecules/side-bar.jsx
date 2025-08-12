@@ -2,15 +2,33 @@ import React, { useEffect, useState } from 'react'
 import useGetInfo from '../db/use-get-info';
 import MenuPanel from '../../lib/menu-panel';
 import Text from '../atoms/text';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import '../../App.css'
+import GeneralModal from './modal-general';
+import Cookies from "js-cookie";
+import LogoDefault from '../../assets/image/default-logo.png'
 
 function SideBar() {
     const { data: dataInfo } = useGetInfo();
+    const details = dataInfo?.results
+
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     const [step, setStep] = useState(0);
 
     const location = useLocation();
+
+    const handleItemClick = (index) => {
+        setStep(index); 
+    };
+
+    const handleExit = () => {
+        setOpen(false); 
+        navigate('/login');
+        Cookies.remove('access');
+        Cookies.remove('refresh');
+    }
 
     useEffect(() => {
         const currentIndex = MenuPanel.findIndex(tab => tab.path === location.pathname);
@@ -20,22 +38,28 @@ function SideBar() {
     }, [location.pathname]);
 
     return (
-        <div className='w-[219px] min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 sticky top-0 max-[1024px]:hidden'>
-            <div>
-                <img src={dataInfo?.logo} className='mb-10 w-16 m-auto' alt="" />
+        <div className='w-[219px] z-[5] fixed right-0 bg-white min-w-[219px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 top-0 max-[1024px]:hidden'>
+            <div className='relative'>
+                {details?.map((item) => (
+                    <img src={item?.logo} onError={(e) => { 
+                        e.target.onerror = null;
+                        e.target.src = LogoDefault; 
+                        }} className='mb-10 w-16 m-auto' alt="" />
+                ))}
+                <div className='hover-item bg-customBlue'style={{
+                    transform: `translateY(${step * 44}px)`,
+                    transition: 'transform 0.3s ease-in-out', 
+                }}></div>
+
                 {MenuPanel.map((tab, index) => (
                     <Link
                         key={index}
                         to={tab.path}
-                        onClick={() => setStep(index)}
-                        className={`px-2 flex items-center gap-2 py-3 cursor-pointer text-right w-full rounded-lg ${
-                            step === index
-                                ? 'bg-customBlue text-white'
-                                : 'bg-bgMenuDashboard text-grayText'
-                        }`}
+                        onClick={() => handleItemClick(index)}
+                        className={`px-2 flex items-center z-30 gap-2 py-3 cursor-pointer text-right w-full rounded-lg bg-bgMenuDashboard text-grayText ${step === index ? 'active text-white transform transition-all duration-75' : ''}`}
                         aria-controls={`vertical-tabpanel-${index}`}
                     >
-                        <span className='font-sans text-sm'>{tab.label}</span>
+                        <span className='font-sans text-sm z-30'>{tab.label}</span>
                     </Link>
                 ))}
                 
@@ -46,6 +70,21 @@ function SideBar() {
             >
                 <Text className={`text-red-500`}> خروج از حساب</Text>
             </button>
+
+             <GeneralModal
+                open={open}
+                handleClose={(e) => {
+                    e.preventDefault();
+                    setOpen(false)
+                }}
+                title="آیا می خواهید از اکانت خود خارج شوید ؟"
+                // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
+                actionText="بله"
+                actionHandler={(e) => { 
+                    e.preventDefault();
+                    handleExit()
+                }}
+            />
         </div>
     )
 }

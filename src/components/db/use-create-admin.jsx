@@ -18,10 +18,10 @@ function useCreateAdmin() {
                     address: address,
                 },
                 national_code: nCode,
-                state: 4
+                state: 1
             });
 
-            const res = await interceptor.post(`cashier/api/v1/cashiers/`, data);
+            const res = await interceptor.post(`cashier/admin/api/v1/cashiers/`, data);
             return res.data;
         },
         onSuccess: (data) => {

@@ -41,6 +41,7 @@ function TabTickets() {
 
     const { data } = useGetAllTickets()
     const { data: dataSection } = useGetAllSection();
+    console.log(dataSection)
     const { mutate } = useCreateTicket();
     const [step, setStep] = useState(0);
     const [detail, setDetail] = useState();
@@ -48,13 +49,15 @@ function TabTickets() {
     const [activeId, setActiveId] = useState(null);
     const [titleForm, setTitleForm] = useState('');
     const navigate = useNavigate();
-
+    
     const handleClick = (id) => {
         setActiveId(id);
     };
-
+    
     
     const handleCreateTicket = () => {
+        // console.log("title",titleForm, "category",selectorCategory, "property",activeId,"detail", detail)
+
         mutate(
             {
                 titleForm, selectorCategory, activeId, detail
@@ -69,7 +72,7 @@ function TabTickets() {
     }
     
     return (
-        <div className='mt-4'>
+        <div className='mt-24 max-[1024px]:mt-[155px]'>
             {/* tab tickets */}
             <TabManagement step={step} index={0}>
                 <div className='flex justify-between items-center gap-2'>
@@ -91,7 +94,7 @@ function TabTickets() {
                 {/* list */}
                 {data?.results.map((item) => (
                     <div className='grid grid-cols-10 py-3 rounded-lg border-b relative max-[680px]:hidden' key={item?.id}>
-                        <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === 1 && 'hidden'}`}></div>
+                        <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === '1' && 'hidden'} ${item?.state === '2' && 'hidden'}`}></div>
                         <div>
                             <DraftsIcon className='!mr-8'/>
                         </div>
@@ -99,9 +102,9 @@ function TabTickets() {
                         <Text className={`col-span-2 cursor-pointer`} onClick={() => navigate(`/tickets/${item?.id}`)}>{item?.title}</Text>
                         <Text className={`col-span-3`}><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.updated_at}/></Text>
                         <Text className={`col-span-2`}>
-                            {item?.state === 1 && 'باز'}
-                            {item?.state === 2 && 'درحال بررسی'}
-                            {item?.state === 3 && 'بسته'}
+                            {item?.state === '1' && 'باز'}
+                            {item?.state === '2' && 'درحال بررسی'}
+                            {item?.state === '3' && 'بسته'}
                         </Text>
                         {/* <div className='flex gap-2'>
                             <img src={happy} alt="" />
@@ -111,11 +114,11 @@ function TabTickets() {
                 ))}
 
                 {/*  */}
-                <div className=' mt-4 max-[680px]:grid max-[680px]:gap-4'>
+                <div className='hidden mt-4 max-[680px]:grid max-[680px]:gap-4'>
                     {data?.results.map((item) => (
                         <>
                         <div className='grid gap-2 relative border rounded-lg p-3' onClick={() => navigate(`/tickets/${item?.id}`)}>
-                            <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === 1 && 'hidden'}`}></div>
+                            <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === '1' && 'hidden'}`}></div>
                             <div className='flex justify-between items-center'>
                                 <Title>شناسه</Title>
                                 <Text className={`truncate w-28`}>{item?.id}</Text>
@@ -172,7 +175,7 @@ function TabTickets() {
                                                 دسته بندی را انتخاب کنید
                                             </Text>
                                         </MenuItem>
-                                        {dataSection?.results.map((item) => (
+                                        {dataSection?.results?.map((item) => (
                                             <MenuItem key={item?.id} value={item?.id}>
                                                 <Text>
                                                     {item?.name}

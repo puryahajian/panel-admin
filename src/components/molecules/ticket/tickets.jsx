@@ -9,13 +9,15 @@ import Img from '../../atoms/img'
 
 function Tickets() {
     const { data } = useGetTicketPage();
+    // console.log(data)
+    // clg
     return (
-        <div className=' h-full max-[830px]:mx-4'>
-            <div className='max-w-[800px] m-auto mt-6'>
+        <div className=' h-full mx-4 max-[1024px]:mt-[88px]'>
+            <div className='w-full mt-6'>
                 <HeaderTicket/>
             </div>
 
-            <div className='max-w-[800px] m-auto shadow-lg rounded-lg'>
+            <div className='w-full shadow-lg rounded-lg'>
                 {data && (
                     <>
                         <div className='bg-gray-100 flex items-center gap-6 mt-6 p-4 rounded-lg'>

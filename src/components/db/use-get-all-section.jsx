@@ -6,7 +6,7 @@ function useGetAllSection() {
     const { data, error, isLoading } = useQuery({
         queryKey: ['allSection'],
         queryFn: async () => {
-          const response = await interceptor.get('ticket/api/v1/ticket-sections/');
+          const response = await interceptor.get('ticket/api/v1/admin/sections/');
           return response.data;
         },
     });

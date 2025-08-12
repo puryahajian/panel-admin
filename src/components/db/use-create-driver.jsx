@@ -15,7 +15,7 @@ function useCreateDriver() {
                 address: addressDriver,
             });
 
-            const res = await interceptor.post(`courier/api/v1/cashier/riders/`, data);
+            const res = await interceptor.post(`courier/admin/api/v1/`, data);
             return res.data;
         },
         onSuccess: (data) => {

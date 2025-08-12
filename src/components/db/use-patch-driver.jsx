@@ -8,7 +8,6 @@ function usePatchDriver() {
 
     return useMutation({
         mutationFn: async ({nameDriver,phoneDriver,addressDriver, id,inState}) => {
-
             const data = JSON.stringify({
                 name: nameDriver,
                 phone: phoneDriver,
@@ -16,7 +15,7 @@ function usePatchDriver() {
                 in_process: inState
             });
 
-            const res = await interceptor.patch(`courier/api/v1/cashier/riders/${id}/`, data);
+            const res = await interceptor.patch(`courier/admin/api/v1/${id}`, data);
             return res.data;
         },
         onSuccess: (data) => {

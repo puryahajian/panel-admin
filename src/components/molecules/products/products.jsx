@@ -13,10 +13,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import useCreateCategory from '../../db/use-create-category';
-import useGetProductCategory from '../../db/use-get-product-category';
 import useCreateProduct from '../../db/use-create-product';
 import Loading from '../../atoms/loading';
 import '../../../App.css'
+import useGetAllCategory from '../../db/use-get-all-category';
+import BirthDate from '../birth-day';
 
 
 function TabProduct({ children, step, index }) {
@@ -38,8 +39,9 @@ function Products() {
     const [step, setStep] = useState(0);
     const [open, setOpen] = useState(false);
     const {mutate, isLoading} = useCreateCategory();
-    const { mutate: mutateCreatedProduct } = useCreateProduct();
-    const { data: dataCategory } = useGetProductCategory();
+    const { mutate: mutateCreatedProduct , isLoading: isLoadingCreateProduct } = useCreateProduct();
+    const { data: dataCategory } = useGetAllCategory();
+    console.log(dataCategory)
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -47,6 +49,8 @@ function Products() {
     const [previewProduct, setPreviewProduct] = useState();
     const [nameProduct, setNameProduct] = useState();
     const [priceProduct, setPriceProduct] = useState();
+    const [birthDay, setBirthDay] = useState();
+    const [gregorianBirthDay, setGregorianBirthDay] = useState("");
     const [selectorCategory, setSelectorCategory] = useState();
     const [unitName, setUnitName] = useState();
     const [offer, setOffer] = useState();
@@ -72,9 +76,10 @@ function Products() {
     }
 
     const handleCreateProduct = () => {
+        // console.log(gregorianBirthDay)
         mutateCreatedProduct(
             {
-                bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description
+                bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay
             }
         )
     }
@@ -92,9 +97,9 @@ function Products() {
 
 
     return (
-        <div>
-            <div className='flex justify-between'>
-                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2'>
+        <div className='max-[1024px]:mt-16'>
+            <div className='flex justify-between fixed top-0 shadow-lg right-0 w-full bg-white py-4 max-[1024px]:top-[64px]'>
+                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2 mr-[235px] max-[1024px]:mr-4'>
                     {Buttons.map((tab, index) => (
                         <button
                             key={index}
@@ -112,7 +117,7 @@ function Products() {
                     ))}
                 </div>
 
-                <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95'>
+                <div className=' max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95 ml-[17px] max-[990px]:ml-0'>
                     {step === 0 ? (
                         <ButtonGeneral onClick={() => setOpen(true)} className={` border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن محصول
@@ -133,6 +138,7 @@ function Products() {
                 <TabCategory/>
             </TabProduct>
 
+            {/* add product */}
             <GeneralModal
                 open={open}
                 handleClose={(e) => {
@@ -140,7 +146,7 @@ function Products() {
                     setOpen(false)
                 }}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
-                actionText="ذخیره"
+                actionText={isLoadingCreateProduct ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
                     e.preventDefault()
                     handleCreateProduct()
@@ -167,6 +173,8 @@ function Products() {
                             onFileSelect={setBgProduct}
                             preview={previewProduct}
                             setPreview={setPreviewProduct}
+                            className={`h-[200px]`}
+
                         />
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
                     </div>
@@ -192,37 +200,53 @@ function Products() {
                         </div>
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>تخفیف</Text>
-                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`20%`}/>
+                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20%`}/>
                         </div>
                     </div>
 
-                    <Text className={`mt-4 mb-2`}>دسته بندی</Text>
-                    <FormControl sx={{ minWidth: 120, outline: 'none' }} className='w-full bg-bgInput !outline-none'>
-                        <Select
-                            className='!outline-none'
-                            value={selectorCategory}
-                            sx={{outline: 'none'}}
-                            onChange={(e) => setSelectorCategory(e.target.value)}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            >
-                                <MenuItem value="">
-                                    <Text>
-                                        دسته بندی را انتخاب کنید
-                                    </Text>
-                                </MenuItem>
-                            {dataCategory?.results.map((item) => (
-                                <MenuItem key={item?.id} value={item?.id}>
-                                    <Text>
-                                        {item?.name}
-                                    </Text>    
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <div className='grid grid-cols-2 gap-4'>
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>دسته بندی</Text>
+                            <FormControl sx={{ minWidth: 120, outline: 'none' }} className='w-full bg-bgInput !outline-none'>
+                                <Select
+                                    className='!outline-none'
+                                    value={selectorCategory}
+                                    // sx={{outline: 'none'}}
+                                    onChange={(e) => setSelectorCategory(e.target.value)}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                    sx={{
+                                        '& .MuiSelect-select': {
+                                            padding: '10px 14px', // اعمال پدینگ به عنصر select داخلی
+                                            outline: 'none'
+                                        },
+                                    }}
+                                    >
+                                        <MenuItem value="">
+                                            <Text>
+                                                دسته بندی را انتخاب کنید
+                                            </Text>
+                                        </MenuItem>
+                                    {Array.isArray(dataCategory?.data) &&
+                                    dataCategory?.data?.map((item) => (
+                                        <MenuItem key={item?.id} value={item?.id}>
+                                            <Text>
+                                                {item?.name}
+                                            </Text>    
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>تاریخ تولد</Text>
+                            <BirthDate value={birthDay}  onChange={setBirthDay} onGregorianChange={setGregorianBirthDay}/>  
+                        </div> 
+                    </div>
                 </div>
             </GeneralModal>
 
+            {/* add category */}
             <GeneralModal
                 open={openAddProduct}
                 handleClose={(e) => {

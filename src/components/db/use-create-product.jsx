@@ -8,22 +8,23 @@ function useCreateProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description }) => {
+        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay }) => {
 
             const formData = new FormData();
             if (nameProduct) formData.append('name', nameProduct);
             if (priceProduct) formData.append('price', convertPriceToNumber(priceProduct));
             if (unitName) formData.append('unit_name', unitName);
-            if (selectorCategory) formData.append('category_id', selectorCategory);
+            if (selectorCategory) formData.append('category', selectorCategory);
             if (bgProduct) formData.append('image', bgProduct);
             if (description) formData.append('details', description);
             if (offer) formData.append('discount_percentage', offer);
+            if (gregorianBirthDay) formData.append('expiration_date', gregorianBirthDay);
 
-            const res = await interceptor.post(`product/api/v1/product/`, formData);
+            const res = await interceptor.post(`product/admin/api/v1/products/`, formData);
             return res.data;
         },
         onSuccess: (data) => {
-            console.log(data)
+            // console.log(data)
             queryClient.removeQueries('allProduct')
         },
         onError: (err) => {

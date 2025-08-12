@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       colors: {
         grayText: "#454545",
-        grayTitle: "#BCBCBC",
+        grayTitle: "#454545",
         customBlue: "#6669F9",
         bgInput: "#E6E6E6",
         buttomExiting: "#5DCDC2",

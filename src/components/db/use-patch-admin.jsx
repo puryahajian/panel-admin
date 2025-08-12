@@ -15,15 +15,18 @@ function usePatchAdmin() {
                     "family": familyAdmin,
                     "address": addressAdmin
                 },
-                "state": 6
+                "state": 1
             })
 
-            const res = await interceptor.patch(`cashier/api/v1/cashiers/${id}/`, data);
+            const res = await interceptor.put(`cashier/admin/api/v1/cashiers/${id}/`, data);
             return res.data;
         },
         onSuccess: (data) => {
             queryClient.removeQueries('allAdmin')
         },
+        onError: (err) => {
+            console.log(err)
+        }
     });
 }
 

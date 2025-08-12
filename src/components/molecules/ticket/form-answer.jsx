@@ -35,7 +35,7 @@ function FormAnswer() {
     }
 
     return (
-        <div className='max-w-[800px] m-auto mt-6 shadow-lg p-6 max-[680px]:max-w-full'>
+        <div className='w-full mt-6 shadow-lg p-6'>
             <Text>ارسال پاسخ</Text>
             <Text className={`!text-xs !text-gray-500 mt-2`}>برای ارسال پاسخ به این تیکت، از فرم زیر استفاده کنید.</Text>
             <form action="">

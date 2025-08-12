@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonExisting from '../../atoms/button-existing'
 import ButtonEdit from '../../atoms/button-edit'
@@ -19,17 +19,20 @@ import Title from '../../atoms/title'
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
+    console.log(data)
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
-    const selectedItem = data?.results.find((it) => it.id === selectIdProduct)
+    const selectedItem = Array.isArray(data?.data)
+        ? data?.data?.find((it) => it?.id === selectIdProduct)
+        : null;
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
     const [selectorCategory, setSelectorCategory] = useState('');   
     const [selectorState, setSelectorState] = useState('');  
     const [nameEditProduct, setNameEditProduct] = useState(selectedItem?.name)
-    const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+    const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price);
     const [descriptionEdit, setDescriptionEdit] = useState(selectedItem?.details);
     const [offerEdit, setOfferEdit] = useState(selectedItem?.discount_percentage);
     
@@ -79,7 +82,7 @@ function TabListProducts() {
     };
 
     return (
-        <div>
+        <div className='mt-16 max-[1024px]:mt-[96px]'>
             <div className='flex items-center max-[992px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-7 items-center w-full py-4'>
@@ -90,66 +93,69 @@ function TabListProducts() {
             </div>
 
             <div className='grid gap-2'>
-                {data?.results.map((item, index) => {
-                    const category = dataCategory?.results.find((c) => c?.id === item?.category_id)
-                    return(
+                {Array.isArray(data?.data) && data.data.length > 0 ? (
+                    data.data.map((item, index) => (
                         <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
-                            <div className='px-8'>{index + 1}</div>
-                            <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
-                                <div className=' col-span-2 flex items-center gap-6'>
-                                    <img src={item?.image} className={`w-16 h-16 rounded-lg`} alt="" />
+                        <div className='px-8'>{index + 1}</div>
+                        <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
+                            <div className='col-span-2 flex items-center gap-6'>
+                            <img src={item?.image} className='w-16 h-16 rounded-lg' alt='' />
+                            <div className='grid gap-2'>
+                                <Text>{item?.name}</Text>
+                                <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
+                            </div>
+                            </div>
 
-                                    <div className='grid gap-2'>
-                                        <Text>{item?.name}</Text>
-                                        <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
-                                    </div>
-                                </div>
-                                <Text>{category?.name}</Text>
-                                <Text>{<DateShamsi date={item?.create_date}/>}</Text>
-                                <div className=' col-span-2 flex justify-end gap-4'>
-                                    <ButtonExisting 
-                                        onClick={() => handleEditProduct(item.id, item.exist)}
-                                        className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
-                                        >
-                                            {item?.exist === true ? 'فعال' : 'غیر فعال'}
-                                    </ButtonExisting>
-                                
-                                    <ButtonEdit onClick={() => {
-                                        setIdEdit(item)
-                                        setOpenEdit(true)
-                                        setSelectIdProduct(item?.id)
-                                        }}>
-                                            ویرایش
-                                    </ButtonEdit>
-                                </div>
-                                <div className=' text-center'>
-                                    <button onClick={() => { 
-                                        setOpen(true)
-                                        setSelectedItemId(item?.id)
-                                        }}>
-                                        <Text className={`text-red-500`}>
-                                            حذف
-                                        </Text>
-                                    </button>
-                                </div>
+                            <Text>{item?.category_name}</Text>
+                            <Text><DateShamsi date={item?.create_date} /></Text>
+
+                            <div className='col-span-2 flex justify-end gap-4'>
+                            <ButtonExisting
+                                onClick={() => handleEditProduct(item.id, item.exist)}
+                                className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
+                            >
+                                {item?.exist === true ? 'فعال' : 'غیر فعال'}
+                            </ButtonExisting>
+
+                            <ButtonEdit onClick={() => {
+                                setIdEdit(item);
+                                setOpenEdit(true);
+                                setSelectIdProduct(item?.id);
+                            }}>
+                                ویرایش
+                            </ButtonEdit>
+                            </div>
+
+                            <div className='text-center'>
+                            <button onClick={() => {
+                                setOpen(true);
+                                setSelectedItemId(item?.id);
+                            }}>
+                                <Text className='text-red-500'>حذف</Text>
+                            </button>
                             </div>
                         </div>
-                    )
-                })}
+                        </div>
+                    ))
+                ) : (
+                    <div className='flex justify-center mt-4'>
+                        <Text>محصول موجود نیست</Text>
+                    </div>
+                )}
+               
             </div>
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
-                {data?.results.map((item, index) => {
-                    const category = dataCategory?.results.find((c) => c?.id === item?.category_id)
-                    return(
+                {Array.isArray(data?.data) && data.data.length > 0 ? (
+                    data.data.map((item, index) => (
                         <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
                             <div className='flex gap-4'>
                                 <img src={item?.image} className={`min-w-16 h-16 rounded-lg`} alt="" />
                                 <div className='w-full grid gap-1'>
                                     <div className='flex justify-between items-center'>
                                         <Title>دسته بندی :</Title>
-                                        <Text>{category?.name}</Text>
+                                        <Text>{item?.category_name}</Text>
                                     </div>
 
                                     <div className='flex justify-between items-center'>
@@ -188,13 +194,17 @@ function TabListProducts() {
                                 </button>
                             </div>
                         </div>
-                    )
-                })}
+                       ))
+                ) : (
+                    <div className='flex justify-center mt-4'>
+                        <Text>محصول موجود نیست</Text>
+                    </div>
+                )}
             </div>
 
-            <div className='flex justify-center mt-4'>
-                {data?.count === 0 && <Text>محصول موجود نیست</Text>}
-            </div>
+            {/* <div className='flex justify-center mt-4'>
+                {data?.length === 0 && <Text>محصول موجود نیست</Text>}
+            </div> */}
 
             <GeneralModal
                 open={open && selectedItemId !== null}
@@ -265,7 +275,7 @@ function TabListProducts() {
                         <Text>قیمت</Text>
                         <div>
                             <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>    
-                            <Input type={`number`} defaultValue={selectedItem?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
+                            <Input inputMode={`numeric`} defaultValue={selectedItem?.price} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
                         </div>
                     </div>
                 </div>
@@ -279,13 +289,18 @@ function TabListProducts() {
                             onChange={(e) => setSelectorCategory(e.target.value)}
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
+                            sx={{
+                                '& .MuiSelect-select': {
+                                padding: '11.5px 14px', // اعمال پدینگ به عنصر select داخلی
+                                },
+                            }}
                             >
                                 <MenuItem value="" className=' !py-3'>
                                     <Text className={`text-gray-400`}>
                                         {dataCategory?.results?.find(c => c?.id === selectedItem?.category_id)?.name || 'انتخاب کنید'}
                                     </Text>
                                 </MenuItem>
-                                {dataCategory?.results.map((item) => (
+                                {dataCategory?.results?.map((item) => (
                                     <MenuItem key={item?.id} value={item?.id}>
                                         <Text>
                                             {item?.name}

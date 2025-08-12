@@ -19,6 +19,7 @@ import Mapp from '../mapp';
 function Dashboard() {
   const { data } = useSalesReport();
   const { data: dataGetAllOrder } = useGetAllActiveOrder();
+  // console.log(dataGetAllOrder)
   const { mutate } = usePatchOrder();
   const { data: getDriver } = useGetDriver();
   const [giveIdDriver, setGiveIdDriver] = useState(''); 
@@ -64,7 +65,7 @@ function Dashboard() {
   };
 
   return (
-    <div>
+    <div className='mt-4 max-[1024px]:mt-20'>
       <div className='grid grid-cols-2 gap-6 max-[1024px]:grid-cols-1'>
         <CardDiagram 
             contentTitle={
@@ -130,7 +131,7 @@ function Dashboard() {
         </div>
         <div className='grid gap-2'>
           {/* data list */}
-          {dataGetAllOrder?.map((item) => (
+          {dataGetAllOrder?.results?.map((item) => (
             <>
             <div
               className={`bg-bgAcceptOrder rounded-lg py-2 max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'}`}
@@ -208,7 +209,7 @@ function Dashboard() {
           ))}
         </div>
         <div className='text-center mt-6'>
-          {dataGetAllOrder?.length === 0 && <Text>سفارش موجود نیست</Text>}
+          {dataGetAllOrder?.count === 0 && <Text>سفارش موجود نیست</Text>}
         </div>
       </div>
 

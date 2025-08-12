@@ -16,12 +16,15 @@ function usePatchCustomer() {
                 address: addressCustomer || ''
             })
 
-            const res = await interceptor.patch(`cashier/api/v1/customers/${selectIdEdit}/`, data);
+            const res = await interceptor.patch(`cashier/admin/api/v1/customers/${selectIdEdit}/`, data);
             return res.data;
         },
         onSuccess: (data) => {
             queryClient.removeQueries('allCustomer');
         },
+        onError: (err) => {
+            console.log(err)
+        }
     });
 }
 

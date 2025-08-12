@@ -6,7 +6,7 @@ function useGetAllProducts() {
     return useQuery({
         queryKey: ['allProduct'],
         queryFn: async () => {
-            const response = await interceptor.get('product/api/v1/product/');
+            const response = await interceptor.get('product/admin/api/v1/products/');
             return response.data;
         },
     });

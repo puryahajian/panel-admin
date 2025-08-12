@@ -2,18 +2,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import interceptor from '../../lib/interceptor';
 
-function useDeleteCategory() {
+function useDeleteDiscount() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idCategoryDelete }) => {
-            const res = await interceptor.delete(`product/admin/api/v1/categories/${idCategoryDelete}/`);
+        mutationFn: async ({ id }) => {
+
+            const res = await interceptor.delete(`discount/admin/api/v1/${id}/`);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.removeQueries('allCategory');
+            queryClient.removeQueries('allDescription');
         },
     });
 }
 
-export default useDeleteCategory
+export default useDeleteDiscount

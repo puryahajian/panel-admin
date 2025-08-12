@@ -33,13 +33,16 @@ function usePatchProduct() {
 
             if (selectedFile) formData.append('image', selectedFile);
     
-            const res = await interceptor.patch(`product/api/v1/product/${idEdit}/`, formData);
+            const res = await interceptor.patch(`product/admin/api/v1/products/${idEdit}/`, formData);
             return res.data;
         },
         onSuccess: (data) => {
             toast.success('محصول ویرایش شد') 
             queryClient.removeQueries('allProduct');
         },
+        onError: (err) => {
+            console.log(err)
+        }
         
     });
 }

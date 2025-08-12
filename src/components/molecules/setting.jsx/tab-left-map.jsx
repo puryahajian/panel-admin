@@ -5,13 +5,15 @@ import useGetInfo from '../../db/use-get-info';
 
 function TabLeftMap() {
     const { data } = useGetInfo();
+    const details = data?.results?.map((item) => item)
+
     const defaultLat = 35.699739; // مختصات پیش‌فرض (مثلاً تهران)
     const defaultLng = 51.338097;
 
     // مقداردهی اولیه savedPosition با بررسی مقادیر معتبر
     const [savedPosition, setSavedPosition] = useState({
-        savedLat: parseFloat(localStorage.getItem('lat')) || parseFloat(data?.lat) || defaultLat,
-        savedLng: parseFloat(localStorage.getItem('lng')) || parseFloat(data?.lng) || defaultLng,
+        savedLat: parseFloat(localStorage.getItem('lat')) || parseFloat(details?.[0]?.lat) || defaultLat,
+        savedLng: parseFloat(localStorage.getItem('lng')) || parseFloat(details?.[0]?.lng) || defaultLng,
     });
 
     // به‌روزرسانی localStorage هنگام تغییر savedPosition

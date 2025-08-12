@@ -8,13 +8,15 @@ function useDeleteDriver() {
 
     return useMutation({
         mutationFn: async ({idDelete}) => {
-
-            const res = await interceptor.delete(`courier/api/v1/cashier/riders/${idDelete}/`);
+            const res = await interceptor.delete(`courier/admin/api/v1/${idDelete}`);
             return res.data;
         },
         onSuccess: (data) => {
             queryClient.removeQueries('allRider');
         },
+        onError: (err) => {
+            console.log(err)
+        }
     });
 }
 

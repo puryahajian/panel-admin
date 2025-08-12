@@ -10,27 +10,32 @@ import useDeleteDriver from '../../db/use-delete-driver';
 import ButtonExisting from '../../atoms/button-existing';
 import Title from '../../atoms/title';
 
-function TabCouriers() {
+function TabCouriers({className}) {
     const { data } = useGetDriver();
-
     const [selectData, setSelectData] = useState('');
+    // console.log(selectData)
     const [openModal, setOpenModal] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [id, setId] = useState(false);
     const [idDelete, setIdDelete] = useState(false);
     const { mutate, isPending } = usePatchDriver();
     const { mutate: mutateDeleteDriver } = useDeleteDriver()
+    const [error, setError] = useState('');
     
     const [nameDriver, setNameDriver] = useState(selectData?.name);
     const [phoneDriver, setPhoneDriver] = useState(selectData?.phone);
     const [addressDriver, setAddressDriver] = useState(selectData?.address);
-    const [inState, setInState] = useState(false);
-
+    const [inState, setInState] = useState('');
     
+    const validatePhone = (phone) => {
+        const phoneRegex = /^09[0-9]{9}$/;
+        return phoneRegex.test(phone);
+    };
 
-    const handlePatchDriver = (id, inProcess) => {
-        const newValue = !inProcess;
+    const handlePatchDriver = (id, currentInProcess) => {
+        const newValue = !currentInProcess;
         setInState(newValue);
+        
         mutate(
             {
                 nameDriver,phoneDriver,addressDriver, id, inState: newValue
@@ -47,7 +52,7 @@ function TabCouriers() {
     }
 
     return (
-        <div>
+        <div className={className}>
             <div className='grid grid-cols-12 py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <Text className={`col-span-2 mr-2`}>نام</Text>
@@ -56,7 +61,8 @@ function TabCouriers() {
             </div>
 
             <div className='grid gap-2 max-[990px]:hidden'>
-                {data?.results.map((item, index) => (
+                {data?.results && data.results.length > 0 ? (
+                    data.results.map((item, index) => (
                     <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4' key={item?.id}>
                         <div>{index + 1}</div>
                         <div className=' col-span-2 flex items-center gap-6'>
@@ -70,10 +76,13 @@ function TabCouriers() {
                         </div>
                         <div className=' col-span-2 flex justify-end gap-4'>
                             <ButtonExisting
-                                onClick={() => handlePatchDriver(item.id, item.in_process)}
+                                onClick={() => {
+                                    handlePatchDriver(item.id, item.in_process)
+                                    // console.log(item.id, item.in_process)
+                                }}
                                 className={`${item?.in_process === true ? '' : 'bg-red-500 border-transparent'}`}
                             >
-                                {item?.in_process === true ? 'آنلاین' : 'آفلاین'}
+                                {item?.in_process ? 'آنلاین' : 'آفلاین'}                            
                             </ButtonExisting>
                             <ButtonEdit onClick={() => { 
                                 setId(item?.id)
@@ -90,12 +99,16 @@ function TabCouriers() {
                             </button>
                         </div>
                     </div>
-                ))}
+                    ))
+                ) : (
+                    ''
+                )}
             </div>
 
             {/* size tablet & mobile */}
             <div className='hidden gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid'>
-                {data?.results.map((item) => (
+                {data?.results && data.results.length > 0 ? (
+                    data.results.map((item, index) => (
                     <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
                         <div className='flex justify-between items-center'>
                             <Title>نام :</Title>
@@ -132,13 +145,17 @@ function TabCouriers() {
                             </button>
                         </div>
                     </div>
-                ))}
+                   ))
+                ) : (
+                    ''
+                )}
             </div>
 
             <div className='flex justify-center mt-4'>
-                {data?.results.length === 0 && <Text>دسته بندی موجود نیست</Text>}
+                {data?.count === 0 && <Text>دسته بندی موجود نیست</Text>}
             </div>
 
+            {/* delete couriers */}
             <GeneralModal
                 open={openModal && idDelete}
                 handleClose={(e) => {
@@ -149,6 +166,11 @@ function TabCouriers() {
                 actionText="بله"
                 actionHandler={(e) => { 
                     e.preventDefault()
+
+                    if (!validatePhone(phoneDriver)) {
+                        setError('شماره تلفن اشتباه است');
+                        return;
+                    }
                     handleDeleteDriver(idDelete)
                     setOpenModal(false); 
                 }}
@@ -164,18 +186,25 @@ function TabCouriers() {
                 }}
             />
 
+            {/* edit couriers */}
             <GeneralModal
                 open={openEdit && id}
                 handleClose={(e) => {
                     e.preventDefault()
                     setOpenEdit(false)
+                    setError('')
                 }}
                 title="ویرایش اطلاعات"
                 actionText={isPending ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
                     e.preventDefault()
+                    if (!validatePhone(phoneDriver)) {
+                        setError('شماره تلفن باید دقیقاً 10 رقم باشد و با 09 شروع شود');
+                        return;
+                    }
                     handlePatchDriver(id)
                     setOpenEdit(false); 
+                    
                 }}
                 onClose={(e) => {
                     e.preventDefault()
@@ -195,7 +224,7 @@ function TabCouriers() {
                     </div>
                     <div className='text-right'>
                         <Text className={`mt-4 mb-2`}>شماره تماس</Text>
-                        <Input defaultValue={selectData?.phone} value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} type={`number`} className={`w-full text-left`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
+                        <Input defaultValue={selectData?.phone} value={phoneDriver} onChange={(e) => setPhoneDriver(e.target.value)} type={`number`} className={`w-full text-left ${error ? 'border !border-red-500' : ''}`} placeholder={`۰۹۳۶۲۲۹۲۵۶۸`}/>
                     </div>                    
                 </div>
 
@@ -203,6 +232,8 @@ function TabCouriers() {
                     <Text className={`mt-4 mb-2`}>آدرس</Text>
                     <Input defaultValue={selectData?.address} value={addressDriver} onChange={(e) => setAddressDriver(e.target.value)} className={`w-full text-right`} placeholder={`آدرس پیک را وارد کنید`}/>
                 </div> 
+
+                <Text className={`text-red-500`}>{error ? error : ''}</Text>
             </GeneralModal>
 
         </div>

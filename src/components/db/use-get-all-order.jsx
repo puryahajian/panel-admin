@@ -5,7 +5,7 @@ function useGetAllOrder() {
   const { data, error, isLoading } = useQuery({
       queryKey: ['listOrders'],
       queryFn: async () => {
-        const response = await interceptor.get('order/api/v1/');
+        const response = await interceptor.get('order/admin/v1/orders/');
         return response.data;
       },
   });

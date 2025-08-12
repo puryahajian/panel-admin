@@ -16,7 +16,7 @@ function usePostVerify() {
                 password: otp
             });
 
-            const res = await interceptor.post(`account/api/v1/verify/`, data);
+            const res = await interceptor.post(`account/mobile/api/v1/verify/`, data);
             return res.data;
         },
         onSuccess: (data) => {
@@ -26,7 +26,7 @@ function usePostVerify() {
             Cookies.set("access", access, { expires: 365 });
             Cookies.set("refresh", refresh, { expires: 365 });
             navigate('/')
-            queryClient.removeQueries('login');
+            // queryClient.removeQueries('login');
         },
     });
 

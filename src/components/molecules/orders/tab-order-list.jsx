@@ -10,7 +10,6 @@ import Mapp from '../mapp'
 
 function TabOrderList() {
   const { data } = useGetAllOrder();
-  console.log(data)
   const [ openModal, setOpenModal ] = useState(false); 
   const [ getData, setGetData ] = useState(''); 
 
@@ -28,7 +27,7 @@ function TabOrderList() {
   };
    
   return (
-    <div className=''>
+    <div className='mt-20 max-[1024px]:mt-32'>
         <div className='flex my-4 max-[1024px]:hidden'>
           <Title>ردیف</Title>
           <div className='grid grid-cols-6 w-full'>
@@ -42,7 +41,7 @@ function TabOrderList() {
           
         </div>
         <div className='grid gap-2'>
-          {data?.map((item, index) => (
+          {data?.results?.map((item, index) => (
             <ListOrders
               onClick={() => {
                 setOpenModal(true);
@@ -50,6 +49,8 @@ function TabOrderList() {
               }}
               classOrderer={`pr-1`}
               classDate={``}
+              className={item?.state !== 8 && 'hidden'}
+              classNameResponse={item?.state !== 8 && 'hidden'}
 
               momber={index + 1}
               order={item?.items?.length === 0 ? 'نا مشخص' : item?.items?.filter(it => it?.product?.name)?.map(it => it.product.name)?.join(', ')}
@@ -67,7 +68,7 @@ function TabOrderList() {
           ))}
         </div>
         <div className='text-center mt-6'>
-          {data?.length === 0 && <Text>سفارش موجود نیست</Text>}
+          {data?.count === 0 && <Text>سفارش موجود نیست</Text>}
         </div>
 
         <GeneralModal

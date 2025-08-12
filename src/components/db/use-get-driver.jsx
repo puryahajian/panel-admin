@@ -6,7 +6,7 @@ function useGetDriver() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['allRider'],
     queryFn: async () => {
-      const response = await interceptor.get('courier/api/v1/cashier/riders/');
+      const response = await interceptor.get('courier/admin/api/v1/');
       return response.data;
     },
   });

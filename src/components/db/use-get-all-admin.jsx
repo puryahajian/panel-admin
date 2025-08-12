@@ -7,7 +7,7 @@ function useGetAllAdmin() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['allAdmin'],
     queryFn: async () => {
-      const response = await interceptor.get('cashier/api/v1/cashiers/');
+      const response = await interceptor.get('cashier/admin/api/v1/cashiers/');
       return response.data;
     },
   });

@@ -10,7 +10,7 @@ import Input from '../../atoms/input'
 import DateShamsi from '../date-shamsi'
 import Title from '../../atoms/title'
 
-function TabAdmins() {
+function TabAdmins({className}) {
     const { data } = useGetAllAdmin();
     const { mutate } = useDeleteAdmin();
     const { mutate: mutatePatchAdmin } = usePatchAdmin();
@@ -22,7 +22,6 @@ function TabAdmins() {
     const [familyAdmin, setFamilyAdmin] = useState(selectDataAdmin?.user?.family);
     const [phoneAdmin, setPhoneAdmin] = useState(selectDataAdmin?.user?.phone);
     const [addressAdmin, setAddressAdmin] = useState(selectDataAdmin?.user?.address);
-
     const [id, setId] = useState(false);
 
     const handleDeleteAdmin = (id) => {
@@ -42,7 +41,7 @@ function TabAdmins() {
     }
 
     return (
-        <div>
+        <div className={className}>
             <div className='flex py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-8 w-full mr-6'>
@@ -54,7 +53,7 @@ function TabAdmins() {
             </div>
 
             <div className='grid gap-2 max-[990px]:hidden'>
-                {data?.results.map((item, index) => (
+                {data?.map((item, index) => (
                     <div className='flex border border-grayTitle items-center p-4 rounded-2xl' key={item?.id}>
                         <div>
                             <Text>{index + 1}</Text>
@@ -93,8 +92,8 @@ function TabAdmins() {
             </div>
 
             {/* size tablet & mobile */}
-            <div className='hidden grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid'>
-                {data?.results.map((item) => (
+            <div className='hidden grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid gap-4 max-[990px]:mt-[160px]'>
+                {data?.map((item) => (
                     <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
                         <div className='flex justify-between items-center'>
                             <Title>نام :</Title>
@@ -120,9 +119,10 @@ function TabAdmins() {
             </div>
 
             <div className='flex justify-center mt-4'>
-                {data?.results.length === 0 && <Text>دسته بندی موجود نیست</Text>}
+                {data?.length === 0 && <Text>دسته بندی موجود نیست</Text>}
             </div>
 
+            {/* delete admin */}
             <GeneralModal
                 open={openModal && id}
                 handleClose={(e) => {
@@ -138,6 +138,7 @@ function TabAdmins() {
                 }}
             />
 
+            {/* edit admin */}
             <GeneralModal
                 open={openModalEdit && id}
                 handleClose={(e) => {

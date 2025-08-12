@@ -9,8 +9,9 @@ import usePatchCustomer from '../../db/use-patch-customer';
 import Loading from '../../atoms/loading';
 import Title from '../../atoms/title';
 
-function TabCustomer() {
+function TabCustomer({className}) {
     const { data } = useGetAllCustomer();
+    // console.log(data)
     const { mutate } = useDeleteCustomer();
     const { mutate: mutatePatchCustomer, isLoading } = usePatchCustomer();
     const [openModal, setOpenModal] = useState(false);
@@ -53,7 +54,7 @@ function TabCustomer() {
     };
 
     return (
-        <div>
+        <div className={className}>
             <div className='grid grid-cols-12 py-4 max-[990px]:hidden'>
                 <Text>ردیف</Text>
                 <Text className={`col-span-2 mr-2`}>نام</Text>
@@ -62,11 +63,11 @@ function TabCustomer() {
             </div>
 
             <div className='grid gap-2 max-[990px]:hidden'>
-                {data?.results.map((item, index) => (
+                {data?.map((item, index) => (
                     <div className='grid grid-cols-12 items-center border border-grayTitle rounded-2xl p-4' key={item?.id}>
                         <div>{index + 1}</div>
                         <div className=' col-span-2 flex items-center gap-6'>
-                            <Text>{item?.name === null || item?.name === '' ? 'ناشناس' : item?.name} {item?.family}</Text>
+                            <Text>{item?.name === '' ? 'ناشناس' : item?.name} {item?.family}</Text>
                         </div>
                         <div className='col-span-2'>
                             <Text>{item?.phone === null ? 'ناموجود' : item?.phone}</Text>
@@ -97,7 +98,7 @@ function TabCustomer() {
 
             {/* size tablet & mobile */}
             <div className='hidden gap-4 grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid max-[990px]:mb-14'>
-                {data?.results.map((item) => (
+                {data?.map((item) => (
                     <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
                         <div className='flex justify-between items-center'>
                             <Title>نام :</Title>

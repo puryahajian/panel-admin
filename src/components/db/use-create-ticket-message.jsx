@@ -15,11 +15,11 @@ function useCreateTicketMessage() {
             formData.append('text', message || '');
             formData.append('file', selectedFile || '');
 
-            const res = await interceptor.post(`ticket/api/v1/tickets/${id}/messages/`, formData);
+            const res = await interceptor.post(`ticket/api/v1/admin/tickets/${id}/messages/`, formData);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('createTicketMessage');
+            queryClient.removeQueries('createTicketMessage');
         },
     });
 }

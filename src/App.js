@@ -22,52 +22,45 @@ function App() {
   
   const navigate = useNavigate();
 
-  const handleExit = () => {
-    setOpen(false); 
-    navigate('/login');
-    Cookies.remove('access');
-    Cookies.remove('refresh');
-  }
+  // const handleExit = () => {
+  //   setOpen(false); 
+  //   navigate('/login');
+  //   Cookies.remove('access');
+  //   Cookies.remove('refresh');
+  // }
 
   return (
-    <div className='flex'>
-      <SideBar/>
-      <HeaderResponsive step={step} setStep={setStep}/>
+   <Routes>
+      {/* مسیر لاگین بدون چیدمان */}
+      <Route element={<Middleware />}>
+        <Route path="/login" element={<Login />} />
+      </Route>
 
-      <div className='w-full'>
-        <Routes>
-          <Route element={<Middleware />}>
-            <Route path='/login' element={<Login/>}/>
-          </Route>
-
-            {/* <Route path='/' element={<Panel/>}/> */}
-
-          <Route path='/' element={<DashboardPage/>}/>
-          <Route path='/orders' element={<OrdersPage/>}/>
-          <Route path='/products' element={<ProductsPage/>}/>
-          <Route path='/management' element={<ManagementPage/>}/>
-          <Route path='/settings' element={<SettingsPage/>}/>
-          <Route path='/discounts' element={<DiscountsPage/>}/>
-
-          <Route path='/tickets/:id' element={<Tickets/>}/>
-        </Routes>
-      </div>
-
-      <GeneralModal
-        open={open}
-        handleClose={(e) => {
-            e.preventDefault();
-            setOpen(false)
-        }}
-        title="آیا می خواهید از اکانت خود خارج شوید ؟"
-        // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
-        actionText="بله"
-        actionHandler={(e) => { 
-            e.preventDefault();
-            handleExit()
-        }}
-      />
-    </div>
+      {/* مسیرهای محافظت‌شده با چیدمان */}
+      <Route
+        element={
+          <div className="grid grid-cols-6">
+            <div className='max-[1024px]:hidden'>
+              <SideBar />
+            </div>
+            <div className="w-full col-span-5 max-[1024px]:col-span-6">
+              <HeaderResponsive step={step} setStep={setStep} />
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route path="/management" element={<ManagementPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/discounts" element={<DiscountsPage />} />
+                <Route path="/tickets/:id" element={<Tickets />} />
+              </Routes>
+            </div>
+          </div>
+        }
+      >
+        <Route path="/*" />
+      </Route>
+    </Routes>
   );
 }
 

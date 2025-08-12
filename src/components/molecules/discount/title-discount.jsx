@@ -3,7 +3,7 @@ import Text from '../../atoms/text'
 
 function TitleDiscount() {
     return (
-        <div className='flex gap-4 max-[992px]:hidden'>
+        <div className='flex gap-4 max-[992px]:hidden mt-20'>
             <div>
                 <Text>ردیف</Text>
             </div>
@@ -18,7 +18,7 @@ function TitleDiscount() {
                     <Text>تاریخ اعتبار</Text>
                 </div>
                 <div className=''>
-                    <Text>کد استفاده شده </Text>
+                    {/* <Text>کد استفاده شده </Text> */}
                 </div>
             </div>
         </div>

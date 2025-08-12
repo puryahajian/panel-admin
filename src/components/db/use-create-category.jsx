@@ -12,7 +12,7 @@ function useCreateCategory() {
             formData.append('name', nameCategory);
             formData.append('image', selectedCategory);
 
-            const res = await interceptor.post(`product/api/v1/category/`, formData);
+            const res = await interceptor.post(`product/admin/api/v1/categories/`, formData);
             return res.data;
         },
         onSuccess: (data) => {

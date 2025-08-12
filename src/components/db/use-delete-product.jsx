@@ -7,7 +7,7 @@ function useDeleteProduct() {
 
     return useMutation({
         mutationFn: async ({ selectedItemId }) => {
-            const res = await interceptor.delete(`product/api/v1/product/${selectedItemId}/`);
+            const res = await interceptor.delete(`product/admin/api/v1/products/${selectedItemId}/`);
             return res.data;
         },
         onSuccess: (data) => {

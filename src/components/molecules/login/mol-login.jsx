@@ -1,5 +1,4 @@
 
-import React from 'react'
 import ImgLogin from '../../../assets/image/Layer-login.png'
 import TextBold from '../../atoms/text-bold'
 import Title from '../../atoms/title'
@@ -61,14 +60,14 @@ function MolLogin() {
             <div>
                 <div className='text-center m-auto max-[990px]:w-[325px]'>
                     <TextBold>خوش آمدید!</TextBold>
-                    <Title className={`mt-4`}>برای ورود نام کاربری و رمزعبور خود را وارد کنید</Title>
+                    <Title className={`mt-4`}>برای ورود شماره تلفن خود را وارد کنید</Title>
                     <div className='text-right mt-6'>
                         <Text className={`text-red-500 mb-2`}>{messageError}</Text>
                         <form className='max-w-[325px] max-[580px]:max-w-[100%] w-[325px] max-[580px]:w-full'>
                             {step === 1 && (
                                 <>
-                                    <Title>نام کاربری</Title>
-                                    <Input value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
+                                    <Title>شماره تلفن</Title>
+                                    <Input inputMode={`numeric`} value={userName} onChange={(e) => setUserName(e.target.value)} className={`w-full bg-transparent border text-left mt-2 ${messageError ? 'border-red-500' : ''}`}/>
                                 </>
                             )}
                             {step === 2 && (
@@ -88,7 +87,7 @@ function MolLogin() {
                                             value={otp}
                                             onChange={setOtp}
                                             numInputs={4}
-                                            renderInput={(props) => <input {...props} type='number' inputMode='numeric'/>}
+                                            renderInput={(props) => <input {...props} inputMode='numeric'/>}
                                             inputStyle="otp-input"
                                             shouldAutoFocus
                                         />

@@ -140,3 +140,12 @@
 .css-4g3e7k-MuiTypography-root {
   margin-top: 0 !important;
 }
+
+/* Hover item (highlight for active menu item) */
+.hover-item {
+  position: absolute;
+  right: 0;
+  width: 100%; /* Thin vertical bar for active item */
+  height: 44px; /* Match menu item height */
+  border-radius: 8px; /* Rounded edges on the right */
+}

@@ -17,31 +17,35 @@ function TabRightDetail({
     valueNumberSupport
     }) {
     const { data } = useGetInfo();
-    console.log(data)
+    const details = data?.results
 
     return (
-        <div>
-            <Text>لوگو </Text>
+        <>
+        {details?.map((item) => (
+            <div>
+                <Text>لوگو </Text>
 
-            <Uploader
-                className={`mt-2 h-[155px] min-h-9`}
-                textOne={'تصوبر لوگو سایت'}
-                // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
-                preview={preview}
-                onFileSelect={onFileSelect}
-                selectedFile={selectedFile}
-                setPreview={setPreview}
-            />
+                <Uploader
+                    className={`mt-2 h-[155px] min-h-9`}
+                    textOne={'تصوبر لوگو سایت'}
+                    // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
+                    preview={preview}
+                    onFileSelect={onFileSelect}
+                    selectedFile={selectedFile}
+                    setPreview={setPreview}
+                />
 
-            <Text className={`mt-4`}>نام فروشگاه</Text>
-            <Input defaultValue={data?.name} value={valueNameShop} onChange={onChangeNameShop} placeholder={`نام فروشگاه خود را وارد کنید`} className={`w-full mt-2`}/>
+                <Text className={`mt-4`}>نام فروشگاه</Text>
+                <Input defaultValue={item?.name} value={valueNameShop} onChange={onChangeNameShop} placeholder={`نام فروشگاه خود را وارد کنید`} className={`w-full mt-2`}/>
 
-            <Text className={`mt-4`}>شماره فروشگاه</Text>
-            <Input defaultValue={data?.phone} value={valueNumberShop} onChange={onChangeNumberShop} type={`number`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
+                <Text className={`mt-4`}>شماره فروشگاه</Text>
+                <Input defaultValue={item?.phone} value={valueNumberShop} onChange={onChangeNumberShop} inputMode={`numeric`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
 
-            <Text className={`mt-4`}>شماره پشتیبانی</Text>
-            <Input value={valueNumberSupport} onChange={onChangeNumberSupport} type={`number`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
-        </div>
+                <Text className={`mt-4`}>شماره پشتیبانی</Text>
+                <Input defaultValue={item?.support_phone} value={valueNumberSupport} onChange={onChangeNumberSupport} inputMode={`numeric`} placeholder={`۰۹۱۱۱۱۱۱۱۱۱`} className={`w-full mt-2 text-left`}/>
+            </div>
+        ))}
+        </>
     )
 }
 

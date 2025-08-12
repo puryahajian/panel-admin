@@ -1,16 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import React from 'react'
 import interceptor from '../../lib/interceptor';
+import { useQuery } from '@tanstack/react-query';
 
-function useSalesReport() {
-
+function useGetDiscount() {
     const { data, error, isLoading } = useQuery({
-        queryKey: ['sale'],
+        queryKey: ['allDescription'],
         queryFn: async () => {
-          const response = await interceptor.get('order/admin/v1/orders/sales-report/');
-          return response.data;
+            const response = await interceptor.get('discount/admin/api/v1/');
+            return response.data;
         },
     });
-
 
     if (isLoading) return <div>loading</div>;
 
@@ -19,4 +18,4 @@ function useSalesReport() {
     return {data}
 }
 
-export default useSalesReport
+export default useGetDiscount

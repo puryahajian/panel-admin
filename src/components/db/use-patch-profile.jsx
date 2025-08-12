@@ -7,6 +7,7 @@ function usePatchProfile() {
 
     return useMutation({
         mutationFn: async ({ 
+            id,
             selectedLogo, 
             nameShop, 
             numberShop, 
@@ -22,7 +23,7 @@ function usePatchProfile() {
             instagram, 
             aboutUse,
             linkBannerOne,
-            linkBannerTwo
+            linkBannerTwo,
         }) => {
         
             const data = new FormData();
@@ -47,12 +48,11 @@ function usePatchProfile() {
             if (linkBannerTwo) data.append('banner_two_link', linkBannerTwo);
 
 
-            const res = await interceptor.patch(`option/api/v1/cashier/store-info/`, data);
+            const res = await interceptor.patch(`option/admin/${id}`, data);
             return res.data;
         },
         onSuccess: (data) => {
             queryClient.removeQueries('getInfo');
-            console.log(data)
         },
     });
 }

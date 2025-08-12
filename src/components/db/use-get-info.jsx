@@ -8,7 +8,7 @@ function useGetInfo() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['getInfo'],
     queryFn: async () => {
-      const response = await interceptor.get('option/api/v1/cashier/store-info/');
+      const response = await interceptor.get('option/admin/');
       return response.data;
     },
   });

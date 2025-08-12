@@ -6,7 +6,7 @@ function useGetAllTickets() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['allTickets'],
     queryFn: async () => {
-      const response = await interceptor.get('ticket/api/v1/tickets/');
+      const response = await interceptor.get('ticket/api/v1/admin/tickets/');
       return response.data;
     },
   });

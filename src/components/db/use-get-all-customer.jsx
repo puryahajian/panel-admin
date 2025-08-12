@@ -5,7 +5,7 @@ function useGetAllCustomer() {
   const { data, error, isLoading } = useQuery({
     queryKey: ['allCustomer'],
     queryFn: async () => {
-      const response = await interceptor.get('cashier/api/v1/customers/');
+      const response = await interceptor.get('cashier/admin/api/v1/customers/');
       return response.data;
     },
   });

@@ -14,7 +14,7 @@ function useCreateCustomer() {
             formData.append('family', lastNameCustomer || '');
             formData.append('address', addressCustomer || '');
 
-            const res = await interceptor.post(`cashier/api/v1/customers/`, formData);
+            const res = await interceptor.post(`cashier/admin/api/v1/customers/`, formData);
             return res.data;
         },
         onSuccess: (data) => {

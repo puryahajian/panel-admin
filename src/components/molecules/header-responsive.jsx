@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuBar from '../../assets/image/Vector.png'
 import useGetInfo from '../db/use-get-info'
 import User from '../../assets/image/arrow_12363532.png'
@@ -6,16 +6,26 @@ import OffcanvasMenu from './offcanvas';
 import MenuPanel from '../../lib/menu-panel';
 import GeneralModal from './modal-general';
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom';
-
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import LogoDefault from '../../assets/image/default-logo.png'
 
 function HeaderResponsive({step, setStep}) {
+    const { data: dataInfo } = useGetInfo();
+    const details = dataInfo?.results
     const navigate = useNavigate();
+    const location = useLocation();
     const { data } = useGetInfo('');
     const [openProfileState , setOpenProfileState] = useState(false);
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
+
+    useEffect(() => {
+        const currentIndex = MenuPanel.findIndex((tab) => tab.path === location.pathname);
+        if (currentIndex !== -1) {
+        setStep(currentIndex);
+        }
+    }, [location.pathname, setStep]);
 
     const handleUserClick = () => setOpenProfileState(true);
 
@@ -32,12 +42,13 @@ function HeaderResponsive({step, setStep}) {
                 <div>
                     <img src={data?.logo} className='mb-10 w-16 m-auto' alt="" />
                     {MenuPanel.map((tab, index) => (
-                        <button
+                        <Link
                             key={index}
                             onClick={() => {
                                 setStep(index);
                                 toggleMenu();
                             }}
+                            to={tab.path}
                             className={`px-2 flex items-center gap-2 py-3 cursor-pointer text-right w-full rounded-lg ${
                                 step === index
                                     ? 'bg-customBlue text-white'
@@ -47,13 +58,18 @@ function HeaderResponsive({step, setStep}) {
                         >
                             <span className='font-sans text-sm '>{tab.label}</span>
                             
-                        </button>
+                        </Link>
                     ))}
                     
                 </div>
             </OffcanvasMenu>
-
-            <img src={data?.logo} className='w-[40px] h-[40px] z-20' alt="" />
+            {details?.map((item) => (
+                // <img src={item?.logo} className='mb-10 w-16 m-auto' alt="" />
+                <img src={item?.logo} onError={(e) => { 
+                    e.target.onerror = null;
+                    e.target.src = LogoDefault; 
+                    }} className='w-[40px] h-[40px] z-20' alt="" />
+            ))}
             
             <button onClick={handleUserClick}>
                 <img src={User} className='w-6 h-6 z-20 rotate-180' alt="" />

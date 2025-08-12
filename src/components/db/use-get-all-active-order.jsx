@@ -7,7 +7,7 @@ function useGetAllActiveOrder() {
     const { data, error, isLoading } = useQuery({
         queryKey: ['activeOrder'],
         queryFn: async () => {
-          const response = await interceptor.get('order/api/v1/active-orders/');
+          const response = await interceptor.get('order/admin/v1/orders/');
           return response.data;
         },
     });

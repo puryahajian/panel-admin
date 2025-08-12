@@ -16,6 +16,7 @@
     "axios": "^1.9.0",
     "chart.js": "^4.4.8",
     "cookie": "^1.0.2",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dayjs-jalali": "^0.0.2",
     "i": "^0.3.7",
@@ -69,14 +70,21 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "babel-jest": "^30.0.5",
+    "jest": "^27.5.1",
     "tailwindcss": "^3.4.17"
   },
   "jest": {
-    "collectCoverage": true,
-    "coverageDirectory": "coverage",
+    "clearMocks": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/**/*.test.{js,jsx}"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 80,
@@ -85,9 +93,8 @@
         "statements": 80
       }
     },
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
-      "!src/**/*.test.{js,jsx}"
+    "transformIgnorePatterns": [
+      "/node_modules/(?!axios|js-cookie)"
     ]
   }
 }

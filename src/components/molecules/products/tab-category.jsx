@@ -18,15 +18,16 @@ function TabCategory() {
     const [openSelected, setOpenSelected] = useState(null);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [preview, setPreview] = useState();
-    const selectedItem = data?.results.find((it) => it?.id === openSelected);
+    const selectedItem = data?.data?.find((it) => it?.id === openSelected);
     const [nameCategory, setNameCategory] = useState(selectedItem?.name);
     const [idCategoryDelete, setIdCategoryDelete] = useState(null);
 
     
     const handleEditCategory = () => {
+        // console.log(selectedCategory, nameCategory, openSelected, preview)
         mutate(
             {
-                selectedCategory, nameCategory, openSelected
+                selectedCategory, nameCategory, openSelected, preview
             },
             {
                 onSuccess: (data) => {
@@ -36,7 +37,7 @@ function TabCategory() {
         )
     }
 
-    const handleDeleteCategory = () => {
+    const handleDeleteCategory = (idCategoryDelete) => {
         mutateDeleteCategory(
             {
                 idCategoryDelete
@@ -51,8 +52,8 @@ function TabCategory() {
 
     return (
         <>
-        <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3'>
-            {data?.results.map((item) => (
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3 mt-16 max-[1024px]:mt-[96px]'>
+            {data?.data?.map((item) => (
                 <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' key={item?.id}>
                     <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
 
@@ -78,11 +79,11 @@ function TabCategory() {
                     e.preventDefault()
                     setOpen(false)
                 }}
-                title="آیا می یخواهید این دسته بندی را حذف کنید ؟"
+                title="آیا می خواهید این دسته بندی را حذف کنید ؟"
                 actionText="بله"
                 actionHandler={(e) => {
                     e.preventDefault()
-                    handleDeleteCategory()
+                    handleDeleteCategory(idCategoryDelete)
                     setOpen(false); 
                 }}
                 onClose={(e) => {
@@ -102,19 +103,22 @@ function TabCategory() {
                 handleClose={(e) => {
                     e.preventDefault()
                     setOpenEditCategory(false)
+                    setNameCategory('')
                 }}
                 actionText="ذخیره"
                 actionHandler={(e) => {
                     e.preventDefault()
                     handleEditCategory()
                     setOpenEditCategory(false); 
+                    setNameCategory('')
                 }}
                 onClose={(e) => {
                     e.preventDefault()
                     setOpenEditCategory(false);
+                    setNameCategory('')
                 }}
                 sx={{
-                    width: '300px', 
+                    width: '400px', 
                     '@media (max-width: 600px)': {
                         width: '92%',
                     },
@@ -128,7 +132,8 @@ function TabCategory() {
                         onFileSelect={setSelectedCategory}
                         preview={selectedItem?.image || preview}
                         setPreview={setPreview}
-                        className={`h-64`}
+                        className={`!h-[256px] w-full max-h-[256px]`}
+
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
@@ -138,7 +143,7 @@ function TabCategory() {
         </div>
 
         <div className='flex justify-center mt-4'>
-            {data?.count === 0 && <Text>دسته بندی موجود نیست</Text>}
+            {data?.length === 0 && <Text>دسته بندی موجود نیست</Text>}
         </div>
         </>
     )

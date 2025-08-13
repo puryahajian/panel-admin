@@ -27,6 +27,8 @@ function useCreateProduct() {
             isCheckedNon,
             isCheckedAmazon,
             isCheckedSoqMaftoh,
+            category,
+            unit_name
         }) => {
 
             const formData = new FormData();
@@ -40,6 +42,7 @@ function useCreateProduct() {
                 formData.append('image', bgProduct);
             }
             if (selectedImage1) formData.append('image1', selectedImage1);
+
             if (selectedImage2) formData.append('image2', selectedImage2);
             if (selectedImage3) formData.append('image3', selectedImage3);
             // if (newImage4) formData.append('image4', newImage4);

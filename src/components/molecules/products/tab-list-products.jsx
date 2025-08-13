@@ -26,7 +26,8 @@ function TabListProducts() {
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
-    const selectedItem = data?.find((it) => it?.id === selectIdProduct)
+    const products = Array.isArray(data) ? data : (Array.isArray(data?.results) ? data.results : []);
+    const selectedItem = products?.find((it) => it?.id === selectIdProduct)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
@@ -197,7 +198,7 @@ function TabListProducts() {
             </div>
 
             <div className='grid gap-2'>
-                {data?.map((item, index) => {
+                {products?.map((item, index) => {
                     return(
                         <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
                             <div className='px-8'>{index + 1}</div>
@@ -246,7 +247,7 @@ function TabListProducts() {
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
-                {data?.map((item, index) => {
+                {products?.map((item, index) => {
                     // const category = dataCategory?.find((c) => c?.id === item?.category)
                     return(
                         <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
@@ -299,7 +300,7 @@ function TabListProducts() {
             </div>
 
             <div className='flex justify-center mt-4'>
-                {data?.count === 0 && <Text>محصول موجود نیست</Text>}
+                {products?.count === 0 && <Text>محصول موجود نیست</Text>}
             </div>
 
             <GeneralModal

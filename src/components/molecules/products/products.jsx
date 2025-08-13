@@ -133,11 +133,11 @@ function Products() {
 
     const handleCreateProduct = () => {
 
-        console.log(selectedImage1,
-                selectedImage2,
-                selectedImage3,)
+        // console.log(selectedImage1,
+        //         selectedImage2,
+        //         selectedImage3,)
 
-        if (!bgProduct && !selectedFile) {
+        if (bgProduct === null && selectedFile === null && selectedImage1 === null && selectedImage2 === null && selectedImage3 === null) {
             const errorMessage = 'لطفاً حداقل یک تصویر برای محصول انتخاب کنید';
             setErrCreate({ message: errorMessage });
             toast.info('تصویر را انتخاب کنید');

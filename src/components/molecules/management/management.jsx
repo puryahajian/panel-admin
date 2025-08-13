@@ -135,8 +135,8 @@ function Management() {
 
     return (
         <div>
-            <div className='flex justify-between fixed top-0 shadow-lg right-0 w-full bg-white py-4'>
-                <div className='flex gap-4 max-[560px]:fixed max-[1024px]:mt-[58px] max-[594px]:w-[93%] max-[560px]:mt-[55px] max-[560px]:bg-white max-[560px]:opacity-95 mr-[235px] max-[1024px]:mr-4'>
+            <div className='flex justify-between w-full bg-white py-4 px-4'>
+                <div className='flex gap-4 max-[560px]:fixed max-[1024px]:mt-[58px] max-[594px]:w-[93%] max-[560px]:mt-[55px] max-[560px]:bg-white max-[560px]:opacity-95 max-[1024px]:mr-4'>
                     <div className='flex overflow-auto w-max gap-4 max-[560px]:pb-4 max-[560px]:pt-1'>
                         {Buttons.map((tab, index) => (
                             <button
@@ -160,7 +160,7 @@ function Management() {
                     </div>
                 </div>
 
-                <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95 ml-[17px] max-[990px]:ml-0'>
+                <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95 max-[990px]:ml-0'>
                     {step === 0 && (
                         <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border bg-white border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن ادمین
@@ -179,18 +179,18 @@ function Management() {
                 </div>
             </div>
             
-            <div className=' max-[560px]:mt-[70px]'>
+            <div className=' max-[560px]:mt-[70px] px-4'>
                 <TabManagement step={step} index={0}>
                     <hr className='w-[95%] border-none m-auto max-[990px]:hidden'/>
-                    <TabAdmins className={`mt-14 max-[1024px]:mt-[120px] max-[1024px]:mb-8`}/>
+                    <TabAdmins className={` max-[1024px]:mt-[120px] max-[1024px]:mb-8`}/>
                 </TabManagement>
                 <TabManagement step={step} index={1}>
                     <hr className='w-[95%] border-none m-auto max-[990px]:hidden'/>
-                    <TabCustomer className={`mt-14 max-[1024px]:mt-[160px] max-[1024px]:mb-8`}/>
+                    <TabCustomer className={` max-[1024px]:mt-[160px] max-[1024px]:mb-8`}/>
                 </TabManagement>
                 <TabManagement step={step} index={2}>
                     <hr className='w-[95%] border-none m-auto max-[990px]:hidden'/>
-                    <TabCouriers className={`mt-14 max-[1024px]:mt-[160px] max-[1024px]:mb-8`}/>
+                    <TabCouriers className={` max-[1024px]:mt-[160px] max-[1024px]:mb-8`}/>
                 </TabManagement>
                 <TabManagement step={step} index={3}>
                     <hr className='w-[95%] border-none m-auto max-[990px]:hidden'/>

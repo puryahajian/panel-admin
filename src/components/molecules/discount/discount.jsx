@@ -45,7 +45,7 @@ function Discount() {
     
 
     const handleCreateDiscount = () => {
-        console.log(gregorianDateFrom, gregorianDateTo, nameCampain, codeDiscount, typeDiscount, valueDiscount, selectProduct)
+        // console.log(gregorianDateFrom, gregorianDateTo, nameCampain, codeDiscount, typeDiscount, valueDiscount, selectProduct)
         mutate(
             {
                 gregorianDateFrom, gregorianDateTo, nameCampain, codeDiscount, typeDiscount, valueDiscount,selectProduct
@@ -59,7 +59,7 @@ function Discount() {
                     setSelectProduct('')
                 },
                onError: (err) => {
-                console.log(err)
+                // console.log(err)
                }
             }
         )
@@ -67,12 +67,12 @@ function Discount() {
     
     return (
         <div>
-            <div className='w-full flex fixed right-0 max-[1024px]:!bottom-0 max-[1024px]:h-max justify-end max-[1024px]:px-4 max-[1024px]:py-2 max-[1024px]:bg-white max-[1024px]:opacity-95 shadow-lg bg-white px-4 pb-4'>
+            <div className='w-full pt-4 flex max-[1024px]:!bottom-0 max-[1024px]:h-max justify-end max-[1024px]:px-4 max-[1024px]:py-2 max-[1024px]:bg-white max-[1024px]:opacity-95  bg-white px-4 pb-4'>
                 <ButtonGeneral onClick={() => setCreateDiscount(true)} className={` border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                     افزودن کد تخفیف
                 </ButtonGeneral>
             </div>
-            <hr className='w-[95%] m-auto my-4 max-[990px]:hidden'/>
+            <hr className='w-[95%] m-auto mb-4 max-[990px]:hidden'/>
 
             <TitleDiscount/>
             

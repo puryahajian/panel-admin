@@ -24,11 +24,11 @@ function TabProduct({ children, step, index }) {
     return (
         <div
             role="tabpanel"
-            className='mt-4'
+            className='mt-0'
             hidden={step !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
-            style={{ backgroundColor: 'white', color: 'black', borderRadius: '8px' }}
+            style={{ backgroundColor: 'white', color: 'black', borderRadius: '8px'}}
         >
             {step === index && <div>{children}</div>}
         </div>
@@ -41,7 +41,7 @@ function Products() {
     const {mutate, isLoading} = useCreateCategory();
     const { mutate: mutateCreatedProduct , isLoading: isLoadingCreateProduct } = useCreateProduct();
     const { data: dataCategory } = useGetAllCategory();
-    console.log(dataCategory)
+    // console.log(dataCategory)
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -97,9 +97,9 @@ function Products() {
 
 
     return (
-        <div className='max-[1024px]:mt-16'>
-            <div className='flex justify-between fixed top-0 shadow-lg right-0 w-full bg-white py-4 max-[1024px]:top-[64px]'>
-                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2 mr-[235px] max-[1024px]:mr-4'>
+        <div className='max-[1024px]:mt-16 grid col-span-10'>
+            <div className='flex justify-between shadow-lg w-full bg-white py-4 max-[1024px]:top-[64px]'>
+                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2 pr-4'>
                     {Buttons.map((tab, index) => (
                         <button
                             key={index}

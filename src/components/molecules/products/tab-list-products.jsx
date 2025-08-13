@@ -19,7 +19,7 @@ import Title from '../../atoms/title'
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
-    console.log(data)
+    // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
@@ -82,7 +82,7 @@ function TabListProducts() {
     };
 
     return (
-        <div className='mt-16 max-[1024px]:mt-[96px]'>
+        <div className='mt-0 px-4 max-[1024px]:mt-[96px]'>
             <div className='flex items-center max-[992px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-7 items-center w-full py-4'>

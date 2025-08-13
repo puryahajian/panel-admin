@@ -27,7 +27,7 @@ function TabOrderList() {
   };
    
   return (
-    <div className='mt-20 max-[1024px]:mt-32'>
+    <div className='mt-4 max-[1024px]:mt-32 px-4'>
         <div className='flex my-4 max-[1024px]:hidden'>
           <Title>ردیف</Title>
           <div className='grid grid-cols-6 w-full'>

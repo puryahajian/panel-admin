@@ -29,7 +29,7 @@ function Orders() {
 
     return (
         <div>
-            <div className='flex gap-4 fixed top-0 shadow-lg right-0 w-full bg-white py-4 max-[1024px]:mt-14'>
+            <div className='flex gap-4 px-4 w-full bg-white py-4 max-[1024px]:mt-14'>
                 {/* <ButtonGeneral className={`bg-grayText text-white`}>
                     لیست سفارشات
                 </ButtonGeneral>
@@ -40,7 +40,7 @@ function Orders() {
                     <button
                         key={index}
                         onClick={() => setStep(index)}
-                        className={`px-7 py-3  mr-[235px] max-[1024px]:mr-4 rounded-lg text-sm font-sans text-grayText ${
+                        className={`px-7 py-3  max-[1024px]:mr-4 rounded-lg text-sm font-sans text-grayText ${
                             step === index
                                 ? 'bg-grayText text-white'
                                 : 'border border-gray-600 text-grayText'

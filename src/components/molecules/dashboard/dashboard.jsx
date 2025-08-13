@@ -65,7 +65,7 @@ function Dashboard() {
   };
 
   return (
-    <div className='mt-4 max-[1024px]:mt-20'>
+    <div className='mt-4 max-[1024px]:mt-20 px-4'>
       <div className='grid grid-cols-2 gap-6 max-[1024px]:grid-cols-1'>
         <CardDiagram 
             contentTitle={

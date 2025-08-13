@@ -3,7 +3,7 @@ import Text from '../../atoms/text'
 
 function TitleDiscount() {
     return (
-        <div className='flex gap-4 max-[992px]:hidden mt-20'>
+        <div className='flex gap-4 max-[992px]:hidden mt-8 px-4'>
             <div>
                 <Text>ردیف</Text>
             </div>

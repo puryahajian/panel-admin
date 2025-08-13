@@ -2,7 +2,7 @@ import React from 'react'
 
 function MainPadding({children}) {
     return (
-        <div className='px-4 pb-4'>
+        <div className='pl-0 pb-4'>
             {children}
         </div>
     )

@@ -13,7 +13,7 @@ import Loading from '../../atoms/loading'
 function Setting() {
     const { data: dataInfo, isLoading } = useGetInfo();
     const details = dataInfo?.results
-    console.log(details)
+    // console.log(details)
 
     const { mutate , isPending } = usePatchProfile();
     const [getIdProfile, setGetIdProfile] = useState();
@@ -82,7 +82,7 @@ function Setting() {
 
 
     return (
-        <div className='mt-4 max-[1024px]:mt-20'>
+        <div className='mt-4 max-[1024px]:mt-20 px-4'>
             {details?.map((item) => (
                 <form>
                     <div className='grid grid-cols-2 max-[640px]:grid-cols-1 gap-5 mb-6'>

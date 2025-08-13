@@ -21,7 +21,7 @@ function ConvertToJalali({ converter }) {
 
 function ListDiscount() {
     const { data } = useGetDiscount();
-    console.log(data)
+    // console.log(data)
 
     const {mutate} = usePatchDiscount();
     const {mutate: mutateDelete} = useDeleteDiscount()
@@ -105,7 +105,7 @@ function ListDiscount() {
         <>
         {data?.results?.map((item, index) => (
             <React.Fragment key={item?.id}>
-            <div className="mt-4 flex gap-4 border p-2 rounded-2xl items-center max-[992px]:hidden">
+            <div className="mt-4 flex gap-4 border p-2 rounded-2xl items-center max-[992px]:hidden px-4">
                 <div>
                 <Text>{index + 1}</Text>
                 </div>

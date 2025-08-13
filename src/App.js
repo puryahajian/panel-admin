@@ -39,11 +39,14 @@ function App() {
       {/* مسیرهای محافظت‌شده با چیدمان */}
       <Route
         element={
-          <div className="grid grid-cols-6">
-            <div className='max-[1024px]:hidden'>
+          <div className="grid grid-cols-12">
+            <div className='max-[1024px]:hidden fixed right-0'>
               <SideBar />
             </div>
-            <div className="w-full col-span-5 max-[1024px]:col-span-6">
+            <div className=' col-span-2 w-full'>
+
+            </div>
+            <div className="w-full col-span-10 max-[1024px]:col-span-12">
               <HeaderResponsive step={step} setStep={setStep} />
               <Routes>
                 <Route path="/" element={<DashboardPage />} />

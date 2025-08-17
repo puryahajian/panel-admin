@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Panel from './pages/panel';
 import Login from './pages/login'
 import Tickets from './components/molecules/ticket/tickets';
@@ -21,6 +21,10 @@ function App() {
   const [open, setOpen] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === '/login';
+
 
   // const handleExit = () => {
   //   setOpen(false); 
@@ -30,40 +34,27 @@ function App() {
   // }
 
   return (
-   <Routes>
-      {/* مسیر لاگین بدون چیدمان */}
-      <Route element={<Middleware />}>
-        <Route path="/login" element={<Login />} />
-      </Route>
+    <div className='flex'>
+      <div className='fixed right-0'>
+        {!isLoginPage && <SideBar />}
+        {!isLoginPage && <HeaderResponsive step={step} setStep={setStep} />}
+      </div>
 
-      {/* مسیرهای محافظت‌شده با چیدمان */}
-      <Route
-        element={
-          <div className="grid grid-cols-12">
-            <div className='max-[1024px]:hidden fixed right-0'>
-              <SideBar />
-            </div>
-            <div className=' col-span-2 w-full'>
-
-            </div>
-            <div className="w-full col-span-10 max-[1024px]:col-span-12">
-              <HeaderResponsive step={step} setStep={setStep} />
-              <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/orders" element={<OrdersPage />} />
-                <Route path="/products" element={<ProductsPage />} />
-                <Route path="/management" element={<ManagementPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/discounts" element={<DiscountsPage />} />
-                <Route path="/tickets/:id" element={<Tickets />} />
-              </Routes>
-            </div>
-          </div>
-        }
-      >
-        <Route path="/*" />
-      </Route>
-    </Routes>
+      <div className='w-full content-right'>
+        <Routes>
+          <Route path='/login' element={<Login/>}/>
+          <Route element={<Middleware />}>
+            <Route path='/' element={<DashboardPage/>}/>
+            <Route path='/orders' element={<OrdersPage/>}/>
+            <Route path='/products' element={<ProductsPage/>}/>
+            <Route path='/management' element={<ManagementPage/>}/>
+            <Route path='/settings' element={<SettingsPage/>}/>
+            <Route path='/discounts' element={<DiscountsPage/>}/>
+            <Route path='/tickets/:id' element={<Tickets/>}/>
+          </Route>
+        </Routes>
+      </div>
+    </div>
   );
 }
 

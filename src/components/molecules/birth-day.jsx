@@ -27,7 +27,7 @@ function BirthDate({ value, onChange, onGregorianChange, inputClass }) {
             format="YYYY-MM-DD"
             placeholder="تاریخ را انتخاب کنید"
             className=""
-            inputClass={`text-center text-lg placeholder:font-sans flex justify-center h-[43px] rounded w-full !bg-bgInput p-1 ${inputClass}`}
+            inputClass={`text-center text-lg placeholder:font-sans placeholder:text-sm flex justify-center h-[43px] rounded w-full !bg-bgInput p-1 ${inputClass}`}
         />
     );
 }

@@ -92,7 +92,7 @@ function TabAdmins({className}) {
             </div>
 
             {/* size tablet & mobile */}
-            <div className='hidden grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid gap-4 max-[990px]:mt-[160px]'>
+            <div className='hidden grid-cols-[repeat(auto-fill,minmax(350px,1fr))] max-[990px]:grid gap-4 max-[990px]:mt-[0px] max-[560px]:mt-6'>
                 {data?.map((item) => (
                     <div className="border rounded-2xl grid gap-2 border-grayTitle p-4" key={item?.id}>
                         <div className='flex justify-between items-center'>

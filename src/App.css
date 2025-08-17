@@ -12,6 +12,14 @@
   font-family: sahelBold;
   src: url("../src/assets/fonts/Sans\ Bold.ttf");
 }
+.content-right{
+  margin-right: 235px;
+}
+@media (max-width: 1024px) {
+  .content-right{
+    margin-right: 0;
+  }
+}
 
 .upload-container {
   border: 2px dashed #ccc;

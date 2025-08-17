@@ -21,7 +21,7 @@ function TabManagement({ children, step, index }) {
     return (
         <div
             role="tabpanel"
-            className='mt-4'
+            className='mt-4 max-[560px]:mt-[120px]'
             hidden={step !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
@@ -72,7 +72,7 @@ function TabTickets() {
     }
     
     return (
-        <div className='mt-24 max-[1024px]:mt-[155px]'>
+        <div className=' max-[1024px]:mt-[16px] '>
             {/* tab tickets */}
             <TabManagement step={step} index={0}>
                 <div className='flex justify-between items-center gap-2'>
@@ -114,7 +114,7 @@ function TabTickets() {
                 ))}
 
                 {/*  */}
-                <div className='hidden mt-4 max-[680px]:grid max-[680px]:gap-4'>
+                <div className='hidden mt-4 max-[680px]:grid max-[990px]:!mt-8 max-[680px]:gap-4'>
                     {data?.results.map((item) => (
                         <>
                         <div className='grid gap-2 relative border rounded-lg p-3' onClick={() => navigate(`/tickets/${item?.id}`)}>

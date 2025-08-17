@@ -51,8 +51,8 @@ function TabCategory() {
     }
 
     return (
-        <>
-        <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3 mt-16 max-[1024px]:mt-[96px]'>
+        <div className='px-4'>
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3 mt-6 max-[1024px]:mt-[0px]'>
             {data?.data?.map((item) => (
                 <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' key={item?.id}>
                     <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
@@ -145,7 +145,7 @@ function TabCategory() {
         <div className='flex justify-center mt-4'>
             {data?.length === 0 && <Text>دسته بندی موجود نیست</Text>}
         </div>
-        </>
+        </div>
     )
 }
 

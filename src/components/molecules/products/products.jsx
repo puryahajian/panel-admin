@@ -56,6 +56,7 @@ function Products() {
     const [offer, setOffer] = useState();
     const [description, setDescription] = useState();
     const [nameCategory, setNameCategory] = useState('');
+    const [errors, setErrors] = useState({});
 
     const Buttons = [
         {label: "لیست محصولات" },
@@ -93,6 +94,31 @@ function Products() {
         const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
         if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
         setPriceProduct(formatNumber(rawValue));
+    };
+
+    const resetForm = () => {
+        setBgProduct(null);
+        setPreviewProduct('');
+        setDescription('');
+        setNameProduct('');
+        setPriceProduct('');
+        setUnitName('');
+        setOffer('');
+        setSelectorCategory('');
+    };
+
+    const validateForm = () => {
+        let newErrors = {};
+
+        if (!bgProduct) newErrors.bgProduct = "تصویر محصول الزامی است";
+        if (!nameProduct) newErrors.nameProduct = "نام محصول الزامی است";
+        if (!priceProduct) newErrors.priceProduct = "قیمت الزامی است";
+        if (!unitName) newErrors.unitName = "نام واحد الزامی است";
+        if (!selectorCategory) newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
+        if (!description) newErrors.description = "توضیحات الزامی است";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // اگه خطا نداشت true برگردون
     };
 
 
@@ -142,109 +168,179 @@ function Products() {
             <GeneralModal
                 open={open}
                 handleClose={(e) => {
-                    e.preventDefault()
-                    setOpen(false)
+                    e.preventDefault();
+                    setOpen(false);
+                    resetForm();
+                    setErrors({});
                 }}
-                // title="آیا می یخواهید این محصول را حذف کنید ؟"
                 actionText={isLoadingCreateProduct ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
-                    e.preventDefault()
-                    handleCreateProduct()
+                    e.preventDefault();
+                    if (!validateForm()) return; 
+                    handleCreateProduct();
                     setOpen(false); 
+                    resetForm();
+                    setErrors({});
                 }}
                 classBtn={`mt-4`}
                 onClose={(e) => {
-                    e.preventDefault()
-                    setOpen(false)}
-                }
-                // width={`w-[300px]`}
+                    e.preventDefault();
+                    setOpen(false);
+                    resetForm();
+                    setErrors({});
+                }}
                 sx={{
                     width: '500px', 
                     '@media (max-width: 600px)': {
-                        width: '92%',
+                    width: '92%',
                     },
                 }}
-            >
-                <div className='text-right'>
-                    <div className='grid grid-cols-2 max-[1037px]:grid-cols-1 gap-4'>
-                        <Uploader
-                            textOne={`تصویر محصول را آپلود کنید`}
-                            selectedFile={bgProduct}
-                            onFileSelect={setBgProduct}
-                            preview={previewProduct}
-                            setPreview={setPreviewProduct}
-                            className={`h-[200px]`}
-
-                        />
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
-                    </div>
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>نام</Text>
-                            <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full`} placeholder={`نام محصول را وارد کنید`}/>
-                        </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>قیمت</Text>
+                >
+                    <div className='text-right'>
+                        <div className='grid grid-cols-2 max-[1037px]:grid-cols-1 gap-4'>
+                            {/* Uploader + پیام خطا */}
                             <div>
-                                <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
-                                {/* <Input value={priceProduct} onChange={(e) => setPriceProduct(e.target.value)} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/> */}
-                                <Input value={priceProduct} onChange={handleChange} className={`w-full text-left`} placeholder={`۳۰۰۰`}/>
+                                <Uploader
+                                textOne={`تصویر محصول را آپلود کنید`}
+                                selectedFile={bgProduct}
+                                onFileSelect={(file) => {
+                                    setBgProduct(file);
+                                    setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                }}
+                                preview={previewProduct}
+                                setPreview={setPreviewProduct}
+                                className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
+                                />
+                                {errors.bgProduct && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.bgProduct}</Text>
+                                )}
                             </div>
-                        </div>                    
-                    </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>نام واحد</Text>
-                            <Input value={unitName} onChange={(e) => setUnitName(e.target.value)} className={`w-full`} placeholder={`نام واحد را وارد کنید`}/>
+                            {/* توضیحات + پیام خطا */}
+                            <div>
+                                <textarea
+                                value={description}
+                                onChange={(e) => {
+                                    setDescription(e.target.value);
+                                    if (errors.description) setErrors(prev => ({ ...prev, description: undefined }));
+                                }}
+                                className={`border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[200px] ${errors.description ? "border-red-500" : ""}`}
+                                placeholder='توضیحات'
+                                />
+                                {errors.description && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.description}</Text>
+                                )}
+                            </div>
                         </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>تخفیف</Text>
-                            <Input value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20%`}/>
-                        </div>
-                    </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>دسته بندی</Text>
-                            <FormControl sx={{ minWidth: 120, outline: 'none' }} className='w-full bg-bgInput !outline-none'>
-                                <Select
-                                    className='!outline-none'
-                                    value={selectorCategory}
-                                    // sx={{outline: 'none'}}
-                                    onChange={(e) => setSelectorCategory(e.target.value)}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    sx={{
+                        <div className='grid grid-cols-2 gap-4'>
+                            {/* نام + پیام خطا */}
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>نام</Text>
+                                <Input
+                                value={nameProduct}
+                                onChange={(e) => {
+                                    setNameProduct(e.target.value);
+                                    if (errors.nameProduct) setErrors(prev => ({ ...prev, nameProduct: undefined }));
+                                }}
+                                className={`w-full ${errors.nameProduct ? "border border-red-500" : ""}`}
+                                placeholder={`نام محصول را وارد کنید`}
+                                />
+                                {errors.nameProduct && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.nameProduct}</Text>
+                                )}
+                            </div>
+
+                            {/* قیمت + پیام خطا */}
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>قیمت</Text>
+                                <div>
+                                <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
+                                <Input
+                                    value={priceProduct}
+                                    onChange={handleChange}
+                                    className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
+                                    placeholder={`۳۰۰۰`}
+                                />
+                                </div>
+                                {errors.priceProduct && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className='grid grid-cols-2 gap-4'>
+                            {/* نام واحد + پیام خطا */}
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>نام واحد</Text>
+                                <Input
+                                value={unitName}
+                                onChange={(e) => {
+                                    setUnitName(e.target.value);
+                                    if (errors.unitName) setErrors(prev => ({ ...prev, unitName: undefined }));
+                                }}
+                                className={`w-full ${errors.unitName ? "border border-red-500" : ""}`}
+                                placeholder={`نام واحد را وارد کنید`}
+                                />
+                                {errors.unitName && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.unitName}</Text>
+                                )}
+                            </div>
+
+                            {/* تخفیف - اختیاری (بدون خطا) */}
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>تخفیف</Text>
+                                <Input
+                                value={offer}
+                                onChange={(e) => setOffer(e.target.value)}
+                                className={`w-full text-left`}
+                                placeholder={`20%`}
+                                />
+                            </div>
+                        </div>
+
+                        <div className='w-full gap-4'>
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>دسته بندی</Text>
+                                <FormControl
+                                    sx={{ minWidth: 120, outline: 'none' }}
+                                    className='w-full bg-bgInput !outline-none'
+                                    error={Boolean(errors.selectorCategory)}
+                                    >
+                                    <Select
+                                        className='!outline-none'
+                                        value={selectorCategory || ""}
+                                        onChange={(e) => {
+                                        setSelectorCategory(e.target.value);
+                                        if (errors.selectorCategory) setErrors(prev => ({ ...prev, selectorCategory: undefined }));
+                                        }}
+                                        displayEmpty
+                                        inputProps={{ 'aria-label': 'Without label' }}
+                                        sx={{
                                         '& .MuiSelect-select': {
-                                            padding: '10px 14px', // اعمال پدینگ به عنصر select داخلی
+                                            padding: '10px 14px',
                                             outline: 'none'
                                         },
-                                    }}
+                                        }}
                                     >
                                         <MenuItem value="">
-                                            <Text>
-                                                دسته بندی را انتخاب کنید
-                                            </Text>
+                                            <Text>دسته بندی را انتخاب کنید</Text>
                                         </MenuItem>
-                                    {Array.isArray(dataCategory?.data) &&
-                                    dataCategory?.data?.map((item) => (
-                                        <MenuItem key={item?.id} value={item?.id}>
-                                            <Text>
-                                                {item?.name}
-                                            </Text>    
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                        {Array.isArray(dataCategory?.data) &&
+                                        dataCategory?.data?.map((item) => (
+                                            <MenuItem key={item?.id} value={item?.id}>
+                                            <Text>{item?.name}</Text>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                {errors.selectorCategory && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.selectorCategory}</Text>
+                                )}
+                            </div>
                         </div>
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>تاریخ تولد</Text>
-                            <BirthDate value={birthDay}  onChange={setBirthDay} onGregorianChange={setGregorianBirthDay}/>  
-                        </div> 
                     </div>
-                </div>
-            </GeneralModal>
+                </GeneralModal>
 
             {/* add category */}
             <GeneralModal

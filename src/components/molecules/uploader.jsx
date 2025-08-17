@@ -44,7 +44,7 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
             <input
                 id="video-upload"
                 type="file"
-                accept="xlsx/*"
+                accept="image/*"
                 onChange={handleFileChange}
                 className="upload-input"
             />

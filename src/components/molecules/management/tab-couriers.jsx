@@ -20,7 +20,7 @@ function TabCouriers({className}) {
     const [idDelete, setIdDelete] = useState(false);
     const { mutate, isPending } = usePatchDriver();
     const { mutate: mutateDeleteDriver } = useDeleteDriver()
-    const [error, setError] = useState('');
+    const [error, setError] = useState(null);
     
     const [nameDriver, setNameDriver] = useState(selectData?.name);
     const [phoneDriver, setPhoneDriver] = useState(selectData?.phone);
@@ -166,11 +166,6 @@ function TabCouriers({className}) {
                 actionText="بله"
                 actionHandler={(e) => { 
                     e.preventDefault()
-
-                    if (!validatePhone(phoneDriver)) {
-                        setError('شماره تلفن اشتباه است');
-                        return;
-                    }
                     handleDeleteDriver(idDelete)
                     setOpenModal(false); 
                 }}

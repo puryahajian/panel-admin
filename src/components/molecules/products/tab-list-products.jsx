@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Text from '../../atoms/text'
 import ButtonExisting from '../../atoms/button-existing'
 import ButtonEdit from '../../atoms/button-edit'
@@ -14,6 +14,7 @@ import Uploader from '../uploader'
 import Loading from '../../atoms/loading';
 import DateShamsi from '../date-shamsi'
 import Title from '../../atoms/title'
+import { FormControl } from '@mui/material'
 
 
 function TabListProducts() {
@@ -21,15 +22,17 @@ function TabListProducts() {
     const { data } = useGetAllProducts();
     // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
+    console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const selectedItem = Array.isArray(data?.data)
         ? data?.data?.find((it) => it?.id === selectIdProduct)
         : null;
+        console.log(selectedItem)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
-    const [selectorCategory, setSelectorCategory] = useState('');   
+    const [selectorCategory, setSelectorCategory] = useState(selectedItem?.category_name);   
     const [selectorState, setSelectorState] = useState('');  
     const [nameEditProduct, setNameEditProduct] = useState(selectedItem?.name)
     const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price);
@@ -40,6 +43,23 @@ function TabListProducts() {
     const [inState, setInState] = useState(false);
     const [ selectedFile, setSelectedFile ] = useState('');
     const [preview, setPreview] = useState('');
+    const [errors, setErrors] = useState({});
+
+   useEffect(() => {
+        if (selectedItem) {
+            setNameEditProduct(selectedItem?.name || '');
+            setPriceEditProduct(selectedItem?.price || '');
+            setDescriptionEdit(selectedItem?.details || '');
+            setOfferEdit(selectedItem?.discount_percentage || '');
+            setSelectorCategory(selectedItem?.category_name ? String(selectedItem?.category_name) : ''); // category id را string کن
+            setSelectorState(
+                selectedItem?.exist !== undefined
+                    ? String(selectedItem?.exist)  // تبدیل boolean به string برای select
+                    : ''
+            );
+            setPreview(selectedItem?.image || null);
+        }
+    }, [selectedItem]);
     
     const stateProduct = [
         { label: 'فعال', value: 'true' },
@@ -81,8 +101,34 @@ function TabListProducts() {
         setPriceEditProduct(formatNumber(rawValue));
     };
 
+    const validateFormEdit = () => {
+        let newErrors = {};
+
+        if (!selectedFile && !selectedItem?.image) {
+            newErrors.image = "تصویر محصول الزامی است";
+        }
+        if (!nameEditProduct || nameEditProduct === "") {
+            newErrors.nameEditProduct = "نام محصول الزامی است";
+        }
+        if (!priceEditProduct || priceEditProduct === "") {
+            newErrors.priceEditProduct = "قیمت الزامی است";
+        }
+        if (!selectorCategory) {
+            newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
+        }
+        if (!descriptionEdit || descriptionEdit === "") {
+            newErrors.descriptionEdit = "توضیحات الزامی است";
+        }
+        if (!selectorState) {
+            newErrors.selectorState = "انتخاب وضعیت الزامی است";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     return (
-        <div className='mt-0 px-4 max-[1024px]:mt-[96px]'>
+        <div className='mt-0 px-4 max-[1024px]:mt-[24px]'>
             <div className='flex items-center max-[992px]:hidden'>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-7 items-center w-full py-4'>
@@ -235,113 +281,170 @@ function TabListProducts() {
             <GeneralModal
                 open={openEdit}
                 handleClose={(e) => {
-                    e.preventDefault()
-                    setOpenEdit(false)
+                    e.preventDefault();
+                    setOpenEdit(false);
+                    setErrors({});
                 }}
                 actionText={isLoading ? <Loading/> : 'ذخیره'}
                 actionHandler={(e) => { 
-                    e.preventDefault()
-                    handleEditProduct(idEdit?.id)
+                    e.preventDefault();
+                    if (!validateFormEdit()) return; // جلوی ذخیره را بگیر اگر خطا هست
+                    handleEditProduct(idEdit?.id);
                     setOpenEdit(false); 
+                    setErrors({});
                 }}
                 onClose={(e) => {
-                    e.preventDefault()
-                    setOpenEdit(false)}
-                }
+                    e.preventDefault();
+                    setOpenEdit(false);
+                    setErrors({});
+                }}
                 sx={{
                     width: '500px', 
-                    '@media (max-width: 600px)': {
-                        width: '92%',
-                    },
+                    '@media (max-width: 600px)': { width: '92%' },
                 }}
-            >
+                >
                 <div className='grid grid-cols-2 max-[550px]:grid-cols-1 gap-4'>
+                    {/* آپلودر + خطا */}
+                    <div>
                     <Uploader
                         textOne={`عکس محصول را انتخاب کنید`}
                         selectedFile={selectedFile}
-                        onFileSelect={setSelectedFile}
+                        onFileSelect={(file) => {
+                        setSelectedFile(file);
+                        if (errors.image) { const { image, ...rest } = errors; setErrors(rest); }
+                        }}
                         preview={selectedItem?.image || preview}
                         setPreview={setPreview}
-                        className={`h-[155px] min-h-9 max-h-[155px]`}
+                        className={`h-[155px] min-h-9 max-h-[155px] ${errors.image ? "border border-red-500" : ""}`}
                     />
-                    <textarea defaultValue={selectedItem?.details} value={descriptionEdit} onChange={(e) => setDescriptionEdit(e.target.value)} className='border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
-                </div>
-                <div className='grid grid-cols-2 text-right mt-4 gap-2'>
-                    <div>
-                        <Text>نام محصول</Text>
-                        <Input defaultValue={selectedItem?.name} value={nameEditProduct} onChange={(e) => setNameEditProduct(e.target.value)} className={`w-full mt-2 bg-transparent border border-gray-300`}/>
+                    {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
                     </div>
+
+                    {/* توضیحات + خطا */}
                     <div>
-                        <Text>قیمت</Text>
-                        <div>
-                            <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>    
-                            <Input inputMode={`numeric`} defaultValue={selectedItem?.price} value={priceEditProduct} placeholder={`۳۰۰۰۰`} onChange={handleChange} className={`w-full mt-2 text-left bg-transparent border border-gray-300`}/>
-                        </div>
+                    <textarea
+                        value={descriptionEdit}
+                        onChange={(e) => {
+                        setDescriptionEdit(e.target.value);
+                        if (errors.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
+                        }}
+                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
+                        placeholder='توضیحات'
+                    />
+                    {errors.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors.descriptionEdit}</p>}
+                    </div>
+                </div>
+
+                <div className='grid grid-cols-2 text-right mt-4 gap-2'>
+                    {/* نام محصول + خطا */}
+                    <div>
+                    <Text>نام محصول</Text>
+                    <Input
+                        value={nameEditProduct}
+                        onChange={(e) => {
+                        setNameEditProduct(e.target.value);
+                        if (errors.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                        }}
+                        className={`w-full mt-2 bg-transparent border ${errors.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
+                        placeholder="نام محصول"
+                    />
+                    {errors.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors.nameEditProduct}</p>}
+                    </div>
+
+                    {/* قیمت + خطا */}
+                    <div>
+                    <Text>قیمت</Text>
+                    <div>
+                        <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>
+                        <Input
+                        inputMode='numeric'
+                        value={priceEditProduct}
+                        placeholder='۳۰۰۰۰'
+                        onChange={(e) => {
+                            handleChange(e);
+                            if (errors.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
+                        }}
+                        className={`w-full mt-2 text-left bg-transparent border ${errors.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
+                        />
+                    </div>
+                    {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors.priceEditProduct}</p>}
                     </div>
                 </div>
 
                 <div className='mt-4 grid grid-cols-2 gap-2'>
+                    {/* دسته‌بندی + خطا (با FormControl) */}
                     <div>
-                        <Text className={`text-right mb-2`}>دسته بندی</Text>
+                    <Text className='text-right mb-2'>دسته بندی</Text>
+                    <FormControl className='w-full' error={Boolean(errors.selectorCategory)}>
                         <Select
-                            className='!outline-none !text-gray-400 !rounded-lg text-right w-full'
-                            value={selectorCategory}
-                            onChange={(e) => setSelectorCategory(e.target.value)}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            sx={{
-                                '& .MuiSelect-select': {
-                                padding: '11.5px 14px', // اعمال پدینگ به عنصر select داخلی
-                                },
-                            }}
-                            >
-                                <MenuItem value="" className=' !py-3'>
-                                    <Text className={`text-gray-400`}>
-                                        {dataCategory?.results?.find(c => c?.id === selectedItem?.category_id)?.name || 'انتخاب کنید'}
-                                    </Text>
-                                </MenuItem>
-                                {dataCategory?.results?.map((item) => (
-                                    <MenuItem key={item?.id} value={item?.id}>
-                                        <Text>
-                                            {item?.name}
-                                        </Text>    
-                                    </MenuItem>
-                                ))}
+                        className='!outline-none !rounded-lg text-right w-full'
+                        value={selectorCategory}
+                        onChange={(e) => {
+                            setSelectorCategory(e.target.value);
+                            if (errors.selectorCategory) { const { selectorCategory, ...rest } = errors; setErrors(rest); }
+                        }}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
+                        >
+                        <MenuItem value="" className='!py-3'>
+                            <Text className='text-gray-400'>
+                             انتخاب کنید
+                            </Text>
+                        </MenuItem>
+                        {dataCategory?.data?.map((item) => (
+                            <MenuItem key={item.id} value={String(item.id)}>
+                                <Text>{item.name}</Text>
+                            </MenuItem>
+                        ))}
                         </Select>
-                    </div>
-                    <div>
-                        <Text className={`text-right`}>تخفیف</Text>
-                        <Input type={`number`} defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300`}/>
+                        {errors.selectorCategory && <Text>{errors.selectorCategory}</Text>}
+                    </FormControl>
                     </div>
 
+                    {/* تخفیف (اختیاری) */}
+                    <div>
+                    <Text className='text-right'>تخفیف</Text>
+                    <Input
+                        inputMode='numeric'
+                        value={offerEdit}
+                        onChange={(e) => setOfferEdit(e.target.value)}
+                        className='w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300'
+                        placeholder='درصد تخفیف'
+                    />
+                    </div>
                 </div>
 
-                <Text className={`mt-4 text-right mb-2`}>وضعیت محصول</Text>
-                <Select
-                    className='!outline-none !text-gray-400 text-right !rounded-lg w-full mb-4'
+                {/* وضعیت محصول + خطا */}
+                <Text className='mt-4 text-right mb-2'>وضعیت محصول</Text>
+                <FormControl className='w-full mb-4' error={Boolean(errors.selectorState)}>
+                    <Select
+                    className='!outline-none text-right !rounded-lg w-full'
                     value={selectorState}
-                    onChange={(e) => setSelectorState(e.target.value)}
+                    onChange={(e) => {
+                        setSelectorState(e.target.value);
+                        if (errors.selectorState) { const { selectorState, ...rest } = errors; setErrors(rest); }
+                    }}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
                     >
-                        <MenuItem value="">
-                            <Text className={`text-gray-400`}>
-                                {selectedItem?.exist === true
-                                    ? 'فعال'
-                                    : selectedItem?.exist === false
-                                    ? 'غیر فعال'
-                                    : 'وضعیت نامشخص'
-                                }
-                            </Text>
+                    <MenuItem value="">
+                        <Text className='text-gray-400'>
+                        {selectedItem?.exist === true ? 'فعال'
+                            : selectedItem?.exist === false ? 'غیر فعال'
+                            : 'وضعیت نامشخص'}
+                        </Text>
+                    </MenuItem>
+                    {stateProduct?.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                        <Text>{item.label}</Text>
                         </MenuItem>
-                        {stateProduct?.map((item, index) => (
-                            <MenuItem key={index} value={item.value}>
-                                <Text>{item.label}</Text>
-                            </MenuItem>
-                        ))}
-                </Select>
-
+                    ))}
+                    </Select>
+                    {errors.selectorState && <Text>{errors.selectorState}</Text>}
+                </FormControl>
             </GeneralModal>
+
         </div>
     )
 }

@@ -38,7 +38,7 @@ function SideBar() {
     }, [location.pathname]);
 
     return (
-        <div className='w-full z-[10] bg-white min-w-[230px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 max-[1024px]:hidden'>
+        <div className=' fixed right-0 bg-white w-[235px] text-white py-6 content-between px-4 h-dvh grid gap-4 border-l border-gray-400 max-[1024px]:hidden'>
             <div className='relative'>
                 {details?.map((item) => (
                     <img src={item?.logo} onError={(e) => { 

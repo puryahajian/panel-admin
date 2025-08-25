@@ -27,6 +27,7 @@ function TabListProducts() {
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const products = Array.isArray(data) ? data : (Array.isArray(data?.results) ? data.results : []);
+    // console.log(products)
     const selectedItem = products?.find((it) => it?.id === selectIdProduct)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -188,7 +189,7 @@ function TabListProducts() {
 
     return (
         <div>
-            <div className='flex items-center max-[992px]:hidden'>
+            <div className={`flex items-center max-[992px]:hidden ${products?.length === 0 && 'hidden'}`}>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-7 items-center w-full py-4'>
                     <Text className={`col-span-2 pr-10`}>محصول</Text>
@@ -243,6 +244,10 @@ function TabListProducts() {
                         </div>
                     )
                 })}
+            </div>
+
+            <div className='flex justify-center items-center mt-6'>
+                {products?.length === 0 && <Text>لیست محصولات خالی !</Text>}
             </div>
 
             {/* size tablet & mobile */}

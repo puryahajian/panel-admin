@@ -27,6 +27,7 @@ function useCreateProduct() {
             isCheckedNon,
             isCheckedAmazon,
             isCheckedSoqMaftoh,
+            unitWeigth,
             category,
             unit_name
         }) => {
@@ -60,6 +61,7 @@ function useCreateProduct() {
 
             if (description) formData.append('details', description);
             if (offer) formData.append('discount_percentage', offer);
+            if (unitWeigth) formData.append('unit_weight', unitWeigth);
 
             const res = await interceptor.post(`product/admin/api/v1/products/`, formData);
             return res.data;

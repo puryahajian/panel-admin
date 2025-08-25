@@ -110,15 +110,6 @@ function Products() {
         // {label: "دسته بندی ها" },
     ];
 
-    const [uploaderCount, setUploaderCount] = useState(1); 
-    
-    // const handleAddUploader = (e) => {
-    //     e.preventDefault();
-    //     if (uploaderCount < 5) {
-    //         setUploaderCount(prev => prev + 1);
-    //     }
-    // };
-
     const handleSendCategory = () => {
         mutate(
             { 
@@ -168,7 +159,8 @@ function Products() {
                 productTol,
                 productArz,
                 productErtefa,
-                count
+                count,
+                unitWeigth
             },
             {
                 onSuccess: (data) => {
@@ -180,6 +172,8 @@ function Products() {
                     // setSelectorCategory('');
                     setUnitName('');
                     setOffer('');
+                    setCount('');
+                    setUnitWeigth('')
                     setDescription('');
                     setPreviewImage1(null);
                     setPreviewImage2(null);
@@ -387,33 +381,6 @@ function Products() {
                                 <InputNumberic value={count} onChange={(e) => setCount(e.target.value)} className={`w-full !bg-bgInput !text-left mt-2 bg-transparent border border-gray-300`}/>
                             </div>
                         </div>
-
-                        {/* <div className='text-right mt-4 gap-4'>
-                            <Text className={`mb-2`}>دسته بندی</Text>
-                            <FormControl sx={{ minWidth: 120, outline: 'none' }} className={`w-full bg-bgInput !rounded-lg !outline-none ${errCreate ? 'border !border-red-500' : ''}`}>
-                                <Select
-                                    className={`!outline-none !rounded-lg ${errCreate ? 'border !border-red-500' : ''}`}
-                                    value={selectorCategory}
-                                    sx={{
-                                        '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                                        '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                                        outline: 'none'
-                                    }}
-                                    onChange={(e) => setSelectorCategory(e.target.value)}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    >
-                                    {dataCategory?.map((item) => (
-                                        <MenuItem key={item?.id} value={item?.id}>
-                                            <Text>
-                                                {item?.name}
-                                            </Text>    
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div> */}
 
                         <div className='grid grid-cols-2 text-right mt-6 gap-4'>
                             <div>

@@ -8,7 +8,7 @@ function useCreateProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay }) => {
+        mutationFn: async ({ bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay, omNameProduct }) => {
 
             const formData = new FormData();
             if (nameProduct) formData.append('name', nameProduct);
@@ -17,6 +17,7 @@ function useCreateProduct() {
             if (selectorCategory) formData.append('category', selectorCategory);
             if (bgProduct) formData.append('image', bgProduct);
             if (description) formData.append('details', description);
+            if (omNameProduct) formData.append('om_name', omNameProduct);
             if (offer) formData.append('discount_percentage', offer);
             if (gregorianBirthDay) formData.append('expiration_date', gregorianBirthDay);
 

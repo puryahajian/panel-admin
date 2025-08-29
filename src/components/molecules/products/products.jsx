@@ -48,14 +48,16 @@ function Products() {
     const [preview, setPreview] = useState();
     const [previewProduct, setPreviewProduct] = useState();
     const [nameProduct, setNameProduct] = useState();
+    const [omNameProduct, setOmNameProduct] = useState();
+
     const [priceProduct, setPriceProduct] = useState();
-    const [birthDay, setBirthDay] = useState();
     const [gregorianBirthDay, setGregorianBirthDay] = useState("");
     const [selectorCategory, setSelectorCategory] = useState();
     const [unitName, setUnitName] = useState();
     const [offer, setOffer] = useState();
     const [description, setDescription] = useState();
     const [nameCategory, setNameCategory] = useState('');
+    const [nameCategoryPersian, setNameCategoryPersian] = useState();
     const [errors, setErrors] = useState({});
 
     const Buttons = [
@@ -67,7 +69,7 @@ function Products() {
     const handleSendCategory = () => {
         mutate(
             { 
-                nameCategory, selectedCategory
+                nameCategory, selectedCategory, nameCategoryPersian
             },
             {
                 onSettled: (data) => {
@@ -80,7 +82,7 @@ function Products() {
         // console.log(gregorianBirthDay)
         mutateCreatedProduct(
             {
-                bgProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay
+                bgProduct,omNameProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay, 
             }
         )
     }
@@ -101,6 +103,7 @@ function Products() {
         setPreviewProduct('');
         setDescription('');
         setNameProduct('');
+        setOmNameProduct('');
         setPriceProduct('');
         setUnitName('');
         setOffer('');
@@ -112,6 +115,7 @@ function Products() {
 
         if (!bgProduct) newErrors.bgProduct = "تصویر محصول الزامی است";
         if (!nameProduct) newErrors.nameProduct = "نام محصول الزامی است";
+        if (!omNameProduct) newErrors.omNameProduct = "نام محصول الزامی است";
         if (!priceProduct) newErrors.priceProduct = "قیمت الزامی است";
         if (!unitName) newErrors.unitName = "نام واحد الزامی است";
         if (!selectorCategory) newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
@@ -251,22 +255,39 @@ function Products() {
                                 )}
                             </div>
 
-                            {/* قیمت + پیام خطا */}
                             <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>قیمت</Text>
-                                <div>
-                                <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
+                                <Text className={`mt-4 mb-2`}>نام عربی</Text>
                                 <Input
-                                    value={priceProduct}
-                                    onChange={handleChange}
-                                    className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
-                                    placeholder={`۳۰۰۰`}
+                                value={omNameProduct}
+                                onChange={(e) => {
+                                    setOmNameProduct(e.target.value);
+                                    if (errors.omNameProduct) setErrors(prev => ({ ...prev, omNameProduct: undefined }));
+                                }}
+                                className={`w-full ${errors.omNameProduct ? "border border-red-500" : ""}`}
+                                placeholder={`نام محصول را به عربی وارد کنید`}
                                 />
-                                </div>
-                                {errors.priceProduct && (
-                                    <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>
+                                {errors.omNameProduct && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.omNameProduct}</Text>
                                 )}
                             </div>
+
+                        </div>
+
+                        {/* قیمت + پیام خطا */}
+                        <div className='text-right'>
+                            <Text className={`mt-4 mb-2`}>قیمت</Text>
+                            <div>
+                            <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
+                            <Input
+                                value={priceProduct}
+                                onChange={handleChange}
+                                className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
+                                placeholder={`۳۰۰۰`}
+                            />
+                            </div>
+                            {errors.priceProduct && (
+                                <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>
+                            )}
                         </div>
 
                         <div className='grid grid-cols-2 gap-4'>
@@ -379,7 +400,10 @@ function Products() {
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی عربی را وارد کنید`}/>
+
+                    <Text className={`mt-4 mb-2`}>نام عربی</Text>
+                    <Input value={nameCategoryPersian} onChange={(e) => setNameCategoryPersian(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی فارسی را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

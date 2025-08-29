@@ -40,7 +40,7 @@ function App() {
         {!isLoginPage && <HeaderResponsive step={step} setStep={setStep} />}
       </div>
 
-      <div className='w-full content-right'>
+      <div className={`w-full content-right ${location.pathname === '/' ? 'login' : ''}`}>
         <Routes>
           <Route path='/login' element={<Login/>}/>
           <Route element={<Middleware />}>

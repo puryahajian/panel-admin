@@ -8,7 +8,7 @@ function usePatchProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idEdit, selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
+        mutationFn: async ({ idEdit, omNameProduct,selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
             
             const formData = new FormData();
 
@@ -32,6 +32,7 @@ function usePatchProduct() {
             }           
 
             if (selectedFile) formData.append('image', selectedFile);
+            if (omNameProduct) formData.append('om_name', omNameProduct);
     
             const res = await interceptor.patch(`product/admin/api/v1/products/${idEdit}/`, formData);
             return res.data;

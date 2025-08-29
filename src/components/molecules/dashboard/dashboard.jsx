@@ -18,6 +18,7 @@ import Mapp from '../mapp';
 
 function Dashboard() {
   const { data } = useSalesReport();
+  console.log(data)
   const { data: dataGetAllOrder } = useGetAllActiveOrder();
   // console.log(dataGetAllOrder)
   const { mutate } = usePatchOrder();

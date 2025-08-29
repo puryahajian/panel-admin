@@ -52,6 +52,7 @@ function usePatchProfile() {
             return res.data;
         },
         onSuccess: (data) => {
+            console.log(data)
             queryClient.removeQueries('getInfo');
         },
     });

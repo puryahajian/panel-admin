@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 function TabCategory() {
     const [open, setOpen] = useState(false);
     const { data } = useGetAllCategory();
+    // console.log(data)
     const { mutate } = usePatchCategory();
     const { mutate: mutateDeleteCategory } = useDeleteCategory()
     const [openEditCategory, setOpenEditCategory] = useState(false);
@@ -19,15 +20,17 @@ function TabCategory() {
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [preview, setPreview] = useState();
     const selectedItem = data?.data?.find((it) => it?.id === openSelected);
+    // console.log(selectedItem)
     const [nameCategory, setNameCategory] = useState(selectedItem?.name);
     const [idCategoryDelete, setIdCategoryDelete] = useState(null);
+    const [nameCategoryPersian, setNameCategoryPersian] = useState(selectedItem?.om_name);
 
     
     const handleEditCategory = () => {
         // console.log(selectedCategory, nameCategory, openSelected, preview)
         mutate(
             {
-                selectedCategory, nameCategory, openSelected, preview
+                selectedCategory, nameCategory, openSelected, preview, nameCategoryPersian
             },
             {
                 onSuccess: (data) => {
@@ -57,7 +60,7 @@ function TabCategory() {
                 <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' key={item?.id}>
                     <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
 
-                    <Text className={`!font-bold`}>{item?.name}</Text>
+                    <Text className={`!font-bold`}>{item?.om_name}</Text>
 
                     <ButtonEdit onClick={() => {
                         setOpenSelected(item?.id)
@@ -137,7 +140,11 @@ function TabCategory() {
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input defaultValue={selectedItem?.name} value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی خود را وارد کنید`}/>
+                    <Input defaultValue={selectedItem?.name} value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی عربی را وارد کنید`}/>
+
+
+                    <Text className={`mt-4 mb-2`}>نام عربی</Text>
+                    <Input defaultValue={selectedItem?.om_name} value={nameCategoryPersian} onChange={(e) => setNameCategoryPersian(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی فارسی را وارد کنید`}/>
                 </div>
             </GeneralModal>
         </div>

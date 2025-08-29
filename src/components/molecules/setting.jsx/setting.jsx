@@ -12,34 +12,34 @@ import Loading from '../../atoms/loading'
 
 function Setting() {
     const { data: dataInfo, isLoading } = useGetInfo();
-    const details = dataInfo?.results
+    // console.log(dataInfo)
+    const details = dataInfo?.results?.map((item) => item)
     // console.log(details)
 
     const { mutate , isPending } = usePatchProfile();
-    const [getIdProfile, setGetIdProfile] = useState();
 
-    const [ nameShop, setNameShop ] = useState(details?.name);
-    const [ numberShop, setNumberShop ] = useState(details?.phone);
-    const [ numberSupportShop, setNumberSupportShop ] = useState(details?.support_phone);
-    const [ openTime, setOpenTime ] = useState(details?.open_time?.slice(0, -3));
-    const [ closeTime, setCloseTime ] = useState(details?.close_time?.slice(0, -3));
-    const [ aboutUse, setAboutUse ] = useState(details?.about_us);
+    const [ nameShop, setNameShop ] = useState(details[0]?.name);
+    const [ numberShop, setNumberShop ] = useState(details[0]?.phone);
+    const [ numberSupportShop, setNumberSupportShop ] = useState(details[0]?.support_phone);
+    const [ openTime, setOpenTime ] = useState(details[0]?.open_time?.slice(0, -3));
+    const [ closeTime, setCloseTime ] = useState(details[0]?.close_time?.slice(0, -3));
+    const [ aboutUse, setAboutUse ] = useState(details[0]?.about_us);
     const [ linkBannerOne, setLinkBannerOne ] = useState('');
     const [ linkBannerTwo, setLinkBannerTwo ] = useState('');
 
-    const [ telegram, setTelegram ] = useState(details?.telegram);
-    const [ whatsApp, setWhatsApp ] = useState(details?.whatsApp);
-    const [ instagram, setInstagram ] = useState(details?.instagram);
+    const [ telegram, setTelegram ] = useState(details[0]?.telegram);
+    const [ whatsApp, setWhatsApp ] = useState(details[0]?.whatsApp);
+    const [ instagram, setInstagram ] = useState(details[0]?.instagram);
 
     const [ selectedLogo, setSelectedLogo ] = useState('');
-    const [ preview, setPreview ] = useState(details?.logo);
+    const [ preview, setPreview ] = useState(details[0]?.logo);
 
     // Banner One
-    const [ previewBannerOne, setPreviewBannerOne ] = useState(details?.banner_one);
+    const [ previewBannerOne, setPreviewBannerOne ] = useState(details[0]?.banner_one);
     const [ selectedBannerOne, setSelectedBannerOne ] = useState('');
 
     // Banner Two
-    const [ previewBannerTwo, setPreviewBannerTwo ] = useState(details?.banner_two);
+    const [ previewBannerTwo, setPreviewBannerTwo ] = useState(details[0]?.banner_two);
     const [ selectedBannerTwo, setSelectedBannerTwo ] = useState('');
 
     const lat = localStorage.getItem('lat');
@@ -83,14 +83,13 @@ function Setting() {
 
     return (
         <div className='mt-4 max-[1024px]:mt-20 px-4'>
-            {details?.map((item) => (
                 <form>
                     <div className='grid grid-cols-2 max-[640px]:grid-cols-1 gap-5 mb-6'>
                         <div>
                             <Uploader
                                 textOne={'تصویر بنر اول'}
                                 // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
-                                preview={item?.banner_one || previewBannerOne}
+                                preview={details[0]?.banner_one || previewBannerOne}
                                 setPreview={setPreviewBannerOne}
                                 onFileSelect={setSelectedBannerOne}
                                 selectedFile={selectedBannerOne}
@@ -104,7 +103,7 @@ function Setting() {
                             <Uploader
                                 textOne={'تصوبر بنر دوم'}
                                 // textTwo={'تصویر بنر اول باید ۵۰۰ پیکسل در ۲۰۰ پیکسل باشد'}
-                                preview={item?.banner_two || previewBannerTwo}
+                                preview={details[0]?.banner_two || previewBannerTwo}
                                 setPreview={setPreviewBannerTwo}
                                 onFileSelect={setSelectedBannerTwo}
                                 selectedFile={selectedBannerTwo}
@@ -119,7 +118,7 @@ function Setting() {
 
                     <div className=' my-6 grid grid-cols-2 max-[640px]:grid-cols-1 gap-4'>
                         <TabRightDetail
-                            preview={item?.logo || preview}
+                            preview={details[0]?.logo || preview}
                             setPreview={setPreview}
                             onFileSelect={setSelectedLogo}
                             selectedFile={selectedLogo}
@@ -144,12 +143,12 @@ function Setting() {
                             <div className='flex gap-4 items-center w-full'> 
                                 <Text className={`w-max text-nowrap`}>از ساعت</Text>
                                 {/* <Input/> */}
-                                <Input className={`w-full`} type={'text'} defaultValue={item?.open_time?.slice(0, -3)} value={openTime} onChange={(e) => setOpenTime(e.target.value)} name="" id="" />
+                                <Input className={`w-full`} defaultValue={details[0]?.open_time?.slice(0, -3)} value={openTime} onChange={(e) => setOpenTime(e.target.value)} name="" id="" />
                             </div>
                             <div className='flex gap-4 items-center w-full'>
                                 <Text className={`w-max text-nowrap`}>تا ساعت</Text>
                                 {/* <Input/> */}
-                                <Input className={`w-full`} type={'text'} defaultValue={item?.close_time?.slice(0, -3)} value={closeTime} onChange={(e) => setCloseTime(e.target.value)} name="" id="" />
+                                <Input className={`w-full`} defaultValue={details[0]?.close_time?.slice(0, -3)} value={closeTime} onChange={(e) => setCloseTime(e.target.value)} name="" id="" />
                             </div>
                         </div>
                     </div>
@@ -164,15 +163,15 @@ function Setting() {
                         <div className=' mt-4 gap-10 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))]'>
                             <div className='flex gap-4 items-center w-full max-[670px]:grid max-[670px]:grid-cols-6 max-[380px]:grid-cols-5'>
                                 <Text>اینستاگرام</Text>
-                                <Input defaultValue={item?.instagram} value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
+                                <Input defaultValue={details[0]?.instagram} value={instagram} onChange={(e) => setInstagram(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
                             </div>
                             <div className='flex gap-4 items-center w-full max-[670px]:grid max-[670px]:grid-cols-6 max-[380px]:grid-cols-5'>
                                 <Text className={`w-[80px]`}>واتس اپ</Text>
-                                <Input defaultValue={item?.whatsApp} value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
+                                <Input defaultValue={details[0]?.whatsApp} value={whatsApp} onChange={(e) => setWhatsApp(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
                             </div>
                             <div className='flex gap-4 items-center w-full max-[670px]:grid max-[670px]:grid-cols-6 max-[380px]:grid-cols-5'>
                                 <Text>تلگرام</Text>
-                                <Input defaultValue={item?.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
+                                <Input defaultValue={details[0]?.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} className={`w-full col-span-5 max-[380px]:col-span-4`}/>
                             </div>
                         </div>
                     </div>
@@ -181,13 +180,13 @@ function Setting() {
 
                     <div className='mt-6'>
                         <Text>متن درباره ما</Text>
-                        <textarea defaultValue={item?.about_us} value={aboutUse} onChange={(e) => setAboutUse(e.target.value)} className='w-full mt-2 p-2 rounded-lg h-80 outline-none bg-bgInput resize-none' name="" id=""></textarea>
+                        <textarea defaultValue={details[0]?.about_us} value={aboutUse} onChange={(e) => setAboutUse(e.target.value)} className='w-full mt-2 p-2 rounded-lg h-80 outline-none bg-bgInput resize-none' name="" id=""></textarea>
                     </div>
 
                     <div className='mt-6 flex justify-end gap-4 max-[550px]:grid max-[550px]:grid-cols-2'>
                         <ButtonGeneral className={`px-16 max-[390px]:px-0 bg-customBlue text-white border-customBlue`} onClick={(e) => {
                             e.preventDefault()
-                            handlePatchProfile(item?.id)
+                            handlePatchProfile(details[0]?.id)
                             // setGetIdProfile(item?.id)
                             }}>
                                 {isPending ? <Loading/> : 'ثبت و اعمال'}
@@ -206,7 +205,6 @@ function Setting() {
                         <ButtonGeneral className={`!px-16 border-red-500 text-red-500`}>انصراف</ButtonGeneral>
                     </div> */}
                 </form>
-            ))}
             <div className='flex justify-center'>
                 {isLoading ? <Loading/> : ''}
             </div>

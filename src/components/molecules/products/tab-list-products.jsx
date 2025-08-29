@@ -22,13 +22,13 @@ function TabListProducts() {
     const { data } = useGetAllProducts();
     // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
-    console.log(dataCategory)
+    // console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const selectedItem = Array.isArray(data?.data)
         ? data?.data?.find((it) => it?.id === selectIdProduct)
         : null;
-        console.log(selectedItem)
+        // console.log(selectedItem)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
@@ -38,6 +38,7 @@ function TabListProducts() {
     const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price);
     const [descriptionEdit, setDescriptionEdit] = useState(selectedItem?.details);
     const [offerEdit, setOfferEdit] = useState(selectedItem?.discount_percentage);
+    const [omNameProduct, setOmNameProduct] = useState();
     
     const [idEdit, setIdEdit] = useState();
     const [inState, setInState] = useState(false);
@@ -49,6 +50,7 @@ function TabListProducts() {
         if (selectedItem) {
             setNameEditProduct(selectedItem?.name || '');
             setPriceEditProduct(selectedItem?.price || '');
+            setOmNameProduct(selectedItem?.om_name || '');
             setDescriptionEdit(selectedItem?.details || '');
             setOfferEdit(selectedItem?.discount_percentage || '');
             setSelectorCategory(selectedItem?.category_name ? String(selectedItem?.category_name) : ''); // category id را string کن
@@ -84,7 +86,7 @@ function TabListProducts() {
 
         mutatePatchProduct(
             { 
-                idEdit, selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue
+                idEdit, selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue, omNameProduct
             },    
         );
 
@@ -338,21 +340,36 @@ function TabListProducts() {
                 <div className='grid grid-cols-2 text-right mt-4 gap-2'>
                     {/* نام محصول + خطا */}
                     <div>
-                    <Text>نام محصول</Text>
-                    <Input
-                        value={nameEditProduct}
-                        onChange={(e) => {
-                        setNameEditProduct(e.target.value);
-                        if (errors.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
-                        }}
-                        className={`w-full mt-2 bg-transparent border ${errors.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
-                        placeholder="نام محصول"
-                    />
-                    {errors.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors.nameEditProduct}</p>}
+                        <Text>نام محصول</Text>
+                        <Input
+                            value={nameEditProduct}
+                            onChange={(e) => {
+                            setNameEditProduct(e.target.value);
+                            if (errors.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                            }}
+                            className={`w-full mt-2 bg-transparent border ${errors.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
+                            placeholder="نام محصول"
+                        />
+                        {errors.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors.nameEditProduct}</p>}
+                    </div>
+                    <div>
+                        <Text>نام عربی</Text>
+                        <Input
+                            value={omNameProduct}
+                            onChange={(e) => {
+                            setOmNameProduct(e.target.value);
+                            if (errors.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
+                            }}
+                            className={`w-full mt-2 bg-transparent border ${errors.omNameProduct ? "border-red-500" : "border-gray-300"}`}
+                            placeholder="نام عربی محصول"
+                        />
+                        {errors.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors.omNameProduct}</p>}
                     </div>
 
-                    {/* قیمت + خطا */}
-                    <div>
+                </div>
+
+                {/* قیمت + خطا */}
+                <div className='mt-4 text-right'>
                     <Text>قیمت</Text>
                     <div>
                         <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>
@@ -368,7 +385,6 @@ function TabListProducts() {
                         />
                     </div>
                     {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors.priceEditProduct}</p>}
-                    </div>
                 </div>
 
                 <div className='mt-4 grid grid-cols-2 gap-2'>

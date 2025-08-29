@@ -6,11 +6,12 @@ function useCreateCategory() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ nameCategory, selectedCategory }) => {
+        mutationFn: async ({ nameCategory, selectedCategory, nameCategoryPersian }) => {
 
             const formData = new FormData();
             formData.append('name', nameCategory);
             formData.append('image', selectedCategory);
+            formData.append('om_name', nameCategoryPersian);
 
             const res = await interceptor.post(`product/admin/api/v1/categories/`, formData);
             return res.data;

@@ -18,7 +18,7 @@ function TabCategory() {
     const [openSelected, setOpenSelected] = useState(null);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [preview, setPreview] = useState();
-    const selectedItem = data?.data?.find((it) => it?.id === openSelected);
+    const selectedItem = data?.results?.find((it) => it?.id === openSelected);
     const [nameCategory, setNameCategory] = useState(selectedItem?.name);
     const [idCategoryDelete, setIdCategoryDelete] = useState(null);
 
@@ -53,7 +53,7 @@ function TabCategory() {
     return (
         <div className='px-4'>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] pt-4 gap-3 mt-6 max-[1024px]:mt-[0px]'>
-            {data?.data?.map((item) => (
+            {data?.results?.map((item) => (
                 <div className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' key={item?.id}>
                     <img src={item?.image} className=' w-full h-28 rounded-xl' alt="" />
 

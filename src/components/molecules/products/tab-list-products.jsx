@@ -22,13 +22,13 @@ function TabListProducts() {
     const { data } = useGetAllProducts();
     // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
-    console.log(dataCategory)
+    // console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
-    const selectedItem = Array.isArray(data?.data)
-        ? data?.data?.find((it) => it?.id === selectIdProduct)
+    const selectedItem = Array.isArray(data)
+        ? data.results?.find((it) => it?.id === selectIdProduct)
         : null;
-        console.log(selectedItem)
+        // console.log(selectedItem)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
@@ -139,8 +139,8 @@ function TabListProducts() {
             </div>
 
             <div className='grid gap-2'>
-                {Array.isArray(data?.data) && data.data.length > 0 ? (
-                    data.data.map((item, index) => (
+                {/* {Array.isArray(data) && data.length > 0 ? ( */}
+                    {data.results.map((item, index) => (
                         <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
                         <div className='px-8'>{index + 1}</div>
                         <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
@@ -182,12 +182,10 @@ function TabListProducts() {
                             </div>
                         </div>
                         </div>
-                    ))
-                ) : (
-                    <div className='flex justify-center mt-4'>
-                        <Text>محصول موجود نیست</Text>
-                    </div>
-                )}
+                    ))}
+
+                    {data?.count === 0 && <Text>محصول موجود نیست</Text>}
+                
                
             </div>
 

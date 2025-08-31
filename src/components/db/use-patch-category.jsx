@@ -6,13 +6,15 @@ function usePatchCategory() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ selectedCategory, nameCategory, openSelected, preview, nameCategoryPersian }) => {
+        mutationFn: async ({ selectedCategory, nameCategory, openSelected, preview, nameCategoryPersian , priority}) => {
             // console.log(selectedCategory, nameCategory, openSelected, preview)
             const formData = new FormData();
             // if (nameCategory) formData.append('image', nameCategory);
             if (nameCategory) formData.append('name', nameCategory);
             if (preview) formData.append('image', preview);
             if (nameCategoryPersian) formData.append('om_name', nameCategoryPersian);
+            if (priority) formData.append('order', priority);
+
 
             const res = await interceptor.patch(`product/admin/api/v1/categories/${openSelected}/`, formData);
             return res.data;

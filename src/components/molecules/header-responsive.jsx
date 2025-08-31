@@ -15,6 +15,7 @@ function HeaderResponsive({step, setStep}) {
     const navigate = useNavigate();
     const location = useLocation();
     const { data } = useGetInfo('');
+    // console.log(data)
     const [openProfileState , setOpenProfileState] = useState(false);
 
     const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ function HeaderResponsive({step, setStep}) {
                 setStep={setStep}
             >
                 <div>
-                    <img src={data?.logo} className='mb-10 w-16 m-auto' alt="" />
+                    <img src={data?.results[0]?.logo} className='mb-4 w-56 mt-8 rounded-lg m-auto' alt="" />
                     {MenuPanel.map((tab, index) => (
                         <Link
                             key={index}
@@ -68,7 +69,7 @@ function HeaderResponsive({step, setStep}) {
                 <img src={item?.logo} onError={(e) => { 
                     e.target.onerror = null;
                     e.target.src = LogoDefault; 
-                    }} className='w-[40px] h-[40px] z-20' alt="" />
+                    }} className=' h-[40px] z-20 rounded-lg' alt="" />
             ))}
             
             <button onClick={handleUserClick}>

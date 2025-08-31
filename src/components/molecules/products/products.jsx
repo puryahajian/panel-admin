@@ -6,18 +6,19 @@ import GeneralModal from '../modal-general';
 import Uploader from '../uploader';
 import Text from '../../atoms/text';
 import Input from '../../atoms/input';
-
+import { Field, Select } from '@headlessui/react'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+// import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import useCreateCategory from '../../db/use-create-category';
 import useCreateProduct from '../../db/use-create-product';
 import Loading from '../../atoms/loading';
 import '../../../App.css'
 import useGetAllCategory from '../../db/use-get-all-category';
-import BirthDate from '../birth-day';
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import clsx from 'clsx'
 
 
 function TabProduct({ children, step, index }) {
@@ -40,8 +41,8 @@ function Products() {
     const [open, setOpen] = useState(false);
     const {mutate, isLoading} = useCreateCategory();
     const { mutate: mutateCreatedProduct , isLoading: isLoadingCreateProduct } = useCreateProduct();
+    const [priority, setPriority] = useState();
     const { data: dataCategory } = useGetAllCategory();
-    // console.log(dataCategory)
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -69,7 +70,7 @@ function Products() {
     const handleSendCategory = () => {
         mutate(
             { 
-                nameCategory, selectedCategory, nameCategoryPersian
+                nameCategory, selectedCategory, nameCategoryPersian, priority
             },
             {
                 onSettled: (data) => {
@@ -82,7 +83,7 @@ function Products() {
         // console.log(gregorianBirthDay)
         mutateCreatedProduct(
             {
-                bgProduct,omNameProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay, 
+                bgProduct,omNameProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay
             }
         )
     }
@@ -129,7 +130,7 @@ function Products() {
     return (
         <div className='max-[1024px]:mt-16 grid col-span-10'>
             <div className='flex justify-between shadow-lg w-full bg-white py-4 max-[1024px]:top-[64px]'>
-                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2 pr-4'>
+                <div className='flex gap-4 max-[480px]:grid max-[480px]:grid-cols-2 max-[480px]:w-full max-[480px]:gap-2 px-4'>
                     {Buttons.map((tab, index) => (
                         <button
                             key={index}
@@ -149,11 +150,11 @@ function Products() {
 
                 <div className=' max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95 ml-[17px] max-[990px]:ml-0'>
                     {step === 0 ? (
-                        <ButtonGeneral onClick={() => setOpen(true)} className={` border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                        <ButtonGeneral onClick={() => setOpen(true)} className={` border border-customBlue !text-customBlue max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن محصول
                         </ButtonGeneral>
                     ) : (
-                        <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                        <ButtonGeneral onClick={() => setOpenAddProduct(true)} className={`border border-customBlue !text-customBlue max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن دسته بندی
                         </ButtonGeneral>
                     )}
@@ -361,7 +362,7 @@ function Products() {
                             </div>
                         </div>
                     </div>
-                </GeneralModal>
+            </GeneralModal>
 
             {/* add category */}
             <GeneralModal
@@ -400,12 +401,21 @@ function Products() {
                     />
 
                     <Text className={`mt-4 mb-2`}>نام</Text>
-                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی عربی را وارد کنید`}/>
+                    <Input value={nameCategory} onChange={(e) => setNameCategory(e.target.value)} className={`w-full !mb-0`} placeholder={`نام دسته بندی فارسی را وارد کنید`}/>
 
-                    <Text className={`mt-4 mb-2`}>نام عربی</Text>
-                    <Input value={nameCategoryPersian} onChange={(e) => setNameCategoryPersian(e.target.value)} className={`w-full mb-4`} placeholder={`نام دسته بندی فارسی را وارد کنید`}/>
+                    <div className='grid grid-cols-4 mt-4 gap-2'>
+                        <div className='col-span-3'>
+                            <Text className={`mb-2`}>نام عربی</Text>
+                            <Input value={nameCategoryPersian} onChange={(e) => setNameCategoryPersian(e.target.value)} className={`w-full`} placeholder={`نام دسته بندی عربی را وارد کنید`}/>
+                        </div>
+                        <div>
+                            <Text className={`mb-2`} >اولویت</Text>
+                            <Input value={priority} inputMode={`numeric`} onChange={(e) => setPriority(e.target.value)} className={`!w-full `} placeholder={`1`}/>
+                        </div>
+                    </div>
                 </div>
             </GeneralModal>
+
         </div>
     )
 }

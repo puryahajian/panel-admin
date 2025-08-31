@@ -19,7 +19,7 @@ import Cookies from "js-cookie";
 function App() {
   const [step, setStep] = useState();
   const [open, setOpen] = useState(false);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,17 +40,17 @@ function App() {
         {!isLoginPage && <HeaderResponsive step={step} setStep={setStep} />}
       </div>
 
-      <div className={`w-full content-right ${location.pathname === '/' ? 'login' : ''}`}>
+      <div className={`w-full content-right ${location.pathname === '/login' ? 'login' : ''}`}>
         <Routes>
-          <Route path='/login' element={<Login/>}/>
+          <Route path='/login' element={<Login />} />
           <Route element={<Middleware />}>
-            <Route path='/' element={<DashboardPage/>}/>
-            <Route path='/orders' element={<OrdersPage/>}/>
-            <Route path='/products' element={<ProductsPage/>}/>
-            <Route path='/management' element={<ManagementPage/>}/>
-            <Route path='/settings' element={<SettingsPage/>}/>
-            <Route path='/discounts' element={<DiscountsPage/>}/>
-            <Route path='/tickets/:id' element={<Tickets/>}/>
+            <Route path='/' element={<DashboardPage />} />
+            <Route path='/orders' element={<OrdersPage />} />
+            <Route path='/products' element={<ProductsPage />} />
+            <Route path='/management' element={<ManagementPage />} />
+            <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/discounts' element={<DiscountsPage />} />
+            <Route path='/tickets/:id' element={<Tickets />} />
           </Route>
         </Routes>
       </div>

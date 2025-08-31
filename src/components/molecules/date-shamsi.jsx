@@ -15,7 +15,7 @@ function DateShamsi({ date, hour, minute }) {
     });
 
     const [year, month, day] = formatter.format(shamsiDate).split('/').map(num => num.trim());
-    const formattedDate = `${year}${month}${day}`;
+    const formattedDate = [year,month,day].join('/');
 
     return <span>{formattedDate}</span>;
 }

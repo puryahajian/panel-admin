@@ -28,7 +28,7 @@ function TabOrderList() {
    
   return (
     <div className='mt-4 max-[1024px]:mt-32 px-4'>
-        <div className='flex my-4 max-[1024px]:hidden'>
+        <div className={`flex my-4 max-[1024px]:hidden ${data?.results?.map((item) => item?.state !== 8 && 'hidden')}`}>
           <Title>ردیف</Title>
           <div className='grid grid-cols-6 w-full'>
             <Title className={`pr-6`}>سفارش</Title>
@@ -38,8 +38,14 @@ function TabOrderList() {
             <Title>تاریخ و ساعت</Title>
             <Title className={`text-left ml-8`}>وضعیت سفارش</Title>
           </div>
-          
         </div>
+
+        {data?.count === 0 || data?.results?.every((item) => item?.state !== 8) ? (
+          <div className="text-center py-8 text-gray-500">
+            لیست خالی
+          </div>
+        ) : null}
+        
         <div className='grid gap-2'>
           {data?.results?.map((item, index) => (
             <ListOrders

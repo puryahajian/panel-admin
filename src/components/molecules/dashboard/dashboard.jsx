@@ -18,7 +18,7 @@ import Mapp from '../mapp';
 
 function Dashboard() {
   const { data } = useSalesReport();
-  console.log(data)
+  // console.log(data)
   const { data: dataGetAllOrder } = useGetAllActiveOrder();
   // console.log(dataGetAllOrder)
   const { mutate } = usePatchOrder();
@@ -29,6 +29,7 @@ function Dashboard() {
   const [activeStep, setActiveStep] = useState(1);
   const [timeDelivery, setTimeDelivery] = useState('');
   const [getData, setGetData] = useState(null);
+  // console.log(getData)
 
   const lastItem = Array.isArray(data?.sales_data) && data?.sales_data.length > 0
     ? data?.sales_data[data?.sales_data.length - 1]
@@ -153,10 +154,10 @@ function Dashboard() {
             >
               <ul className='grid grid-cols-6 items-center mr-[35px] w-full'>
                 <li className='pr-3'>
-                  <Text>{`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}</Text>
+                  <Text>{`${item?.user?.name === null ? 'نامشخص' : item?.user?.name} ${item?.user?.family === null ? '' : item?.user?.family}`}</Text>
                 </li>
                 <li className='pr-2'>
-                  <Text>{`${item?.final_price?.toLocaleString('fa-IR')} تومان`}</Text>
+                  <Text>{`${Math.round(item?.final_price || 0).toLocaleString('fa-IR')} تومان`}</Text>
                 </li>
                 <li>
                   <Text className={`truncate w-20`}>{item?.id}</Text>
@@ -187,7 +188,7 @@ function Dashboard() {
               >
                 <div className='flex justify-between items-center'>
                   <Title>سفارش دهنده</Title>
-                  <Text>{`${item?.user?.name === '' ? 'نامشخص' : item?.user?.name} ${item?.user?.family === '' ? 'نامشخص' : item?.user?.family}`}</Text>
+                  <Text>{`${item?.user?.name === null ? 'نامشخص' : item?.user?.name} ${item?.user?.family === null ? '' : item?.user?.family}`}</Text>
                 </div>
                 <div className='flex justify-between items-center mt-2'>
                   <Title>قیمت</Title>
@@ -285,11 +286,13 @@ function Dashboard() {
         <hr className="my-4" />
 
         <div className="w-full overflow-scroll gap-3">
-          {getData?.items?.map((item) => (
+          {getData?.items?.map((item) => {
+            // console.log(item?.product?.image)
+            return(
             <div key={item?.product?.id}
               className="border border-gray-400 flex gap-2 justify-start items-center w-max p-2 rounded-xl"
             >
-              <Img className="m-auto border-none" src={item?.product?.image} />
+              <img className="w-14 h-14 m-auto border-none" src={item?.product?.image} />
               <div>
                 <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
 
@@ -300,7 +303,8 @@ function Dashboard() {
               </div>
 
             </div>
-          ))}
+            )
+          })}
         </div>
 
         <div className='my-6'>
@@ -375,22 +379,26 @@ function Dashboard() {
 
         {/* show items order */}
         <div className="w-full overflow-scroll gap-3">
-          {getData?.items?.map((item) => (
-            <div key={item?.product?.id}
-              className="border border-gray-400 flex gap-2 justify-start items-center w-max p-2 rounded-xl"
-            >
-              <Img className="m-auto border-none" src={item?.product?.image} />
-              <div>
-                <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
+          {getData?.items?.map((item) => {
 
-                <div className='flex items-center gap-1 mt-1 justify-between'>
-                  <Text className="w-max text-xs">تعداد سفارش : </Text>
-                  <Text>{item?.quantity}</Text>
+            return (
+              <div key={item?.product?.id}
+                className="border border-gray-400 flex gap-2 justify-start items-center w-max p-2 rounded-xl">
+                
+                <img className="m-auto w-14 h-14 border border-grayTitle rounded-lg" src={item.product?.image} />
+
+                <div>
+                  <Text className={`w-max`}>{item?.product?.name || 'نامشخص'}</Text>
+
+                  <div className='flex items-center gap-1 mt-1 justify-between'>
+                    <Text className="w-max text-xs">تعداد سفارش : </Text>
+                    <Text>{item?.quantity}</Text>
+                  </div>
                 </div>
-              </div>
 
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
         <div className="my-5">
           {getData?.items?.length === 0 && <Text>سفارش موجود نیست</Text>}

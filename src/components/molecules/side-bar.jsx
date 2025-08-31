@@ -44,7 +44,7 @@ function SideBar() {
                     <img src={item?.logo} onError={(e) => { 
                         e.target.onerror = null;
                         e.target.src = LogoDefault; 
-                        }} className='mb-10 w-16 h-16 object-cover rounded-full m-auto ' alt="" />
+                        }} className='mb-10 object-contain rounded-lg m-auto ' alt="" />
                 ))}
                 <div className='hover-item bg-customBlue'style={{
                     transform: `translateY(${step * 44}px)`,
@@ -71,15 +71,22 @@ function SideBar() {
                 <Text className={`text-red-500`}> خروج از حساب</Text>
             </button>
 
-             <GeneralModal
+            <GeneralModal
                 open={open}
                 handleClose={(e) => {
                     e.preventDefault();
                     setOpen(false)
                 }}
+                sx={{
+                    width: '30%', 
+                    '@media (max-width: 700px)': {
+                        width: '92%',
+                    },
+                }}
                 title="آیا می خواهید از اکانت خود خارج شوید ؟"
                 // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
                 actionText="بله"
+
                 actionHandler={(e) => { 
                     e.preventDefault();
                     handleExit()

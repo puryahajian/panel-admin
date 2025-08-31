@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import Text from '../../atoms/text'
 import ButtonExisting from '../../atoms/button-existing'
 import ButtonEdit from '../../atoms/button-edit'
@@ -15,12 +15,14 @@ import Loading from '../../atoms/loading';
 import DateShamsi from '../date-shamsi'
 import Title from '../../atoms/title'
 import { FormControl } from '@mui/material'
+import { toast } from 'react-toastify'
+import Rial from '../../../assets/image/Frame.png'
 
 
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
-    // console.log(data)
+    console.log(data)
     const { data: dataCategory } = useGetProductCategory();
     // console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
@@ -46,6 +48,11 @@ function TabListProducts() {
     const [preview, setPreview] = useState('');
     const [errors, setErrors] = useState({});
 
+    // Lazy loading state
+    const [displayCount, setDisplayCount] = useState(20);
+    const [isLoadingLoder, setIsLoading] = useState(false);
+
+
    useEffect(() => {
         if (selectedItem) {
             setNameEditProduct(selectedItem?.name || '');
@@ -53,7 +60,7 @@ function TabListProducts() {
             setOmNameProduct(selectedItem?.om_name || '');
             setDescriptionEdit(selectedItem?.details || '');
             setOfferEdit(selectedItem?.discount_percentage || '');
-            setSelectorCategory(selectedItem?.category_name ? String(selectedItem?.category_name) : ''); // category id را string کن
+            setSelectorCategory(selectedItem?.category ? String(selectedItem?.category) : ''); // category id را string کن
             setSelectorState(
                 selectedItem?.exist !== undefined
                     ? String(selectedItem?.exist)  // تبدیل boolean به string برای select
@@ -62,6 +69,7 @@ function TabListProducts() {
             setPreview(selectedItem?.image || null);
         }
     }, [selectedItem]);
+
     
     const stateProduct = [
         { label: 'فعال', value: 'true' },
@@ -97,12 +105,37 @@ function TabListProducts() {
         return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // افزودن ویرگول سه‌رقمی
     };
 
+    // Lazy loading 
+    const loadMore = () => {
+        if (isLoadingLoder) return;
+        
+        setIsLoading(true);
+        setTimeout(() => {
+            setDisplayCount(prev => prev + 10);
+            setIsLoading(false);
+        }, 400);
+    };
+
+    // مدیریت lazy loading
+    const observerRef = React.useRef();
+    const lastElementRef = React.useCallback(node => {
+        if (isLoadingLoder) return;
+        if (observerRef.current) observerRef.current.disconnect();
+        observerRef.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && displayCount < (data?.data?.length || 0)) {
+                loadMore();
+            }
+        });
+        if (node) observerRef.current.observe(node);
+    }, [isLoadingLoder, displayCount, data?.data?.length]);
+
     const handleChange = (e) => {
         const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
         if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
         setPriceEditProduct(formatNumber(rawValue));
     };
 
+    // مدیریت ارور ها
     const validateFormEdit = () => {
         let newErrors = {};
 
@@ -133,79 +166,132 @@ function TabListProducts() {
         <div className='mt-0 px-4 max-[1024px]:mt-[24px]'>
             <div className='flex items-center max-[992px]:hidden'>
                 <Text>ردیف</Text>
-                <div className='grid grid-cols-7 items-center w-full py-4'>
-                    <Text className={`col-span-2 pr-10`}>محصول</Text>
-                    <Text className={` col-span-1 pr-5`}>دسته بندی</Text>
-                    <Text className={`pr-4`}>تاریخ </Text>
+                <div className='grid grid-cols-8 items-center w-full py-4'>
+                    <Text className={`col-span-2 pr-11`}>محصول</Text>
+                    <Text className={`col-span-1 pr-6`}>دسته بندی</Text>
+                    <Text className={`mr-[42px]`}>کد محصول</Text>
+                    <Text className={`mr-[40px]`}>تاریخ </Text>
+
                 </div>
             </div>
 
             <div className='grid gap-2'>
-                {Array.isArray(data?.data) && data.data.length > 0 ? (
-                    data.data.map((item, index) => (
-                        <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
-                        <div className='px-8'>{index + 1}</div>
-                        <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
-                            <div className='col-span-2 flex items-center gap-6'>
-                            <img src={item?.image} className='w-16 h-16 rounded-lg' alt='' />
-                            <div className='grid gap-2'>
-                                <Text>{item?.name}</Text>
-                                <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
-                            </div>
-                            </div>
+                {Array.isArray(data?.data) && data?.data?.length > 0 ? (
+                    data?.data?.slice(0, displayCount).map((item, index) => (
+                        <div 
+                            className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' 
+                            key={item?.id}
+                            ref={index === displayCount - 1 ? lastElementRef : null}
+                        >
+                            <div className='px-8'>{index + 1}</div>
+                            <div className='grid grid-cols-8 items-center p-4 pr-0 w-full'>
+                                <div className='col-span-2 flex items-center gap-6'>
+                                    <img 
+                                        src={item?.image} 
+                                        className='w-16 h-16 rounded-lg object-cover' 
+                                        alt={item?.name || 'تصویر محصول'}
+                                        loading="lazy"
+                                        onError={(e) => {
+                                            e.target.src = '/src/assets/image/default-logo.png';
+                                        }}
+                                    />
+                                    <div className='grid gap-2'>
+                                        <Text>{item?.name}</Text>
+                                        <Text className={`flex items-center`}>{item?.price?.toLocaleString('fa-IR')} <img src={Rial} alt="ریال" loading="lazy" /></Text>
+                                    </div>
+                                </div>
 
-                            <Text>{item?.category_name}</Text>
-                            <Text><DateShamsi date={item?.create_date} /></Text>
+                                <Text>{item?.category_name ? item?.category_name : 'ندارد'}</Text>
 
-                            <div className='col-span-2 flex justify-end gap-4'>
-                            <ButtonExisting
-                                onClick={() => handleEditProduct(item.id, item.exist)}
-                                className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
-                            >
-                                {item?.exist === true ? 'فعال' : 'غیر فعال'}
-                            </ButtonExisting>
+                                <Text 
+                                    className={`truncate w-28 cursor-pointer rounded mr-7`} 
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(item?.sku);
+                                        toast.success('کپی شد')
+                                        // می‌توانید یک toast یا پیام موفقیت نمایش دهید
+                                    }}
+                                    title="کلیک برای کپی کردن"
+                                >
+                                    {item?.sku === null || "" ? "ندارد" : item?.sku}{item?.sku === "" && "ندارد"}
+                                </Text>
 
-                            <ButtonEdit onClick={() => {
-                                setIdEdit(item);
-                                setOpenEdit(true);
-                                setSelectIdProduct(item?.id);
-                            }}>
-                                ویرایش
-                            </ButtonEdit>
+                                <Text className={`mr-7`}><DateShamsi date={item?.create_date} /></Text>
+
+                                <div className='col-span-2 flex justify-end gap-4'>
+                                    <ButtonExisting
+                                        onClick={() => handleEditProduct(item.id, item.exist)}
+                                        className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
+                                    >
+                                        {item?.exist === true ? 'فعال' : 'غیر فعال'}
+                                    </ButtonExisting>
+
+                                    <ButtonEdit onClick={() => {
+                                            setIdEdit(item);
+                                            setOpenEdit(true);
+                                            setSelectIdProduct(item?.id);
+                                        }}>
+                                            ویرایش
+                                    </ButtonEdit>
+                                </div>
+
+                                <div className='text-center'>
+                                    <button onClick={() => {
+                                        setOpen(true);
+                                        setSelectedItemId(item?.id);
+                                    }}>
+                                        <Text className='text-red-500'>حذف</Text>
+                                    </button>
+                                </div>
                             </div>
-
-                            <div className='text-center'>
-                            <button onClick={() => {
-                                setOpen(true);
-                                setSelectedItemId(item?.id);
-                            }}>
-                                <Text className='text-red-500'>حذف</Text>
-                            </button>
-                            </div>
-                        </div>
                         </div>
                     ))
                 ) : (
+                    ''
+                )}
+
+                {data?.count === 0 && (
                     <div className='flex justify-center mt-4'>
                         <Text>محصول موجود نیست</Text>
                     </div>
                 )}
+
+            
                
             </div>
+            {/* Loading indicator */}
+            {isLoadingLoder && (
+                <div className='flex justify-center mt-4'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
+                </div>
+            )}
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
                 {Array.isArray(data?.data) && data.data.length > 0 ? (
-                    data.data.map((item, index) => (
-                        <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
+                    data.data.slice(0, displayCount).map((item, index) => (
+                        <div 
+                            className='border border-grayTitle rounded-2xl p-4' 
+                            key={item?.id}
+                        >
                             <div className='flex gap-4'>
-                                <img src={item?.image} className={`min-w-16 h-16 rounded-lg`} alt="" />
+                                <img 
+                                    src={item?.image} 
+                                    className={`min-w-16 h-16 rounded-lg object-cover`} 
+                                    alt={item?.name || 'تصویر محصول'}
+                                    loading="lazy"
+                                    onError={(e) => {
+                                        e.target.src = '/src/assets/image/default-logo.png';
+                                    }}
+                                />
                                 <div className='w-full grid gap-1'>
                                     <div className='flex justify-between items-center'>
                                         <Title>دسته بندی :</Title>
                                         <Text>{item?.category_name}</Text>
                                     </div>
-
+                                    <div className='flex justify-between items-center'>
+                                        <Title>کد محصول :</Title>
+                                        <Text>{item?.sku === null ? "ندارد" : item?.sku} {item?.sku === "" && "ندارد"}</Text>
+                                    </div>
                                     <div className='flex justify-between items-center'>
                                         <Title>محصول :</Title>
                                         <Text>{item?.name}</Text>
@@ -244,10 +330,15 @@ function TabListProducts() {
                         </div>
                        ))
                 ) : (
+                    ''
+                )}
+
+                {data?.count === 0 && (
                     <div className='flex justify-center mt-4'>
                         <Text>محصول موجود نیست</Text>
                     </div>
                 )}
+
             </div>
 
             {/* <div className='flex justify-center mt-4'>

@@ -11,7 +11,7 @@ module.exports = {
       colors: {
         grayText: "#454545",
         grayTitle: "#454545",
-        customBlue: "#6669F9",
+        customBlue: "#f15923",
         bgInput: "#E6E6E6",
         buttomExiting: "#5DCDC2",
         bgAcceptOrder: "#F9FFEE",

@@ -15,7 +15,7 @@
 .content-right{
   margin-right: 235px;
 }
-.main-content.login {
+.login {
   margin-right: 0;
 }
 @media (max-width: 1024px) {

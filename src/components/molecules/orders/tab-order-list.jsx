@@ -7,6 +7,8 @@ import useGetAllOrder from '../../db/use-get-all-order'
 import GeneralModal from '../modal-general'
 import Img from '../../atoms/img'
 import Mapp from '../mapp'
+import Rial from '../../../assets/image/Frame.png'
+
 
 function TabOrderList() {
   const { data } = useGetAllOrder();
@@ -61,8 +63,8 @@ function TabOrderList() {
               momber={index + 1}
               order={item?.items?.length === 0 ? 'نا مشخص' : item?.items?.filter(it => it?.product?.name)?.map(it => it.product.name)?.join(', ')}
               orderCode={item?.id}
-              price={`${item?.final_price} تومان`}
-              orderer={item?.user?.name === '' ? 'نامشخص' : item?.user?.name}
+              price={<span className='flex items-center gap-1'>{Number(item?.final_price || 0).toLocaleString('fa-IR', { maximumFractionDigits: 0 })} <img src={Rial} alt='ریال' className='w-6 h-6' /></span>}
+              orderer={`${item?.user?.name === null ? 'نامشخص' : item?.user?.name} ${item?.user?.family === null ? '' : item?.user?.family}`}
               date={<DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/>}
               orderStatus={
                 <>

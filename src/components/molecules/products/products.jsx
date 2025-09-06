@@ -6,19 +6,22 @@ import GeneralModal from '../modal-general';
 import Uploader from '../uploader';
 import Text from '../../atoms/text';
 import Input from '../../atoms/input';
-import { Field, Select } from '@headlessui/react'
+// Removed Headless UI Select to prevent conflicts with MUI Select
+// import { Field, Select as HeadlessSelect } from '@headlessui/react'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-// import Select from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import useCreateCategory from '../../db/use-create-category';
 import useCreateProduct from '../../db/use-create-product';
 import Loading from '../../atoms/loading';
 import '../../../App.css'
 import useGetAllCategory from '../../db/use-get-all-category';
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import clsx from 'clsx'
+import Rial from '../../../assets/image/Frame.png'
+
+// import { ChevronDownIcon } from '@heroicons/react/20/solid'
+// import clsx from 'clsx'
 
 
 function TabProduct({ children, step, index }) {
@@ -108,7 +111,7 @@ function Products() {
         setPriceProduct('');
         setUnitName('');
         setOffer('');
-        setSelectorCategory('');
+        setSelectorCategory(null);
     };
 
     const validateForm = () => {
@@ -278,7 +281,7 @@ function Products() {
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>قیمت</Text>
                             <div>
-                            <p className='mt-3 mr-2 absolute font-sans text-xs'>تومان</p>
+                            <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' />
                             <Input
                                 value={priceProduct}
                                 onChange={handleChange}
@@ -326,23 +329,42 @@ function Products() {
                                 <Text className={`mt-4 mb-2`}>دسته بندی</Text>
                                 <FormControl
                                     sx={{ minWidth: 120, outline: 'none' }}
-                                    className='w-full bg-bgInput !outline-none'
+                                    className='w-full bg-bgInput !outline-none rounded-lg'
                                     error={Boolean(errors.selectorCategory)}
                                     >
                                     <Select
-                                        className='!outline-none'
+                                        className='!outline-none rounded-lg'
                                         value={selectorCategory || ""}
                                         onChange={(e) => {
-                                        setSelectorCategory(e.target.value);
-                                        if (errors.selectorCategory) setErrors(prev => ({ ...prev, selectorCategory: undefined }));
+                                            setSelectorCategory(e.target.value);
+                                            if (errors.selectorCategory) setErrors(prev => ({ ...prev, selectorCategory: undefined }));
                                         }}
                                         displayEmpty
                                         inputProps={{ 'aria-label': 'Without label' }}
                                         sx={{
                                         '& .MuiSelect-select': {
                                             padding: '10px 14px',
-                                            outline: 'none'
+                                            outline: 'none',
+                                            borderRadius: '8px'
                                         },
+                                        // Round the input root in all states
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: '8px',
+                                        },
+                                        // Remove the outlined border in all states
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none !important',
+                                        },
+                                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none !important',
+                                        },
+                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none !important',
+                                        },
+                                        // Remove focus ring/box-shadow if any
+                                        '& .MuiOutlinedInput-root.Mui-focused': {
+                                            boxShadow: 'none',
+                                        }
                                         }}
                                     >
                                         <MenuItem value="">

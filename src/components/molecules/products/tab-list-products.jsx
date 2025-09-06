@@ -14,15 +14,15 @@ import Uploader from '../uploader'
 import Loading from '../../atoms/loading';
 import DateShamsi from '../date-shamsi'
 import Title from '../../atoms/title'
-import { FormControl } from '@mui/material'
+import { FormControl, Tooltip } from '@mui/material'
 import { toast } from 'react-toastify'
 import Rial from '../../../assets/image/Frame.png'
-
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
-    console.log(data)
+    // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
     // console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
@@ -203,17 +203,26 @@ function TabListProducts() {
 
                                 <Text>{item?.category_name ? item?.category_name : 'ندارد'}</Text>
 
-                                <Text 
-                                    className={`truncate w-28 cursor-pointer rounded mr-7`} 
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(item?.sku);
-                                        toast.success('کپی شد')
-                                        // می‌توانید یک toast یا پیام موفقیت نمایش دهید
-                                    }}
-                                    title="کلیک برای کپی کردن"
-                                >
-                                    {item?.sku === null || "" ? "ندارد" : item?.sku}{item?.sku === "" && "ندارد"}
-                                </Text>
+                                <div className='flex items-center justify-between gap-2'>
+                                    <Text 
+                                        className={`truncate w-28 cursor-pointer rounded mr-7`} 
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(item?.sku);
+                                            toast.success('کپی شد')
+                                            // می‌توانید یک toast یا پیام موفقیت نمایش دهید
+                                        }}
+                                        title="کلیک برای کپی کردن"
+                                    >
+                                        {item?.sku === null || "" ? "ندارد" : item?.sku}{item?.sku === "" && "ندارد"}
+                                    </Text>
+                                    <Tooltip title="کپی کد محصول" placement="top">
+                                        <ContentCopyIcon onClick={() => {
+                                            navigator.clipboard.writeText(item?.sku);
+                                            toast.success('کپی شد')
+                                            // می‌توانید یک toast یا پیام موفقیت نمایش دهید
+                                        }} className='!text-sm cursor-pointer'/>
+                                    </Tooltip>
+                                </div>
 
                                 <Text className={`mr-7`}><DateShamsi date={item?.create_date} /></Text>
 
@@ -463,10 +472,10 @@ function TabListProducts() {
                 <div className='mt-4 text-right'>
                     <Text>قیمت</Text>
                     <div>
-                        <p className='mt-5 mr-2 absolute font-sans text-xs'>تومان</p>
+                        <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
                         <Input
                         inputMode='numeric'
-                        value={priceEditProduct}
+                        value={priceEditProduct.toLocaleString('fa-IR')}
                         placeholder='۳۰۰۰۰'
                         onChange={(e) => {
                             handleChange(e);

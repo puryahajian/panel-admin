@@ -15,6 +15,8 @@ import useGetDriver from '../../db/use-get-driver';
 import usePatchOrder from '../../db/use-patch-order';
 import useGetAllActiveOrder from '../../db/use-get-all-active-order';
 import Mapp from '../mapp';
+import Rial from '../../../assets/image/Frame.png'
+
 
 function Dashboard() {
   const { data } = useSalesReport();
@@ -136,7 +138,7 @@ function Dashboard() {
           {dataGetAllOrder?.results?.map((item) => (
             <>
             <div
-              className={`bg-bgAcceptOrder rounded-lg py-2 max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'}`}
+              className={`bg-bgAcceptOrder rounded-lg py-2 max-[1024px]:hidden ${item?.state === 3 && 'bg-bgRejectOrder'} ${item?.state === 8 && 'hidden'}`}
               classNameResponse={`bg-bgAcceptOrder ${item?.state === 3 && 'bg-bgRejectOrder'}`}
               onClick={() => {
                 setGetData(item)
@@ -156,8 +158,9 @@ function Dashboard() {
                 <li className='pr-3'>
                   <Text>{`${item?.user?.name === null ? 'نامشخص' : item?.user?.name} ${item?.user?.family === null ? '' : item?.user?.family}`}</Text>
                 </li>
-                <li className='pr-2'>
-                  <Text>{`${Math.round(item?.final_price || 0).toLocaleString('fa-IR')} تومان`}</Text>
+                <li className='pr-2 flex justify-start items-center'>
+                  <Text>{`${Math.round(item?.final_price || 0).toLocaleString('fa-IR')}`}</Text>
+                  <img src={Rial} alt="" />
                 </li>
                 <li>
                   <Text className={`truncate w-20`}>{item?.id}</Text>

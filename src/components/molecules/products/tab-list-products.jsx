@@ -475,7 +475,7 @@ function TabListProducts() {
                         <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
                         <Input
                         inputMode='numeric'
-                        value={priceEditProduct.toLocaleString('fa-IR')}
+                        value={priceEditProduct?.toLocaleString('fa-IR')}
                         placeholder='۳۰۰۰۰'
                         onChange={(e) => {
                             handleChange(e);

@@ -44,7 +44,7 @@ function SideBar() {
                     <img src={item?.logo} onError={(e) => { 
                         e.target.onerror = null;
                         e.target.src = LogoDefault; 
-                        }} className='mb-10 w-16 m-auto' alt="" />
+                        }} className='mb-10 w-max m-auto' alt="" />
                 ))}
                 <div className='hover-item bg-customBlue'style={{
                     transform: `translateY(${step * 44}px)`,

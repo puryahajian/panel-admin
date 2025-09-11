@@ -140,7 +140,7 @@ function TabListProducts() {
 
             <div className='grid gap-2'>
                 {/* {Array.isArray(data) && data.length > 0 ? ( */}
-                    {data.results.map((item, index) => (
+                    {data?.results?.map((item, index) => (
                         <div className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' key={item?.id}>
                         <div className='px-8'>{index + 1}</div>
                         <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>

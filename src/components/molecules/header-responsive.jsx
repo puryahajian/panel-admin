@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import Text from '../atoms/text';
 
 
-function HeaderResponsive({step, setStep}) {
+function HeaderResponsive({step, setStep, setOpenModalEdit}) {
     const navigate = useNavigate();
     const { data } = useGetInfo('');
     const [openProfileState , setOpenProfileState] = useState(false);
@@ -50,6 +50,15 @@ function HeaderResponsive({step, setStep}) {
                             
                         </button>
                     ))}
+                    <button
+                        className='border w-full border-gray-700 text-right py-3 px-2 mt-4 rounded-lg'
+                        onClick={() => {
+                            setIsOpen(false)
+                            setOpenModalEdit(true)
+                        }}
+                    >
+                        <Text>پروفایل</Text>
+                    </button>
                     
                 </div>
             </OffcanvasMenu>

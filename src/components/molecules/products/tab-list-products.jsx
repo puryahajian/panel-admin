@@ -29,6 +29,7 @@ function TabListProducts() {
     const products = Array.isArray(data) ? data : (Array.isArray(data?.results) ? data.results : []);
     // console.log(products)
     const selectedItem = products?.find((it) => it?.id === selectIdProduct)
+    // console.log(selectedItem)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
@@ -205,7 +206,7 @@ function TabListProducts() {
                             <div className='px-8'>{index + 1}</div>
                             <div className='grid grid-cols-7 items-center p-4 pr-0 w-full'>
                                 <div className=' col-span-2 flex items-center gap-6'>
-                                    <img src={`https://bahateam.ir${item?.image}`} className={`w-16 h-16 rounded-lg`} alt="" />
+                                    <img src={`https://seller-api.iranishop.om${item?.image}`} className={`w-16 h-16 rounded-lg`} alt="" />
 
                                     <div className='grid gap-2'>
                                         <Text>{item?.name}</Text>
@@ -257,7 +258,7 @@ function TabListProducts() {
                     return(
                         <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
                             <div className='flex gap-4'>
-                                <img src={`https://bahateam.ir${item?.image}`} className={`min-w-16 h-16 rounded-lg`} alt="" />
+                                <img src={`https://seller-api.iranishop.om${item?.image}`} className={`min-w-16 h-16 rounded-lg`} alt="" />
                                 <div className='w-full grid gap-1'>
                                     <div className='flex justify-between items-center'>
                                         <Title>تعداد :</Title>
@@ -365,7 +366,7 @@ function TabListProducts() {
                                 textOne={`عکس محصول را انتخاب کنید`}
                                 selectedFile={selectedFile}
                                 onFileSelect={setSelectedFile}
-                                preview={`https://bahateam.ir${selectedItem?.image || preview}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image || preview}`}
                                 setPreview={setPreview}
                                 clssBtnDelete={`hidden`}
                                 className={`h-[200px] min-h-9 max-h-[200px]`}
@@ -382,7 +383,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, file, selectedImage1); 
                                     }
                                 }} 
-                                preview={`https://bahateam.ir${selectedItem?.image1}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image1}`}
                                 setPreview={setPreviewImage1}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />
@@ -395,7 +396,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, selectedImage2, file); 
                                     }
                                 }}    
-                                preview={`https://bahateam.ir${selectedItem?.image2}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image2}`}
                                 setPreview={setPreviewImage2}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />
@@ -408,7 +409,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, selectedImage3, file);
                                     }
                                 }}   
-                                preview={`https://bahateam.ir${selectedItem?.image3}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image3}`}
                                 setPreview={setPreviewImage3}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />
@@ -576,7 +577,7 @@ function TabListProducts() {
                                 textOne={`عکس محصول را انتخاب کنید`}
                                 selectedFile={selectedFile}
                                 onFileSelect={setSelectedFile}
-                                preview={`https://bahateam.ir${selectedItem?.image || preview}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image || preview}`}
                                 setPreview={setPreview}
                                 clssBtnDelete={`hidden`}
                                 className={`h-[278px] min-h-9 max-h-[278px]`}
@@ -593,7 +594,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, file, selectedImage1); 
                                     }
                                 }} 
-                                preview={`https://bahateam.ir${selectedItem?.image1}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image1}`}
                                 setPreview={setPreviewImage1}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />
@@ -606,7 +607,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, selectedImage2, file); 
                                     }
                                 }}    
-                                preview={`https://bahateam.ir${selectedItem?.image2}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image2}`}
                                 setPreview={setPreviewImage2}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />
@@ -619,7 +620,7 @@ function TabListProducts() {
                                         handleEditProduct(idEdit.id, inState, selectedImage3, file);
                                     }
                                 }}   
-                                preview={`https://bahateam.ir${selectedItem?.image3}`}
+                                preview={`https://seller-api.iranishop.om${selectedItem?.image3}`}
                                 setPreview={setPreviewImage3}
                                 className="h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]"
                             />

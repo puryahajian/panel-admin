@@ -14,6 +14,10 @@ import Cookies from "js-cookie";
 import useGetInfo from '../db/use-get-info';
 import HeaderResponsive from '../molecules/header-responsive';
 import Discount from '../molecules/discount/discount';
+import useGetProfile from '../db/use-get-profile';
+import Title from '../atoms/title';
+import InputNumberic from '../atoms/input-numberic';
+import usePatchProfile from '../db/use-patch-profile';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -31,14 +35,20 @@ function TabPanel({ children, step, index }) {
 }
 
 function MolPanel() {
-    const { data: dataInfo } = useGetInfo();
-
+    const {data} = useGetProfile();
+    // console.log(data)
+    const {mutate} = usePatchProfile();
     const [step, setStep] = useState(() => {
         const savedStep = localStorage.getItem('activeStep');
         return savedStep !== null ? parseInt(savedStep, 10) : 0;
     });
 
     const [open, setOpen] = useState(false);
+    const [openEditSnba, setOpenEditSnba] = useState(false);
+    const [snba, setSnba] = useState('');
+
+    const [openModalEdit, setOpenModalEdit] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,12 +56,31 @@ function MolPanel() {
     }, [step]);
 
     const handleExit = () => {
-        setOpen(false); 
-        localStorage.removeItem('access');
-        localStorage.removeItem('refresh');
-        navigate('/login');
-
+        setOpenModalEdit(false); 
+        Cookies.remove("access")
+        Cookies.remove("refresh")
+        navigate('/login')
     }
+
+    const handleEdit = () => {
+        mutate(
+            {
+                snba
+            },
+            {
+                onSuccess: (data) => {
+                    console.log(data)
+                    setOpenEditSnba(false)
+                },
+                onError: (err) => {
+                    // console.log(err)
+                    // setOpenEditSnba(false)
+                }
+            }
+        )
+    }
+
+
 
     return (
         <>
@@ -80,14 +109,23 @@ function MolPanel() {
                     ))}
                     
                 </div>
-                <button
-                    className='border border-red-600 text-right py-3 px-2 rounded-lg'
-                    onClick={() => setOpen(true)}
-                >
-                    <Text className={`text-red-500`}> خروج از حساب</Text>
-                </button>
+
+                <div>
+                    <button
+                        className='border w-full border-gray-700 text-right py-3 px-2 rounded-lg'
+                        onClick={() => setOpenModalEdit(true)}
+                    >
+                        <Text>پروفایل</Text>
+                    </button>
+                    <button
+                        className='border w-full mt-4 border-red-600 text-right py-3 px-2 rounded-lg'
+                        onClick={() => setOpen(true)}
+                    >
+                        <Text className={`text-red-500`}> خروج از حساب</Text>
+                    </button>
+                </div>
             </div>
-            <HeaderResponsive step={step} setStep={setStep}/>
+            <HeaderResponsive setOpenModalEdit={setOpenModalEdit} step={step} setStep={setStep}/>
             <div className=' grow max-[1024px]:mt-[60px]'>
                 {/* <TabPanel step={step} index={0}>
                     <Dashboard/>
@@ -133,6 +171,110 @@ function MolPanel() {
                 },
             }}
         />
+
+        <GeneralModal
+            open={openModalEdit}
+            handleClose={(e) => {
+                e.preventDefault();
+                setOpenModalEdit(false)
+            }}
+            title="پروفایل"
+            classTitle={`!font-bold text-right`}
+            // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
+            // actionText="ذخیره"
+            classAccept={`hidden`}
+            exitButton={`بازگشت`}
+            actionHandler={(e) => { 
+                e.preventDefault();
+                // handleExit()
+            }}
+            onClose={()=> setOpenModalEdit(false)}
+            sx={{
+                width: '500px', 
+                '@media (max-width: 840px)': {
+                    width: '92%',
+                },
+            }}
+        >
+            <div className='grid grid-cols-2 mt-4'>
+                <div className='text-right'>
+                    <Text className={`mb-2`}>نام</Text>
+                    <Title>{data?.name}</Title>
+                </div>
+                <div className='text-right'>
+                    <Text className={`mb-2`}>نام خانوادگی</Text>
+                    <Title>{data?.family}</Title>
+                </div>
+            </div>
+            <div className='grid grid-cols-2 text-right mt-4'>
+                <div className='text-right'>
+                    <Text className={`mb-2`}>شماره تلقن</Text>
+                    <Title>{data?.phone}</Title>
+                </div>
+                <div className='text-right'>
+                    <Text className={`mb-2`}> آدرس</Text>
+                    <Title>{data?.address}</Title>
+                </div>
+            </div>
+
+            <div className='flex justify-between items-center'>
+                <div className='text-right mt-4'>
+                    <Text>شماره شبا</Text>
+                    <Title className={`mt-2`}>{data?.shomare_kart === null ? 'موجود نیست' : `IR - ${data?.shomare_kart}`}</Title>
+                </div>
+
+
+                <svg 
+                    onClick={() => {
+                        if (!data?.shomare_kart) {
+                            setOpenEditSnba(true);
+                        } else {
+                            return;
+                        }
+                    }}
+                    className={!data?.shomare_kart ? '' : 'cursor-not-allowed'}
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width={24} 
+                    height={24} 
+                    viewBox="0 0 512 512">
+                        <defs>
+                            <path id="SVGkrQfddLX" fill={!data?.shomare_kart ? '#dc2626' : '#ccc'} d="M426.667 373.333V416H0v-42.667zM186.019 91.314l96 95.999l-143.352 143.354h-96v-96zM277.333 0l96 96l-68.686 68.686l-96-96z">
+                            </path>
+                        </defs><use fillRule="evenodd" href="#SVGkrQfddLX" transform="translate(42.667 53.333)"></use>
+                </svg>
+            </div>
+        </GeneralModal>
+
+        <GeneralModal
+            open={openEditSnba}
+            handleClose={(e) => {
+                e.preventDefault();
+                setOpenEditSnba(false)
+            }}
+            // title="آیا می خواهید از اکانت خود خارج شوید ؟"
+            classTitle={`hidden`}
+            // content="این یک مودال عمومی است که در تمام بخش‌ها می‌توان از آن استفاده کرد."
+            actionText="ذخیره"
+            actionHandler={(e) => { 
+                e.preventDefault();
+                handleEdit()
+            }}
+            onClose={()=> setOpenEditSnba(false)}
+            sx={{
+                width: '500px', 
+                '@media (max-width: 840px)': {
+                    width: '92%',
+                },
+            }}
+        >
+            <div className='text-right mt-4'>
+                <Text>شماره شبا</Text>
+                <div className='relative mt-2'>
+                    <Text className={`absolute left-2 top-[14px]`}> - IR</Text>
+                    <InputNumberic className={`w-full pl-9`} value={snba} onChange={(e) => setSnba(e.target.value)}/>
+                </div>
+            </div>
+        </GeneralModal>
         </>
     )
 }

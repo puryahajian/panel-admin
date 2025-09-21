@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const interceptor = axios.create({
-  baseURL: 'https://api.iranishop.om/',
+  baseURL: 'https://api.sonatikaran.ir/',
 });
 
 let isRefreshing = false;

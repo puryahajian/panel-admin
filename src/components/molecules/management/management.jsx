@@ -162,17 +162,17 @@ function Management() {
 
                 <div className='max-[990px]:fixed max-[990px]:w-full max-[990px]:bottom-0 max-[990px]:right-0 max-[990px]:px-4 max-[990px]:py-2 max-[990px]:bg-white max-[990px]:opacity-95 max-[990px]:ml-0'>
                     {step === 0 && (
-                        <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border bg-white border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                        <ButtonGeneral onClick={() => setOpenAddAdmin(true)} className={`border bg-white border-customBlue !text-customBlue max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن ادمین
                         </ButtonGeneral>
                     )}
                     {step === 1 && (
-                        <ButtonGeneral onClick={() => setOpenAddCustomer(true)} className={`border bg-white border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                        <ButtonGeneral onClick={() => setOpenAddCustomer(true)} className={`border bg-white border-customBlue !text-customBlue max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن مشتری
                         </ButtonGeneral>
                     )}
                     {step === 2 && (
-                        <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border bg-white border-blue-500 !text-blue-500 max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
+                        <ButtonGeneral onClick={() => setOpenAddCouriers(true)} className={`border bg-white border-customBlue !text-customBlue max-[990px]:w-full max-[990px]:bg-customBlue max-[990px]:!text-white`}>
                             افزودن پیک
                         </ButtonGeneral>
                     )}

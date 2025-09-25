@@ -129,8 +129,9 @@ function TabListProducts() {
         if (node) observerRef.current.observe(node);
     }, [isLoadingLoder, displayCount, data?.data?.length]);
 
+
     const handleChange = (e) => {
-        const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
+        const rawValue = e.target.value?.replace(/,/g, ''); // فقط عدد خام
         if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
         setPriceEditProduct(formatNumber(rawValue));
     };
@@ -197,7 +198,7 @@ function TabListProducts() {
                                     />
                                     <div className='grid gap-2'>
                                         <Text>{item?.name}</Text>
-                                        <Text className={`flex items-center`}>{item?.price?.toLocaleString('fa-IR')} <img src={Rial} alt="ریال" loading="lazy" /></Text>
+                                        <Text className={`flex items-center`}>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
                                     </div>
                                 </div>
 
@@ -264,8 +265,6 @@ function TabListProducts() {
                     </div>
                 )}
 
-            
-               
             </div>
             {/* Loading indicator */}
             {isLoadingLoder && (
@@ -276,11 +275,12 @@ function TabListProducts() {
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
-                {Array.isArray(data?.data) && data.data.length > 0 ? (
+                {Array.isArray(data?.data) && data.data?.length > 0 ? (
                     data.data.slice(0, displayCount).map((item, index) => (
                         <div 
                             className='border border-grayTitle rounded-2xl p-4' 
                             key={item?.id}
+                            ref={index === displayCount - 1 ? lastElementRef : null}
                         >
                             <div className='flex gap-4'>
                                 <img 
@@ -413,13 +413,13 @@ function TabListProducts() {
                         selectedFile={selectedFile}
                         onFileSelect={(file) => {
                         setSelectedFile(file);
-                        if (errors.image) { const { image, ...rest } = errors; setErrors(rest); }
+                        if (errors?.image) { const { image, ...rest } = errors; setErrors(rest); }
                         }}
                         preview={selectedItem?.image || preview}
                         setPreview={setPreview}
-                        className={`h-[155px] min-h-9 max-h-[155px] ${errors.image ? "border border-red-500" : ""}`}
+                        className={`h-[155px] min-h-9 max-h-[155px] ${errors?.image ? "border border-red-500" : ""}`}
                     />
-                    {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
+                    {errors?.image && <p className="text-red-500 text-xs mt-1">{errors?.image}</p>}
                     </div>
 
                     {/* توضیحات + خطا */}
@@ -428,12 +428,12 @@ function TabListProducts() {
                         value={descriptionEdit}
                         onChange={(e) => {
                         setDescriptionEdit(e.target.value);
-                        if (errors.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
+                        if (errors?.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
                         }}
-                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
+                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors?.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
                         placeholder='توضیحات'
                     />
-                    {errors.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors.descriptionEdit}</p>}
+                    {errors?.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors?.descriptionEdit}</p>}
                     </div>
                 </div>
 
@@ -445,12 +445,12 @@ function TabListProducts() {
                             value={nameEditProduct}
                             onChange={(e) => {
                             setNameEditProduct(e.target.value);
-                            if (errors.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                            if (errors?.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
                             }}
-                            className={`w-full mt-2 bg-transparent border ${errors.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
+                            className={`w-full mt-2 bg-transparent border ${errors?.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
                             placeholder="نام محصول"
                         />
-                        {errors.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors.nameEditProduct}</p>}
+                        {errors?.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.nameEditProduct}</p>}
                     </div>
                     <div>
                         <Text>نام عربی</Text>
@@ -458,12 +458,12 @@ function TabListProducts() {
                             value={omNameProduct}
                             onChange={(e) => {
                             setOmNameProduct(e.target.value);
-                            if (errors.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
+                            if (errors?.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
                             }}
-                            className={`w-full mt-2 bg-transparent border ${errors.omNameProduct ? "border-red-500" : "border-gray-300"}`}
+                            className={`w-full mt-2 bg-transparent border ${errors?.omNameProduct ? "border-red-500" : "border-gray-300"}`}
                             placeholder="نام عربی محصول"
                         />
-                        {errors.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors.omNameProduct}</p>}
+                        {errors?.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors?.omNameProduct}</p>}
                     </div>
 
                 </div>
@@ -475,29 +475,29 @@ function TabListProducts() {
                         <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
                         <Input
                         inputMode='numeric'
-                        value={priceEditProduct.toLocaleString('fa-IR')}
+                        value={priceEditProduct?.toLocaleString('fa-IR')}
                         placeholder='۳۰۰۰۰'
                         onChange={(e) => {
                             handleChange(e);
-                            if (errors.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
+                            if (errors?.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
                         }}
-                        className={`w-full mt-2 text-left bg-transparent border ${errors.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
+                        className={`w-full mt-2 text-left bg-transparent border ${errors?.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
                         />
                     </div>
-                    {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors.priceEditProduct}</p>}
+                    {errors?.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.priceEditProduct}</p>}
                 </div>
 
                 <div className='mt-4 grid grid-cols-2 gap-2'>
                     {/* دسته‌بندی + خطا (با FormControl) */}
                     <div>
                     <Text className='text-right mb-2'>دسته بندی</Text>
-                    <FormControl className='w-full' error={Boolean(errors.selectorCategory)}>
+                    <FormControl className='w-full' error={Boolean(errors?.selectorCategory)}>
                         <Select
                         className='!outline-none !rounded-lg text-right w-full'
                         value={selectorCategory}
                         onChange={(e) => {
                             setSelectorCategory(e.target.value);
-                            if (errors.selectorCategory) { const { selectorCategory, ...rest } = errors; setErrors(rest); }
+                            if (errors?.selectorCategory) { const { selectorCategory, ...rest } = errors; setErrors(rest); }
                         }}
                         displayEmpty
                         inputProps={{ 'aria-label': 'Without label' }}
@@ -514,7 +514,7 @@ function TabListProducts() {
                             </MenuItem>
                         ))}
                         </Select>
-                        {errors.selectorCategory && <Text>{errors.selectorCategory}</Text>}
+                        {errors?.selectorCategory && <Text>{errors?.selectorCategory}</Text>}
                     </FormControl>
                     </div>
 
@@ -533,13 +533,13 @@ function TabListProducts() {
 
                 {/* وضعیت محصول + خطا */}
                 <Text className='mt-4 text-right mb-2'>وضعیت محصول</Text>
-                <FormControl className='w-full mb-4' error={Boolean(errors.selectorState)}>
+                <FormControl className='w-full mb-4' error={Boolean(errors?.selectorState)}>
                     <Select
                     className='!outline-none text-right !rounded-lg w-full'
                     value={selectorState}
                     onChange={(e) => {
                         setSelectorState(e.target.value);
-                        if (errors.selectorState) { const { selectorState, ...rest } = errors; setErrors(rest); }
+                        if (errors?.selectorState) { const { selectorState, ...rest } = errors; setErrors(rest); }
                     }}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
@@ -557,7 +557,7 @@ function TabListProducts() {
                         </MenuItem>
                     ))}
                     </Select>
-                    {errors.selectorState && <Text>{errors.selectorState}</Text>}
+                    {errors?.selectorState && <Text>{errors?.selectorState}</Text>}
                 </FormControl>
             </GeneralModal>
 

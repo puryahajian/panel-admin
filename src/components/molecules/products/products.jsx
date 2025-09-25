@@ -209,15 +209,15 @@ function Products() {
                             {/* Uploader + پیام خطا */}
                             <div>
                                 <Uploader
-                                textOne={`تصویر محصول را آپلود کنید`}
-                                selectedFile={bgProduct}
-                                onFileSelect={(file) => {
-                                    setBgProduct(file);
-                                    setErrors(prev => ({ ...prev, bgProduct: undefined }));
-                                }}
-                                preview={previewProduct}
-                                setPreview={setPreviewProduct}
-                                className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
+                                    textOne={`تصویر محصول را آپلود کنید`}
+                                    selectedFile={bgProduct}
+                                    onFileSelect={(file) => {
+                                        setBgProduct(file);
+                                        setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                    }}
+                                    preview={previewProduct}
+                                    setPreview={setPreviewProduct}
+                                    className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
                                 />
                                 {errors.bgProduct && (
                                     <Text className="text-red-500 text-xs mt-1">{errors.bgProduct}</Text>
@@ -281,13 +281,14 @@ function Products() {
                         <div className='text-right'>
                             <Text className={`mt-4 mb-2`}>قیمت</Text>
                             <div>
-                            <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' />
-                            <Input
-                                value={priceProduct}
-                                onChange={handleChange}
-                                className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
-                                placeholder={`۳۰۰۰`}
-                            />
+                                {/* <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' /> */}
+                                <Text className={`mt-3 mr-2 absolute`}>تومان</Text>
+                                <Input
+                                    value={priceProduct}
+                                    onChange={handleChange}
+                                    className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
+                                    placeholder={`۳۰۰۰`}
+                                />
                             </div>
                             {errors.priceProduct && (
                                 <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>

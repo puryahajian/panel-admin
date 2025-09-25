@@ -196,7 +196,7 @@ function ListDiscount() {
             </React.Fragment>
         ))}
 
-        <div className='mt-6 flex justify-center'>
+        <div className='mt-6 max-[1024px]:mt-[150px] flex justify-center'>
             <Text>{data?.count === 0 && 'تخفیف ایجاد نکردید'}</Text>
         </div>
 

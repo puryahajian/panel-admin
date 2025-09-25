@@ -18,7 +18,7 @@ function Setting() {
 
     const { mutate , isPending } = usePatchProfile();
 
-    const [ nameShop, setNameShop ] = useState(details[0]?.name);
+    const [ nameShop, setNameShop ] = useState();
     const [ numberShop, setNumberShop ] = useState(details[0]?.phone);
     const [ numberSupportShop, setNumberSupportShop ] = useState(details[0]?.support_phone);
     const [ openTime, setOpenTime ] = useState(details[0]?.open_time?.slice(0, -3));

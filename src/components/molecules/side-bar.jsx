@@ -84,6 +84,12 @@ function SideBar() {
                     e.preventDefault();
                     handleExit()
                 }}
+                sx={{
+                    width: '400px',
+                    '@media (max-width:480px)': {
+                        width: '80%',
+                    },
+                }}
             />
         </div>
     )

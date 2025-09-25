@@ -40,7 +40,7 @@ function Orders() {
                     <button
                         key={index}
                         onClick={() => setStep(index)}
-                        className={`px-7 py-3  max-[1024px]:mr-4 rounded-lg text-sm font-sans text-grayText ${
+                        className={`px-7 py-3 rounded-lg text-sm font-sans text-grayText ${
                             step === index
                                 ? 'bg-grayText text-white'
                                 : 'border border-gray-600 text-grayText'

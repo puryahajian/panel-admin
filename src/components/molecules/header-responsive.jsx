@@ -15,6 +15,12 @@ function HeaderResponsive({step, setStep}) {
     const navigate = useNavigate();
     const location = useLocation();
     const { data } = useGetInfo('');
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
     // console.log(data)
     const [openProfileState , setOpenProfileState] = useState(false);
 
@@ -30,15 +36,18 @@ function HeaderResponsive({step, setStep}) {
 
     const handleUserClick = () => setOpenProfileState(true);
 
+
     return (
         <div className='hidden max-[1024px]:flex justify-between items-center py-4 px-4 max-[390px]:py-4 z-[1000] fixed top-0 w-full bg-white opacity-95'>
             <OffcanvasMenu
-                onClose={toggleMenu}
-                onClick={toggleMenu}
+                // anchor="right"
+                isOpen={isDrawerOpen}
+                onClose={toggleDrawer}
                 contentButton={<img src={MenuBar} className='w-6 h-6 z-20' alt="" />}
-                isOpen={isOpen}
-                step={step}
-                setStep={setStep}
+                // step={step}
+                // setStep={setStep}
+                // state={drawerState}
+
             >
                 <div>
                     <img src={data?.results[0]?.logo} className='mb-4 w-56 mt-8 rounded-lg m-auto' alt="" />
@@ -48,6 +57,7 @@ function HeaderResponsive({step, setStep}) {
                             onClick={() => {
                                 setStep(index);
                                 toggleMenu();
+                                toggleDrawer();
                             }}
                             to={tab.path}
                             className={`px-2 flex items-center gap-2 py-3 cursor-pointer text-right w-full rounded-lg ${

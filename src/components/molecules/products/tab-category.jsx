@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useRef, useCallback } from 'react'
 import ButtonEdit from '../../atoms/button-edit'
 import Text from '../../atoms/text'
@@ -83,7 +84,7 @@ function TabCategory() {
 
     return (
         <div className='px-4'>
-            <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 mt-6 max-[1024px]:mt-[0px]'>
+            <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 mt-6 max-[1024px]:mt-[0px] max-[480px]:mb-[60px]'>
                 {data?.data?.slice(0, displayCount).map((item, index) => (
                     <div 
                         className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' 

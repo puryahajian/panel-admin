@@ -281,7 +281,7 @@ function Products() {
                 <div className='grid grid-cols-2 max-[840px]:grid-cols-1 gap-4'>
                     <div className=''> 
                         <div className='h-max max-[840px]:hidden'>
-                            <Text className={`text-right text-sm mb-1`}>سایز تصویر باید ۲۰۰ * ۲۰۰ پیکسل باشد</Text>
+                            <Text className={`text-right text-sm mb-1`}>سایز تصویر باید ۸۰۰ * ۸۰۰ پیکسل باشد</Text>
                             <Uploader
                                 textOne={`عکس محصول را انتخاب کنید`}
                                 selectedFile={selectedFile}
@@ -418,7 +418,7 @@ function Products() {
 
                         <div className='max-[840px]:block mt-6 hidden'>
                             <div className='max-[840px]:mb-4'>
-                                <Text className={`text-right text-sm mb-4`}>سایز تصویر باید ۲۰۰ * ۲۰۰ پیکسل باشد</Text>
+                                <Text className={`text-right text-sm mb-4`}>سایز تصویر باید ۸۰۰ * ۸۰۰ پیکسل باشد</Text>
                                 <Uploader
                                     textOne={`تصویر محصول را آپلود کنید`}
                                     selectedFile={bgProduct}

@@ -44,8 +44,11 @@ function MolPanel() {
     });
 
     const [open, setOpen] = useState(false);
+    const [getDataBank, setGetDataBank] = useState('');
     const [openEditSnba, setOpenEditSnba] = useState(false);
-    const [snba, setSnba] = useState('');
+    const [snba, setSnba] = useState(data?.shomare_shaba);
+    const [hesab, setHesab] = useState(data?.shomare_hesab);
+    const [kart, setKart] = useState(data?.card_number);
 
     const [openModalEdit, setOpenModalEdit] = useState(false);
 
@@ -65,11 +68,11 @@ function MolPanel() {
     const handleEdit = () => {
         mutate(
             {
-                snba
+                snba, kart, hesab
             },
             {
                 onSuccess: (data) => {
-                    console.log(data)
+                    // console.log(data)
                     setOpenEditSnba(false)
                 },
                 onError: (err) => {
@@ -208,7 +211,7 @@ function MolPanel() {
             </div>
             <div className='grid grid-cols-2 text-right mt-4'>
                 <div className='text-right'>
-                    <Text className={`mb-2`}>شماره تلقن</Text>
+                    <Text className={`mb-2`}>شماره تلفن</Text>
                     <Title>{data?.phone}</Title>
                 </div>
                 <div className='text-right'>
@@ -218,27 +221,38 @@ function MolPanel() {
             </div>
 
             <div className='flex justify-between items-center'>
-                <div className='text-right mt-4'>
-                    <Text>شماره شبا</Text>
-                    <Title className={`mt-2`}>{data?.shomare_kart === null ? 'موجود نیست' : `IR - ${data?.shomare_kart}`}</Title>
+                <div>
+                    <div className='text-right mt-4'>
+                        <Text>شماره شبا</Text>
+                        <Title className={`mt-2`}>{data?.shomare_shaba === null ? 'موجود نیست' : `IR - ${data?.shomare_shaba}`}</Title>
+                    </div>
+                    <div className='text-right mt-4'>
+                        <Text>شماره حساب</Text>
+                        <Title className={`mt-2`}>{data?.shomare_hesab === null ? 'موجود نیست' : `IR - ${data?.shomare_hesab}`}</Title>
+                    </div>
+                    <div className='text-right mt-4'>
+                        <Text>شماره کارت</Text>
+                        <Title className={`mt-2`}>{data?.card_number === null ? 'موجود نیست' : `IR - ${data?.card_number}`}</Title>
+                    </div>
                 </div>
 
 
                 <svg 
                     onClick={() => {
-                        if (!data?.shomare_kart) {
+                        if (!data?.shomare_shaba || !data?.shomare_hesab || !data?.card_number) {
                             setOpenEditSnba(true);
+                            setGetDataBank(data)
                         } else {
                             return;
                         }
                     }}
-                    className={!data?.shomare_kart ? '' : 'cursor-not-allowed'}
+                    className={!data?.shomare_shaba || !data?.shomare_hesab || !data?.card_number ? '' : 'cursor-not-allowed'}
                     xmlns="http://www.w3.org/2000/svg" 
                     width={24} 
                     height={24} 
                     viewBox="0 0 512 512">
                         <defs>
-                            <path id="SVGkrQfddLX" fill={!data?.shomare_kart ? '#dc2626' : '#ccc'} d="M426.667 373.333V416H0v-42.667zM186.019 91.314l96 95.999l-143.352 143.354h-96v-96zM277.333 0l96 96l-68.686 68.686l-96-96z">
+                            <path id="SVGkrQfddLX" fill={!data?.shomare_shaba || !data?.shomare_hesab || !data?.card_number ? '#dc2626' : '#ccc'} d="M426.667 373.333V416H0v-42.667zM186.019 91.314l96 95.999l-143.352 143.354h-96v-96zM277.333 0l96 96l-68.686 68.686l-96-96z">
                             </path>
                         </defs><use fillRule="evenodd" href="#SVGkrQfddLX" transform="translate(42.667 53.333)"></use>
                 </svg>
@@ -271,8 +285,16 @@ function MolPanel() {
                 <Text>شماره شبا</Text>
                 <div className='relative mt-2'>
                     <Text className={`absolute left-2 top-[14px]`}> - IR</Text>
-                    <InputNumberic className={`w-full pl-9`} value={snba} onChange={(e) => setSnba(e.target.value)}/>
+                    <InputNumberic defaultValue={getDataBank?.shomare_shaba} className={`w-full pl-9`} value={snba} onChange={(e) => setSnba(e.target.value)}/>
                 </div>
+            </div>
+            <div className='text-right mt-4'>
+                <Text>شماره کارت</Text>
+                <InputNumberic defaultValue={getDataBank?.card_number} className={`w-full mt-2`} value={kart} onChange={(e) => setKart(e.target.value)}/>
+            </div>
+            <div className='text-right mt-4'>
+                <Text>شماره حساب</Text>
+                <InputNumberic defaultValue={getDataBank?.shomare_hesab} className={`w-full mt-2`} value={hesab} onChange={(e) => setHesab(e.target.value)}/>
             </div>
         </GeneralModal>
         </>

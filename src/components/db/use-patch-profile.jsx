@@ -23,11 +23,15 @@ function usePatchProfile() {
             aboutUse,
             linkBannerOne,
             linkBannerTwo,
-            snba
+            snba,
+            hesab,
+            kart
         }) => {
         
             const data = JSON.stringify({
-                shomare_kart: snba,
+                shomare_shaba: snba,
+                shomare_hesab: hesab,
+                card_number: kart
 
             });
             // if (nameShop) data.append('name', nameShop);

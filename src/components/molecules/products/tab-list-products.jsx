@@ -191,7 +191,7 @@ function TabListProducts() {
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
-                {Array.isArray(data?.data) && data.data.length > 0 ? (
+                {Array.isArray(data?.data) && data.data?.length > 0 ? (
                     data.data.map((item, index) => (
                         <div className='border border-grayTitle rounded-2xl p-4' key={item?.id}>
                             <div className='flex gap-4'>
@@ -214,7 +214,7 @@ function TabListProducts() {
                             </div>
                             <div className='grid grid-cols-3 gap-3 mt-4'>
                                 <ButtonExisting 
-                                    onClick={() => handleEditProduct(item.id, item.exist)}
+                                    onClick={() => handleEditProduct(item.id, item?.exist)}
                                     className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
                                     >
                                         {item?.exist === true ? 'فعال' : 'غیر فعال'}

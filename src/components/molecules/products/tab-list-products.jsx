@@ -419,7 +419,7 @@ function TabListProducts() {
                         setPreview={setPreview}
                         className={`h-[155px] min-h-9 max-h-[155px] ${errors.image ? "border border-red-500" : ""}`}
                     />
-                    {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
+                    {errors?.image && <p className="text-red-500 text-xs mt-1">{errors?.image}</p>}
                     </div>
 
                     {/* توضیحات + خطا */}
@@ -428,12 +428,12 @@ function TabListProducts() {
                         value={descriptionEdit}
                         onChange={(e) => {
                         setDescriptionEdit(e.target.value);
-                        if (errors.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
+                        if (errors?.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
                         }}
-                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
+                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors?.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
                         placeholder='توضیحات'
                     />
-                    {errors.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors.descriptionEdit}</p>}
+                    {errors?.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors?.descriptionEdit}</p>}
                     </div>
                 </div>
 
@@ -445,12 +445,12 @@ function TabListProducts() {
                             value={nameEditProduct}
                             onChange={(e) => {
                             setNameEditProduct(e.target.value);
-                            if (errors.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                            if (errors?.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
                             }}
-                            className={`w-full mt-2 bg-transparent border ${errors.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
+                            className={`w-full mt-2 bg-transparent border ${errors?.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
                             placeholder="نام محصول"
                         />
-                        {errors.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors.nameEditProduct}</p>}
+                        {errors?.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.nameEditProduct}</p>}
                     </div>
                     <div>
                         <Text>نام عربی</Text>
@@ -460,10 +460,10 @@ function TabListProducts() {
                             setOmNameProduct(e.target.value);
                             if (errors.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
                             }}
-                            className={`w-full mt-2 bg-transparent border ${errors.omNameProduct ? "border-red-500" : "border-gray-300"}`}
+                            className={`w-full mt-2 bg-transparent border ${errors?.omNameProduct ? "border-red-500" : "border-gray-300"}`}
                             placeholder="نام عربی محصول"
                         />
-                        {errors.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors.omNameProduct}</p>}
+                        {errors?.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors?.omNameProduct}</p>}
                     </div>
 
                 </div>
@@ -475,16 +475,16 @@ function TabListProducts() {
                         <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
                         <Input
                         inputMode='numeric'
-                        value={priceEditProduct.toLocaleString('fa-IR')}
+                        value={priceEditProduct?.toLocaleString('fa-IR')}
                         placeholder='۳۰۰۰۰'
                         onChange={(e) => {
                             handleChange(e);
-                            if (errors.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
+                            if (errors?.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
                         }}
-                        className={`w-full mt-2 text-left bg-transparent border ${errors.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
+                        className={`w-full mt-2 text-left bg-transparent border ${errors?.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
                         />
                     </div>
-                    {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors.priceEditProduct}</p>}
+                    {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.priceEditProduct}</p>}
                 </div>
 
                 <div className='mt-4 grid grid-cols-2 gap-2'>

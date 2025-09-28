@@ -17,28 +17,36 @@ import Title from '../../atoms/title'
 import UseAddImagesProduct from '../../db/use-add-images-product'
 import useDeleteImageProduct from '../../db/use-delete-image-product'
 import InputNumberic from '../../atoms/input-numberic'
+import useGetCategory from '../../db/use-get-category'
+import useGetParentCategory from '../../db/use-get-parent-category'
 
 
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
+
     const { mutate: mutateDeleteImage } = useDeleteImageProduct();
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const products = Array.isArray(data) ? data : (Array.isArray(data?.results) ? data.results : []);
-    // console.log(products)
     const selectedItem = products?.find((it) => it?.id === selectIdProduct)
     // console.log(selectedItem)
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
-    const [selectorCategory, setSelectorCategory] = useState(selectedItem?.category_name);   
+    const [selectorCategory, setSelectorCategory] = useState(selectedItem?.category);   
     const [selectorState, setSelectorState] = useState('');  
     const [nameEditProduct, setNameEditProduct] = useState(selectedItem?.name)
     const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
     const [descriptionEdit, setDescriptionEdit] = useState(selectedItem?.details);
     const [offerEdit, setOfferEdit] = useState(selectedItem?.discount_percentage);
+
+    const [selectedParentId, setSelectedParentId] = useState('')
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState('')
+    const [subCategories, setSubCategories] = useState([])
+    const { data: parentCategories } = useGetCategory();
+    const { data: subCategoriesData } = useGetParentCategory(selectedParentId)
     
     const [idEdit, setIdEdit] = useState();
     const [inState, setInState] = useState(false);
@@ -55,11 +63,7 @@ function TabListProducts() {
     const [ selectedImage3, setSelectedImage3 ] = useState('');
     const [ previewImage3, setPreviewImage3 ] = useState(selectedItem?.image3);
 
-    const [ selectedImage4, setSelectedImage4 ] = useState('');
-    const [ previewImage4, setPreviewImage4 ] = useState('');
 
-    const [ selectedImage5, setSelectedImage5 ] = useState('');
-    const [ previewImage5, setPreviewImage5 ] = useState('');
     const [ productTol, setProductTol ] = useState(selectedItem?.tole);
     const [ productArz, setProductArz ] = useState(selectedItem?.arze);
     const [ productErtefa, setProductErtefa ] = useState(selectedItem?.ertefahe);
@@ -72,15 +76,34 @@ function TabListProducts() {
     const [isCheckedNon, setIsCheckedNon] = useState(false);
 
     useEffect(() => {
-    if (selectedItem) {
-        setIsCheckedAmazon(selectedItem.amazon ?? false);
-        setIsCheckedNon(selectedItem.non ?? false);
-        setIsCheckedSoqMaftoh(selectedItem.soghol_maftoh ?? false);
-    } else {
-        setIsCheckedAmazon(false);
-        setIsCheckedNon(false);
-        setIsCheckedSoqMaftoh(false);
-    }
+        if (selectedItem) {
+            setIsCheckedAmazon(selectedItem.amazon ?? false);
+            setIsCheckedNon(selectedItem.non ?? false);
+            setIsCheckedSoqMaftoh(selectedItem.soghol_maftoh ?? false);
+        } else {
+            setIsCheckedAmazon(false);
+            setIsCheckedNon(false);
+            setIsCheckedSoqMaftoh(false);
+        }
+    }, [selectedItem]);
+
+    useEffect(() => {
+        if (selectedItem) {
+            setSelectorCategory(selectedItem?.category)
+            setNameEditProduct(selectedItem?.name)
+            setPriceEditProduct(selectedItem?.price)
+            setDescriptionEdit(selectedItem?.details)
+            setOfferEdit(selectedItem?.discount_percentage)
+            setStockNumber(selectedItem?.stock)
+            setPreviewImage1(selectedItem?.image1)
+            setPreviewImage2(selectedItem?.image2)
+            setPreviewImage3(selectedItem?.image3)
+            setProductTol(selectedItem?.tole)
+            setProductArz(selectedItem?.arze)
+            setProductErtefa(selectedItem?.ertefahe)
+            setUnitWeigth(selectedItem?.unit_weight)
+            setWholPrice(selectedItem?.wholesale_price)
+        }
     }, [selectedItem]);
 
 
@@ -359,7 +382,7 @@ function TabListProducts() {
                     },
                 }}
             >
-                <div className='grid grid-cols-2 max-[640px]:grid-cols-1 gap-4'>
+                <div className='grid grid-cols-3 max-[640px]:grid-cols-1 gap-4'>
                     <div>
                         <div className='h-max max-[840px]:hidden'>
                             <Uploader
@@ -415,7 +438,8 @@ function TabListProducts() {
                             />
                         </div>
 
-                        <form className='mt-4 max-[640px]:!mt-0'>
+                        {/* selector */}
+                        {/* <form className='mt-4 max-[640px]:!mt-0'>
                             <div className='text-right mt-2 max-[640px]:hidden'>
                                 <Text>اجازه فروش در :</Text>
                                 
@@ -443,7 +467,7 @@ function TabListProducts() {
                                     </div>
                                 </div>
                             </div>
-                        </form>    
+                        </form>     */}
                     </div>
                     <div className='max-[640px]:h-[500px] max-[640px]:overflow-y-auto max-[640px]:overflow-x-hidden'>
                         
@@ -477,40 +501,6 @@ function TabListProducts() {
                             </div>
                         </div>
 
-                        {/* <div className='mt-4 grid grid-cols-1 gap-2'>
-                            <div>
-                                <Text className={`text-right mb-2`}>دسته بندی</Text>
-                                <Select
-                                    className='!outline-none !text-gray-400 !rounded-lg text-right w-full'
-                                    value={selectorCategory}
-                                    onChange={(e) => setSelectorCategory(e.target.value)}
-                                    displayEmpty
-                                    defaultValue={selectedItem?.category_name}
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    renderValue={(selected) => {
-                                        if (!selected) {
-                                        return <Text className="text-gray-400">{selectedItem?.category_name || 'دسته‌بندی را انتخاب کنید'}</Text>;
-                                        }
-                                        const selectedCategory = dataCategory?.find((item) => item?.id === selected);
-                                        return <Text>{selectedCategory?.name || selectedItem?.category_name || 'دسته‌بندی را انتخاب کنید'}</Text>;
-                                    }}
-                                    >
-                                        <MenuItem disabled value="" className=' !py-3'>
-                                            <Text className={`text-gray-400`}>
-                                               {selectedItem?.category_name}
-                                            </Text>
-                                        </MenuItem>
-                                        {dataCategory?.map((item) => (
-                                            <MenuItem key={item?.id} value={item?.id}>
-                                                <Text>
-                                                    {item?.name}
-                                                </Text>    
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </div>
-                        </div> */}
-
                         <div className='grid grid-cols-2 text-right mt-6 gap-2'>
                             <div>
                                 <Text className={`text-right`}>تخفیف</Text>
@@ -519,33 +509,6 @@ function TabListProducts() {
                                     <InputNumberic defaultValue={selectedItem?.discount_percentage} value={offerEdit} onChange={(e) => setOfferEdit(e.target.value)} className={`w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300`}/>
                                 </div>
                             </div>
-                            {/* <div>
-                                <Text className={`text-right mb-2`}>وضعیت محصول</Text>
-                                <Select
-                                    className='!outline-none bg-bgInput !text-gray-400 text-right !rounded-lg w-full mb-4'
-                                    value={selectorState || selectedItem?.exist}
-                                    onChange={(e) => setSelectorState(e.target.value)}
-                                    displayEmpty
-                                    defaultValue={selectedItem?.exist}
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    >
-                                        <MenuItem value="">
-                                            <Text className={`text-gray-400`}>
-                                                {selectedItem?.exist === true
-                                                    ? 'فعال'
-                                                    : selectedItem?.exist === false
-                                                    ? 'غیر فعال'
-                                                    : 'وضعیت نامشخص'
-                                                }
-                                            </Text>
-                                        </MenuItem>
-                                        {stateProduct?.map((item, index) => (
-                                            <MenuItem key={index} value={item.value}>
-                                                <Text>{item.label}</Text>
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                            </div> */}
                             <div>
                                 <Text>وزن واحد</Text>
                                 <div className='relative'>
@@ -656,10 +619,13 @@ function TabListProducts() {
                             </div>
                         </div>
                     </div>
+
+                    <div>
+                        2
+                    </div>
                 </div>
 
                 <textarea defaultValue={selectedItem?.details} value={descriptionEdit} onChange={(e) => setDescriptionEdit(e.target.value)} className='border bg-bgInput h-[130px] rounded-xl max-[640px]:hidden p-2 mt-4 w-full font-sans resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
-
             </GeneralModal>
         </div>
     )

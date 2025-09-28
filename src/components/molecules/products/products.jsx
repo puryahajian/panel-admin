@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import ButtonGeneral from '../../atoms/button-general';
 import TabListProducts from './tab-list-products';
 import TabCategory from './tab-category';
@@ -21,6 +21,8 @@ import useDeleteImageProduct from '../../db/use-delete-image-product';
 import UseAddImagesProduct from '../../db/use-add-images-product';
 import { toast } from 'react-toastify';
 import InputNumberic from '../../atoms/input-numberic';
+import useGetCategory from '../../db/use-get-category';
+import useGetParentCategory from '../../db/use-get-parent-category';
 
 
 function TabProduct({ children, step, index }) {
@@ -46,10 +48,19 @@ function Products() {
     const { mutate: mutateCreatedProduct, isPending } = useCreateProduct();
     const { mutate: mutateAddImage } = UseAddImagesProduct();
     const { data: dataCategory } = useGetProductCategory();
+    // console.log(dataCategory)
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState(null);
     const [ errCreate, setErrCreate ] = useState(null);
+    const [getParentId, setGetParentId] = useState(''); 
+
+    const [selectedParentId, setSelectedParentId] = useState('')
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState('')
+    const [subCategories, setSubCategories] = useState([])
+    const { data: parentCategories } = useGetCategory();
+    // console.log(parentCategories)
+    const { data: subCategoriesData } = useGetParentCategory(selectedParentId)
 
     const [preview, setPreview] = useState(null);
     const [ selectedFile, setSelectedFile ] = useState(null);
@@ -208,6 +219,36 @@ function Products() {
         setWholPrice(formatNumber(wholValue));
     };
 
+    useEffect(() => {
+        if (getParentId) {
+            setSelectedParentId(getParentId)
+        }
+    }, [getParentId]);
+
+    useEffect(() => {
+        if (subCategoriesData?.results) {
+        setSubCategories(subCategoriesData.results)
+        } else {
+        setSubCategories([])
+        }
+    }, [subCategoriesData])
+    
+    useEffect(() => {
+        if (selectedSubCategoryId) {
+        setSelectorCategory(selectedSubCategoryId)
+        } else if (selectedParentId) {
+        setSelectorCategory(selectedParentId)
+        } else {
+        setSelectorCategory('')
+        }
+    }, [selectedParentId, selectedSubCategoryId, setSelectorCategory])
+
+    const mainCategoriesOrder = useMemo(
+        () => parentCategories?.filter(item => item?.order !== 0) || [],
+        [parentCategories]
+    );
+    console.log(mainCategoriesOrder)
+
 
     return (
         <div>
@@ -262,23 +303,24 @@ function Products() {
                 }}
                 // title="آیا می یخواهید این محصول را حذف کنید ؟"
                 actionText={isPending ? <Loading/> : 'ذخیره'}
-                actionHandler={(e) => { 
-                    e.preventDefault()
-                    handleCreateProduct();
-                }}
-                classBtn={`mt-4`}
-                onClose={(e) => {
-                    e.preventDefault()
-                    setOpen(false)}
-                }
+                // actionHandler={(e) => { 
+                //     e.preventDefault()
+                //     handleCreateProduct();
+                // }}
+                classBtn={`hidden`}
+                // onClose={(e) => {
+                //     e.preventDefault()
+                //     setOpen(false)}
+                // }
                 sx={{
-                    width: '800px', 
+                    width: 'max-content',
+                    maxWidth: '900px', 
                     '@media (max-width: 840px)': {
                         width: '92%',
                     },
                 }}
             >
-                <div className='grid grid-cols-2 max-[840px]:grid-cols-1 gap-4'>
+                <div className='grid grid-cols-3 max-[840px]:grid-cols-1 gap-4 max-[840px]:h-[600px] max-[840px]:overflow-x-hidden max-[840px]:overflow-y-auto'>
                     <div className=''> 
                         <div className='h-max max-[840px]:hidden'>
                             <Text className={`text-right text-sm mb-1`}>سایز تصویر باید ۸۰۰ * ۸۰۰ پیکسل باشد</Text>
@@ -301,7 +343,7 @@ function Products() {
                                     preview={previewImage1}
                                     setPreview={setPreviewImage1}
                                     clssBtnDelete={`hidden`}
-                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                    className={`h-[70px] max-[840px]:h-[70px] max-[840px]:min-h-20 min-h-9 max-h-[70px]`}
                                 />
                                 <Uploader
                                     // textOne={`عکس محصول را انتخاب کنید`}
@@ -310,7 +352,7 @@ function Products() {
                                     preview={previewImage2}
                                     setPreview={setPreviewImage2}
                                     clssBtnDelete={`hidden`}
-                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                    className={`h-[70px] max-[840px]:h-[70px] max-[840px]:min-h-20 min-h-9 max-h-[70px]`}
                                 />
                                 <Uploader
                                     // textOne={`عکس محصول را انتخاب کنید`}
@@ -319,102 +361,66 @@ function Products() {
                                     preview={previewImage3}
                                     setPreview={setPreviewImage3}
                                     clssBtnDelete={`hidden`}
-                                    className={`h-[80px] max-[840px]:h-[80px] max-[840px]:min-h-20 min-h-9 max-h-[80px]`}
+                                    className={`h-[70px] max-[840px]:h-[70px] max-[840px]:min-h-20 min-h-9 max-h-[70px]`}
                                 />
                             </div>
 
-                            <div className='text-right mt-2 max-[840px]:hidden'>
-                                <Text>اجازه فروش در :</Text>
-                                
-                               <div className='grid grid-cols-3 max-[840px]:hidden'>
-                                    <div className='flex justify-start items-center gap-2 mt-2'>
-                                        <input type="checkbox" 
-                                            checked={isCheckedAmazon}
-                                            onChange={handleCheckboxChangeAmazon} 
-                                        />
-                                        <Text>آمازون</Text>
-                                    </div>
-                                    <div className='flex justify-start items-center gap-2 mt-2'>
-                                        <input type="checkbox" 
-                                            checked={isCheckedSoqMaftoh}
-                                            onChange={handleCheckboxChangeSoqMaftoh} 
-                                        />
-                                        <Text>سوق المفتوح</Text>
-                                    </div>
-                                    <div className='flex justify-start items-center gap-2 mt-2'>
-                                        <input type="checkbox" 
-                                            checked={isCheckedNon}
-                                            onChange={handleCheckboxChangeNon} 
-                                        />
-                                        <Text>نون</Text>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                       
-                    </div>
-                    <div className='max-[840px]:h-[500px] max-[840px]:overflow-x-hidden max-[840px]:overflow-y-auto'>  
-                        <div className='grid grid-cols-2 gap-4'>
-                            <div className='text-right'>
-                                <Text className={` mb-2`}>نام</Text>
-                                <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`نام محصول را وارد کنید`}/>
-                            </div>
-                            <div className='text-right'>
-                                <Text className={`mb-2`}>قیمت تکی</Text>
-                                <div className='relative'>
-                                    <p className='mt-[13px] mr-2 absolute font-sans text-xs'>تومان</p>
-                                    <InputNumberic value={priceProduct} onChange={handleChange} className={`w-full text-left ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`۳۰۰۰`}/>
-                                </div>
-                            </div>                    
-                        </div>
+                            <div className='text-right mt-2'>
+                                <Text>نام</Text>
+                                <Input value={nameProduct} onChange={(e) => setNameProduct(e.target.value)} className={`w-full mt-2 ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`نام محصول را وارد کنید`}/>
 
-                        <div className='grid grid-cols-2 text-right mt-6 gap-4'>
-                            <div>
-                                <Text>قیمت عمده</Text>
-                                <div className=' relative'>
-                                    <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
-                                    <InputNumberic value={wholPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} placeholder={`۳۰۰۰۰`} onChange={handleChangePriceNumber} className={`w-full mt-2 !bg-bgInput !text-left bg-transparent border border-gray-300`}/>
-                                </div>
-                            </div>
-                            <div>
-                                <Text>تعداد موجود</Text>
-                                <InputNumberic value={count} onChange={(e) => setCount(e.target.value)} className={`w-full !bg-bgInput !text-left mt-2 bg-transparent border border-gray-300`}/>
-                            </div>
-                        </div>
-
-                        <div className='grid grid-cols-2 text-right mt-6 gap-4'>
-                            <div>
-                                <Text className={`text-right`}>تخفیف</Text>
-                                <div className='relative mt-2'>
-                                    <p className='mt-[13px] mr-3 absolute font-sans text-sm'>٪</p>  
-                                    <InputNumberic value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20`}/>
-                                </div>
-                            </div>
-                            <div>
-                                <Text>وزن واحد</Text>
+                                <Text className={`mt-4`}>وزن واحد</Text>
                                 <div className='relative'>
                                     <p className='mt-[21px] mr-2 absolute font-sans text-xs'>gr</p>    
-                                    <InputNumberic value={unitWeigth} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 !bg-bgInput text-left bg-transparent`}/>
+                                    <InputNumberic value={unitWeigth} placeholder={`۳۰۰۰۰`} onChange={(e) => setUnitWeigth(e.target.value)} className={`w-full mt-2 text-left `}/>
                                 </div>
                             </div>
-                        </div>
+                        </form>   
+                    </div>
 
-                        <Text className={`text-right mt-5`}>ابعاد واحد cm</Text>
-                        <div className='grid grid-cols-3 text-right mt-2 gap-2'>
-                            <div className='relative'>
-                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>طول</p>    
-                                <InputNumberic value={productTol} placeholder={`20`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
-                            </div>
-                            <div className='relative'>
-                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>عرض</p>    
-                                <InputNumberic value={productArz} placeholder={`20`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
-                            </div>
-                            <div className='relative'>
-                                <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>ارتفاع</p>    
-                                <InputNumberic value={productErtefa} placeholder={`20`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left !bg-bgInput bg-transparent border border-gray-300`}/>
-                            </div>
-                        </div>
 
+                    <div>  
+                            
+                        <div className='text-right'>
+                            <Text className={`mb-2`}>قیمت تکی</Text>
+                            <div className='relative'>
+                                <p className='mt-[13px] mr-2 absolute font-sans text-xs'>تومان</p>
+                                <InputNumberic value={priceProduct} onChange={handleChange} className={`w-full text-left ${errCreate ? 'border !border-red-500' : ''}`} placeholder={`۳۰۰۰`}/>
+                            </div>
+
+                            <Text className={`mt-7`}>قیمت عمده</Text>
+                            <div className=' relative'>
+                                <p className='mt-[22px] mr-2 absolute font-sans text-xs'>تومان</p>    
+                                <InputNumberic value={wholPrice?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} placeholder={`۳۰۰۰۰`} onChange={handleChangePriceNumber} className={`w-full mt-2 !text-left bg-transparent border border-gray-300`}/>
+                            </div>
+
+                            <div className='mt-7'>
+                                <Text>تعداد موجود</Text>
+                                <InputNumberic value={count} onChange={(e) => setCount(e.target.value)} className={`w-full !text-left mt-2 bg-transparent border border-gray-300`}/>
+                            </div>
+
+                            <Text className={`text-right mt-7`}>تخفیف</Text>
+                            <div className='relative mt-2'>
+                                <p className='mt-[13px] mr-3 absolute font-sans text-sm'>٪</p>  
+                                <InputNumberic value={offer} onChange={(e) => setOffer(e.target.value)} className={`w-full text-left`} placeholder={`20`}/>
+                            </div>
+
+                            <Text className={`text-right mt-7`}>ابعاد واحد cm</Text>
+                            <div className='grid grid-cols-3 text-right mt-2 gap-2'>
+                                <div className='relative'>
+                                    <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>طول</p>    
+                                    <InputNumberic value={productTol} placeholder={`20`} onChange={(e) => setProductTol(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                </div>
+                                <div className='relative'>
+                                    <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>عرض</p>    
+                                    <InputNumberic value={productArz} placeholder={`20`} onChange={(e) => setProductArz(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                </div>
+                                <div className='relative'>
+                                    <p className='!mt-[16px] mr-2 absolute font-sans text-xs'>ارتفاع</p>    
+                                    <InputNumberic value={productErtefa} placeholder={`20`} onChange={(e) => setProductErtefa(e.target.value)} className={`w-full text-left bg-transparent border border-gray-300`}/>
+                                </div>
+                            </div>
+                        </div>                    
 
                         <div className='max-[840px]:block mt-6 hidden'>
                             <div className='max-[840px]:mb-4'>
@@ -459,8 +465,6 @@ function Products() {
                             />
                         </div>
 
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border h-[130px] bg-bgInput w-full font-sans hidden max-[840px]:block rounded-xl p-2 my-4 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
-
                         <div className='text-right my-6 hidden max-[840px]:block'>
                             <Text>اجازه فروش در :</Text>
                             
@@ -489,9 +493,110 @@ function Products() {
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <div>
+                            <Text className='text-right mb-2'> دسته بندی اصلی</Text>
+                            <FormControl className='w-full'>
+                                <Select
+                                    className='!outline-none !rounded-lg text-right w-full'
+                                    value={selectedParentId}
+                                    onChange={(e) => {
+                                        setSelectedParentId(e.target.value)
+                                        setSelectedSubCategoryId('')
+                                    }}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
+                                    >
+                                    <MenuItem value="" className='!py-3'>
+                                        <Text className='text-gray-400'>
+                                        انتخاب کنید
+                                        </Text>
+                                    </MenuItem>
+                                    {mainCategoriesOrder.map(item => (
+                                        <MenuItem className='!font-sans !text-[12px]' key={item.id} value={item.id}>
+                                            <Text>{item.name}</Text>
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        <div className='mt-7'>
+                            <Text className='text-right mb-2'>زیر دسته بندی</Text>
+                            <FormControl className='w-full' >
+                                <Select
+                                    className='!outline-none !rounded-lg text-right w-full'
+                                    value={selectedSubCategoryId}
+                                    onChange={(e) => setSelectedSubCategoryId(e.target.value)}
+                                    // displayEmpty
+                                    // inputProps={{ 'aria-label': 'Without label' }}
+                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
+                                    >
+                                    <MenuItem value="" className='!py-3'>
+                                        <Text className='text-gray-400'>
+                                        انتخاب کنید
+                                        </Text>
+                                    </MenuItem>
+                                    {parentCategories
+                                        ?.filter(sub => sub.parent === selectedParentId) // فقط زیرمجموعه‌های parent انتخاب‌شده
+                                        ?.map(sub => (
+                                            <MenuItem key={sub.id} value={sub.id}>
+                                                <Text>{sub.name}</Text>
+                                            </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border border-gray-300 h-[280px] w-full font-sans rounded-xl p-2 mt-7 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+
+                    </div>
 
                 </div>
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border h-[130px] bg-bgInput w-full font-sans max-[840px]:hidden rounded-xl p-2 mt-4 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+                
+                <div className='grid grid-cols-2 max-[840px]:grid-cols-1 gap-4 mt-4'>
+                    <div className='max-[840px]:hidden'>
+                        {/* اجازه فروش */}
+                        <div className='text-right max-[840px]:hidden'>
+                            <Text>اجازه فروش در :</Text>
+                            
+                            <div className='grid grid-cols-3 max-[840px]:hidden'>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedAmazon}
+                                        onChange={handleCheckboxChangeAmazon} 
+                                    />
+                                    <Text>آمازون</Text>
+                                </div>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedSoqMaftoh}
+                                        onChange={handleCheckboxChangeSoqMaftoh} 
+                                    />
+                                    <Text>سوق المفتوح</Text>
+                                </div>
+                                <div className='flex justify-start items-center gap-2 mt-2'>
+                                    <input type="checkbox" 
+                                        checked={isCheckedNon}
+                                        onChange={handleCheckboxChangeNon} 
+                                    />
+                                    <Text>نون</Text>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='flex gap-2'>
+                        <ButtonGeneral className={`bg-customBlue text-white border-none w-full`} onClick={(e) => {
+                            e.preventDefault()
+                            handleCreateProduct()
+                            }}>ذخیره</ButtonGeneral> 
+                        <ButtonGeneral className={` border border-red-600 text-red-600 w-full`} variant="outlined" onClick={(e) => {
+                            e.preventDefault()
+                            setOpen(false)
+                        }}>خیر</ButtonGeneral> 
+                    </div>
+                </div>
             </GeneralModal>
 
             <GeneralModal

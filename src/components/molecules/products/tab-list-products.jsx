@@ -131,12 +131,13 @@ function TabListProducts() {
     };
     
     const handleEditProduct = (idEdit, currentExist) => {
+        console.log(selectedSubCategoryId)
         const newValue = !currentExist;
         setInState(newValue);
 
         mutatePatchProduct(
             { 
-                idEdit, selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue, omNameProduct
+                idEdit, selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue, omNameProduct
             },    
         );
 

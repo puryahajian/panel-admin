@@ -8,7 +8,7 @@ function usePatchProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idEdit, omNameProduct,selectorCategory, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
+        mutationFn: async ({ idEdit, omNameProduct,selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
             
             const formData = new FormData();
 
@@ -23,7 +23,7 @@ function usePatchProduct() {
                 formData.append('price', priceEditProduct);
             }
 
-            if (selectorCategory) formData.append('category_id', selectorCategory);
+            if (selectedSubCategoryId) formData.append('category', selectedSubCategoryId);
 
             if (selectorState !== '') {
                 formData.append('exist', selectorState);

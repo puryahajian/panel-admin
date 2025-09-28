@@ -37,7 +37,7 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
             {!(localPreview || preview) && (
                 <div className='grid gap-2 w-full m-auto p-2 rounded-lg'>
                     <img src={iconImage} className="m-auto" alt="" />
-                    <Title>{textOne}</Title>
+                    <Title className={`text-[11px] max-[480px]:text-[16px]`}>{textOne}</Title>
                     <Title>{textTwo}</Title>
                 </div>
             )}

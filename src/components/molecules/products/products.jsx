@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import ButtonGeneral from '../../atoms/button-general';
 import TabListProducts from './tab-list-products';
 import TabCategory from './tab-category';
@@ -19,6 +19,8 @@ import Loading from '../../atoms/loading';
 import '../../../App.css'
 import useGetAllCategory from '../../db/use-get-all-category';
 import Rial from '../../../assets/image/Frame.png'
+import useGetParentCategory from '../../db/use-get-parent-category';
+import useGetCategory from '../../db/use-get-category';
 
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 // import clsx from 'clsx'
@@ -44,8 +46,17 @@ function Products() {
     const [open, setOpen] = useState(false);
     const {mutate, isLoading} = useCreateCategory();
     const { mutate: mutateCreatedProduct , isLoading: isLoadingCreateProduct } = useCreateProduct();
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState('');
+    const [selectedParentId, setSelectedParentId] = useState('');
+    const [getIdSubCategory, setGetIdSubCategory] = useState('');
+    const [subCategories, setSubCategories] = useState([]);
+    const { data: parentCategories } = useGetCategory();
+    const { data: parentSubCategories } = useGetParentCategory(selectedParentId);
+    const { data: subSubCategories } = useGetParentCategory(selectedSubCategoryId);
+
+
     const [priority, setPriority] = useState();
-    const { data: dataCategory } = useGetAllCategory();
+    // const { data: dataCategory } = useGetAllCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -53,6 +64,7 @@ function Products() {
     const [previewProduct, setPreviewProduct] = useState();
     const [nameProduct, setNameProduct] = useState();
     const [omNameProduct, setOmNameProduct] = useState();
+    const [sku, setSku] = useState();
 
     const [priceProduct, setPriceProduct] = useState();
     const [gregorianBirthDay, setGregorianBirthDay] = useState("");
@@ -64,6 +76,29 @@ function Products() {
     const [nameCategoryPersian, setNameCategoryPersian] = useState();
     const [errors, setErrors] = useState({});
 
+
+    useEffect(() => {
+        let combined = [];
+        if (parentSubCategories?.results) combined = [...parentSubCategories.results];
+        if (subSubCategories?.results) combined = [...combined, ...subSubCategories.results];
+        setSubCategories(combined);
+    }, [parentSubCategories, subSubCategories]);
+
+    useEffect(() => {
+        if (selectedSubCategoryId) {
+            setSelectorCategory(selectedSubCategoryId);
+        } else if (selectedParentId) {
+            setSelectorCategory(selectedParentId);
+        } else {
+            setSelectorCategory(null);
+        }
+    }, [selectedParentId, selectedSubCategoryId]);
+
+    const mainCategoriesOrder = useMemo(
+        () => parentCategories?.filter(item => item?.order !== 0) || [],
+        [parentCategories]
+    );
+
     const Buttons = [
         {label: "لیست محصولات" },
         {label: "دسته بندی ها" },
@@ -73,7 +108,10 @@ function Products() {
     const handleSendCategory = () => {
         mutate(
             { 
-                nameCategory, selectedCategory, nameCategoryPersian, priority
+                nameCategory, 
+                selectedCategory, 
+                nameCategoryPersian, 
+                priority
             },
             {
                 onSettled: (data) => {
@@ -86,8 +124,23 @@ function Products() {
         // console.log(gregorianBirthDay)
         mutateCreatedProduct(
             {
-                bgProduct,omNameProduct, nameProduct, priceProduct, selectorCategory, unitName,offer, description, gregorianBirthDay
-            }
+                bgProduct,
+                omNameProduct, 
+                nameProduct, 
+                priceProduct, 
+                selectorCategory, 
+                unitName,
+                offer, 
+                description, 
+                gregorianBirthDay,
+                sku,
+                getIdSubCategory
+            },
+            // {
+            //     onSuccess: (data) => {
+            //         console.log(data)
+            //     }
+            // }
         )
     }
 
@@ -121,13 +174,26 @@ function Products() {
         if (!nameProduct) newErrors.nameProduct = "نام محصول الزامی است";
         if (!omNameProduct) newErrors.omNameProduct = "نام محصول الزامی است";
         if (!priceProduct) newErrors.priceProduct = "قیمت الزامی است";
-        if (!unitName) newErrors.unitName = "نام واحد الزامی است";
+        // if (!unitName) newErrors.unitName = "نام واحد الزامی است";
         if (!selectorCategory) newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
         if (!description) newErrors.description = "توضیحات الزامی است";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // اگه خطا نداشت true برگردون
     };
+
+    const handleParentChange = (e) => {
+        const selectedId = e.target.value;
+        setSelectedParentId(selectedId);
+        setSelectedSubCategoryId(''); 
+    };
+
+    const handleSubCategoryChange = (e) => {
+        setSelectedSubCategoryId(e.target.value);
+    };
+    // console.log(getIdSubCategory)
+
+
 
 
     return (
@@ -198,26 +264,26 @@ function Products() {
                     setErrors({});
                 }}
                 sx={{
-                    width: '500px', 
+                    width: 'max-content', 
                     '@media (max-width: 600px)': {
                     width: '92%',
                     },
                 }}
                 >
-                    <div className='text-right'>
-                        <div className='grid grid-cols-2 max-[1037px]:grid-cols-1 gap-4'>
+                    <div className='text-right grid grid-cols-2 gap-4 max-[480px]:grid-cols-1 max-[480px]:h-[600px] max-[480px]:overflow-y-auto'>
+                        <div className='grid grid-cols-1 max-[1037px]:grid-cols-1 gap-4'>
                             {/* Uploader + پیام خطا */}
                             <div>
                                 <Uploader
-                                textOne={`تصویر محصول را آپلود کنید`}
-                                selectedFile={bgProduct}
-                                onFileSelect={(file) => {
-                                    setBgProduct(file);
-                                    setErrors(prev => ({ ...prev, bgProduct: undefined }));
-                                }}
-                                preview={previewProduct}
-                                setPreview={setPreviewProduct}
-                                className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
+                                    textOne={`تصویر محصول را آپلود کنید`}
+                                    selectedFile={bgProduct}
+                                    onFileSelect={(file) => {
+                                        setBgProduct(file);
+                                        setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                    }}
+                                    preview={previewProduct}
+                                    setPreview={setPreviewProduct}
+                                    className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
                                 />
                                 {errors.bgProduct && (
                                     <Text className="text-red-500 text-xs mt-1">{errors.bgProduct}</Text>
@@ -227,106 +293,124 @@ function Products() {
                             {/* توضیحات + پیام خطا */}
                             <div>
                                 <textarea
-                                value={description}
-                                onChange={(e) => {
-                                    setDescription(e.target.value);
-                                    if (errors.description) setErrors(prev => ({ ...prev, description: undefined }));
-                                }}
-                                className={`border bg-bgInput font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[200px] ${errors.description ? "border-red-500" : ""}`}
-                                placeholder='توضیحات'
+                                    value={description}
+                                    onChange={(e) => {
+                                        setDescription(e.target.value);
+                                        if (errors.description) setErrors(prev => ({ ...prev, description: undefined }));
+                                    }}
+                                    className={`border bg-bgInput font-sans rounded-xl p-2 resize-none text-[12px] max-[680px]:text-[16px] outline-none placeholder:text-gray-400 w-full h-[200px] ${errors.description ? "border-red-500" : ""}`}
+                                    placeholder='توضیحات'
                                 />
                                 {errors.description && (
                                     <Text className="text-red-500 text-xs mt-1">{errors.description}</Text>
                                 )}
                             </div>
                         </div>
+                        <div>
+                            <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1 '>
+                                {/* نام + پیام خطا */}
+                                <div className='text-right'>
+                                    <Text className={`mb-2`}>نام</Text>
+                                    <Input
+                                    value={nameProduct}
+                                    onChange={(e) => {
+                                        setNameProduct(e.target.value);
+                                        if (errors.nameProduct) setErrors(prev => ({ ...prev, nameProduct: undefined }));
+                                    }}
+                                    className={`w-full ${errors.nameProduct ? "border border-red-500" : ""}`}
+                                    placeholder={`نام محصول را وارد کنید`}
+                                    />
+                                    {errors.nameProduct && (
+                                        <Text className="text-red-500 text-xs mt-1">{errors.nameProduct}</Text>
+                                    )}
+                                </div>
 
-                        <div className='grid grid-cols-2 gap-4'>
-                            {/* نام + پیام خطا */}
-                            <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>نام</Text>
-                                <Input
-                                value={nameProduct}
-                                onChange={(e) => {
-                                    setNameProduct(e.target.value);
-                                    if (errors.nameProduct) setErrors(prev => ({ ...prev, nameProduct: undefined }));
-                                }}
-                                className={`w-full ${errors.nameProduct ? "border border-red-500" : ""}`}
-                                placeholder={`نام محصول را وارد کنید`}
-                                />
-                                {errors.nameProduct && (
-                                    <Text className="text-red-500 text-xs mt-1">{errors.nameProduct}</Text>
-                                )}
+                                <div className='text-right'>
+                                    <Text className={`mb-2`}>نام عربی</Text>
+                                    <Input
+                                    value={omNameProduct}
+                                    onChange={(e) => {
+                                        setOmNameProduct(e.target.value);
+                                        if (errors.omNameProduct) setErrors(prev => ({ ...prev, omNameProduct: undefined }));
+                                    }}
+                                    className={`w-full ${errors.omNameProduct ? "border border-red-500" : ""}`}
+                                    placeholder={`نام محصول را به عربی وارد کنید`}
+                                    />
+                                    {errors.omNameProduct && (
+                                        <Text className="text-red-500 text-xs mt-1">{errors.omNameProduct}</Text>
+                                    )}
+                                </div>
+
                             </div>
 
-                            <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>نام عربی</Text>
-                                <Input
-                                value={omNameProduct}
-                                onChange={(e) => {
-                                    setOmNameProduct(e.target.value);
-                                    if (errors.omNameProduct) setErrors(prev => ({ ...prev, omNameProduct: undefined }));
-                                }}
-                                className={`w-full ${errors.omNameProduct ? "border border-red-500" : ""}`}
-                                placeholder={`نام محصول را به عربی وارد کنید`}
-                                />
-                                {errors.omNameProduct && (
-                                    <Text className="text-red-500 text-xs mt-1">{errors.omNameProduct}</Text>
-                                )}
+                            <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1'>
+                                {/* قیمت + پیام خطا */}
+                                <div className='text-right relative'>
+                                    <Text className={`mt-4 mb-2`}>قیمت</Text>
+                                    <div>
+                                        <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' />
+                                        <Input
+                                            value={priceProduct}
+                                            onChange={handleChange}
+                                            className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
+                                            placeholder={`۳,۰۰۰`}
+                                        />
+                                    </div>
+                                    {errors.priceProduct && (
+                                        <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>
+                                    )}
+                                </div>
+
+                                <div className='text-right'>
+                                    <Text className={`mt-4 mb-2`}>کد محصول</Text>
+                                    <Input
+                                    value={sku}
+                                    onChange={(e) => {
+                                        setSku(e.target.value);
+                                        // if (errors.omNameProduct) setErrors(prev => ({ ...prev, omNameProduct: undefined }));
+                                    }}
+                                    className={`w-full ${errors.omNameProduct ? "border border-red-500" : ""}`}
+                                    placeholder={`کد محصول را وارد کنید`}
+                                    />
+                                    {/* {errors.omNameProduct && (
+                                        <Text className="text-red-500 text-xs mt-1">{errors.omNameProduct}</Text>
+                                    )} */}
+                                </div>
                             </div>
 
-                        </div>
+                            <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1'>
+                                {/* نام واحد + پیام خطا */}
+                                <div className='text-right'>
+                                    <Text className={`mt-4 mb-2`}>نام واحد</Text>
+                                    <Input
+                                    value={unitName}
+                                    onChange={(e) => {
+                                        setUnitName(e.target.value);
+                                        // if (errors.unitName) setErrors(prev => ({ ...prev, unitName: undefined }));
+                                    }}
+                                    className={`w-full ${errors.unitName ? "border border-red-500" : ""}`}
+                                    placeholder={`نام واحد را وارد کنید`}
+                                    />
+                                    {/* {errors.unitName && (
+                                        <Text className="text-red-500 text-xs mt-1">{errors.unitName}</Text>
+                                    )} */}
+                                </div>
 
-                        {/* قیمت + پیام خطا */}
-                        <div className='text-right'>
-                            <Text className={`mt-4 mb-2`}>قیمت</Text>
-                            <div>
-                            <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' />
-                            <Input
-                                value={priceProduct}
-                                onChange={handleChange}
-                                className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
-                                placeholder={`۳۰۰۰`}
-                            />
-                            </div>
-                            {errors.priceProduct && (
-                                <Text className="text-red-500 text-xs mt-1">{errors.priceProduct}</Text>
-                            )}
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-4'>
-                            {/* نام واحد + پیام خطا */}
-                            <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>نام واحد</Text>
-                                <Input
-                                value={unitName}
-                                onChange={(e) => {
-                                    setUnitName(e.target.value);
-                                    if (errors.unitName) setErrors(prev => ({ ...prev, unitName: undefined }));
-                                }}
-                                className={`w-full ${errors.unitName ? "border border-red-500" : ""}`}
-                                placeholder={`نام واحد را وارد کنید`}
-                                />
-                                {errors.unitName && (
-                                    <Text className="text-red-500 text-xs mt-1">{errors.unitName}</Text>
-                                )}
+                                {/* تخفیف - اختیاری (بدون خطا) */}
+                                <div className='text-right'>
+                                    <Text className={`mt-4 mb-2`}>تخفیف</Text>
+                                    <Input
+                                    value={offer}
+                                    onChange={(e) => setOffer(e.target.value)}
+                                    className={`w-full text-left`}
+                                    placeholder={`20%`}
+                                    />
+                                </div>
                             </div>
 
-                            {/* تخفیف - اختیاری (بدون خطا) */}
-                            <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>تخفیف</Text>
-                                <Input
-                                value={offer}
-                                onChange={(e) => setOffer(e.target.value)}
-                                className={`w-full text-left`}
-                                placeholder={`20%`}
-                                />
-                            </div>
-                        </div>
 
-                        <div className='w-full gap-4'>
                             <div className='text-right'>
-                                <Text className={`mt-4 mb-2`}>دسته بندی</Text>
+                                <Text className={`mt-4 mb-2`}>دسته بندی اصلی</Text>
                                 <FormControl
                                     sx={{ minWidth: 120, outline: 'none' }}
                                     className='w-full bg-bgInput !outline-none rounded-lg'
@@ -334,46 +418,98 @@ function Products() {
                                     >
                                     <Select
                                         className='!outline-none rounded-lg'
-                                        value={selectorCategory || ""}
-                                        onChange={(e) => {
-                                            setSelectorCategory(e.target.value);
-                                            if (errors.selectorCategory) setErrors(prev => ({ ...prev, selectorCategory: undefined }));
-                                        }}
+                                        value={selectedParentId || ""}
+                                        onChange={handleParentChange}
                                         displayEmpty
                                         inputProps={{ 'aria-label': 'Without label' }}
                                         sx={{
-                                        '& .MuiSelect-select': {
-                                            padding: '10px 14px',
-                                            outline: 'none',
-                                            borderRadius: '8px'
-                                        },
-                                        // Round the input root in all states
-                                        '& .MuiOutlinedInput-root': {
-                                            borderRadius: '8px',
-                                        },
-                                        // Remove the outlined border in all states
-                                        '& .MuiOutlinedInput-notchedOutline': {
-                                            border: 'none !important',
-                                        },
-                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                            border: 'none !important',
-                                        },
-                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                            border: 'none !important',
-                                        },
-                                        // Remove focus ring/box-shadow if any
-                                        '& .MuiOutlinedInput-root.Mui-focused': {
-                                            boxShadow: 'none',
-                                        }
+                                            '& .MuiSelect-select': {
+                                                padding: '10px 14px',
+                                                outline: 'none',
+                                                borderRadius: '8px'
+                                            },
+                                            // Round the input root in all states
+                                            '& .MuiOutlinedInput-root': {
+                                                borderRadius: '8px',
+                                            },
+                                            // Remove the outlined border in all states
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            // Remove focus ring/box-shadow if any
+                                            '& .MuiOutlinedInput-root.Mui-focused': {
+                                                boxShadow: 'none',
+                                            }
                                         }}
                                     >
                                         <MenuItem value="">
-                                            <Text>دسته بندی را انتخاب کنید</Text>
+                                            <Text>دسته بندی اصلی را انتخاب کنید</Text>
                                         </MenuItem>
-                                        {Array.isArray(dataCategory?.data) &&
-                                        dataCategory?.data?.map((item) => (
-                                            <MenuItem key={item?.id} value={item?.id}>
-                                            <Text>{item?.name}</Text>
+                                        {mainCategoriesOrder.map(item => (
+                                            <MenuItem className='!font-sans !text-[12px]' key={item.id} value={item.id}>
+                                                {item.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                {errors.selectorCategory && (
+                                    <Text className="text-red-500 text-xs mt-1">{errors.selectorCategory}</Text>
+                                )}
+                            </div>
+
+                            <div className='text-right'>
+                                <Text className={`mt-4 mb-2`}>زیر دسته بندی</Text>
+                                <FormControl
+                                    sx={{ minWidth: 120, outline: 'none' }}
+                                    className='w-full bg-bgInput !outline-none rounded-lg'
+                                    error={Boolean(errors.selectorCategory)}
+                                    >
+                                    <Select
+                                        className='!outline-none rounded-lg'
+                                        value={selectedSubCategoryId || ""}
+                                        onChange={handleSubCategoryChange}
+                                        displayEmpty
+                                        inputProps={{ 'aria-label': 'Without label' }}
+                                        sx={{
+                                            '& .MuiSelect-select': {
+                                                padding: '10px 14px',
+                                                outline: 'none',
+                                                borderRadius: '8px'
+                                            },
+                                            // Round the input root in all states
+                                            '& .MuiOutlinedInput-root': {
+                                                borderRadius: '8px',
+                                            },
+                                            // Remove the outlined border in all states
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none !important',
+                                            },
+                                            // Remove focus ring/box-shadow if any
+                                            '& .MuiOutlinedInput-root.Mui-focused': {
+                                                boxShadow: 'none',
+                                            }
+                                        }}
+                                    >
+                                        <MenuItem value="">
+                                            <Text> زیر دسته بندی را انتخاب کنید</Text>
+                                        </MenuItem>
+                                        {Array.isArray(subCategories) && subCategories.map((item) => (
+                                            <MenuItem 
+                                                onClick={() => setGetIdSubCategory(item?.id)}
+                                                key={item?.id} value={item?.id}>
+                                                {item?.name}
                                             </MenuItem>
                                         ))}
                                     </Select>

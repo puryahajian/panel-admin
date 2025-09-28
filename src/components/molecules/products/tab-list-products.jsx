@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import Text from '../../atoms/text'
 import ButtonExisting from '../../atoms/button-existing'
 import ButtonEdit from '../../atoms/button-edit'
@@ -18,29 +18,41 @@ import { FormControl, Tooltip } from '@mui/material'
 import { toast } from 'react-toastify'
 import Rial from '../../../assets/image/Frame.png'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import useGetParentCategory from '../../db/use-get-parent-category'
+import useGetCategory from '../../db/use-get-category'
+
 
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
     const { data } = useGetAllProducts();
     // console.log(data)
     const { data: dataCategory } = useGetProductCategory();
-    // console.log(dataCategory)
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const selectedItem = Array.isArray(data?.data)
         ? data?.data?.find((it) => it?.id === selectIdProduct)
         : null;
         // console.log(selectedItem)
+    
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
-    const [selectorCategory, setSelectorCategory] = useState(selectedItem?.category_name);   
+    const [selectorCategory, setSelectorCategory] = useState(selectedItem?.category);   
     const [selectorState, setSelectorState] = useState('');  
+    const [getParentId, setGetParentId] = useState(''); 
     const [nameEditProduct, setNameEditProduct] = useState(selectedItem?.name)
     const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price);
     const [descriptionEdit, setDescriptionEdit] = useState(selectedItem?.details);
     const [offerEdit, setOfferEdit] = useState(selectedItem?.discount_percentage);
+
+    const [selectedParentId, setSelectedParentId] = useState('')
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState('')
+    const [subCategories, setSubCategories] = useState([])
+    const { data: parentCategories } = useGetCategory();
+    const { data: subCategoriesData } = useGetParentCategory(selectedParentId)
+    
     const [omNameProduct, setOmNameProduct] = useState();
+    const [sku, setSku] = useState(selectedItem?.sku);
     
     const [idEdit, setIdEdit] = useState();
     const [inState, setInState] = useState(false);
@@ -55,22 +67,52 @@ function TabListProducts() {
 
    useEffect(() => {
         if (selectedItem) {
+            // console.log(selectedItem)
             setNameEditProduct(selectedItem?.name || '');
             setPriceEditProduct(selectedItem?.price || '');
             setOmNameProduct(selectedItem?.om_name || '');
             setDescriptionEdit(selectedItem?.details || '');
             setOfferEdit(selectedItem?.discount_percentage || '');
-            setSelectorCategory(selectedItem?.category ? String(selectedItem?.category) : ''); // category id را string کن
+            setSku(selectedItem?.sku || '');
+            setSelectorCategory(selectedItem?.category || ''); 
             setSelectorState(
                 selectedItem?.exist !== undefined
-                    ? String(selectedItem?.exist)  // تبدیل boolean به string برای select
+                    ? String(selectedItem?.exist) 
                     : ''
             );
             setPreview(selectedItem?.image || null);
         }
     }, [selectedItem]);
 
+    useEffect(() => {
+        if (getParentId) {
+            setSelectedParentId(getParentId)
+        }
+    }, [getParentId]);
+
+    useEffect(() => {
+        if (subCategoriesData?.results) {
+        setSubCategories(subCategoriesData.results)
+        } else {
+        setSubCategories([])
+        }
+    }, [subCategoriesData])
     
+    useEffect(() => {
+        if (selectedSubCategoryId) {
+        setSelectorCategory(selectedSubCategoryId)
+        } else if (selectedParentId) {
+        setSelectorCategory(selectedParentId)
+        } else {
+        setSelectorCategory('')
+        }
+    }, [selectedParentId, selectedSubCategoryId, setSelectorCategory])
+
+    const mainCategoriesOrder = useMemo(
+        () => parentCategories?.filter(item => item?.order !== 0) || [],
+        [parentCategories]
+    );
+        
     const stateProduct = [
         { label: 'فعال', value: 'true' },
         { label: 'غیرفعال', value: 'false' }
@@ -162,6 +204,16 @@ function TabListProducts() {
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleParentChange = (e) => {
+        const selectedId = e.target.value;
+        setSelectedParentId(selectedId);
+        setSelectedSubCategoryId(''); 
+    };
+
+    // const handleSubCategoryChange = (e) => {
+    //     setSelectedSubCategoryId(e.target.value);
+    // };
+
     return (
         <div className='mt-0 px-4 max-[1024px]:mt-[24px]'>
             <div className='flex items-center max-[992px]:hidden'>
@@ -176,7 +228,7 @@ function TabListProducts() {
             </div>
 
             <div className='grid gap-2'>
-                {Array.isArray(data?.data) && data?.data?.length > 0 ? (
+                {Array.isArray(data?.data) && data.data?.length > 0 ? (
                     data?.data?.slice(0, displayCount).map((item, index) => (
                         <div 
                             className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' 
@@ -238,6 +290,20 @@ function TabListProducts() {
                                             setIdEdit(item);
                                             setOpenEdit(true);
                                             setSelectIdProduct(item?.id);
+                                            const category = dataCategory?.data?.find(cat => cat.id === item?.category);
+                                            if (category) {
+                                                const parentId = category?.parent;
+                                                setGetParentId(parentId);
+
+                                                const mainCat = mainCategoriesOrder?.find(cat => cat.id === parentId);
+                                                if (mainCat) {
+                                                    setSelectedParentId(mainCat.id);  // فعال کردن دسته‌بندی اصلی
+                                                }
+
+                                                // همچنین زیر دسته‌بندی را ست کن (در صورت وجود)
+                                                setSelectedSubCategoryId(category.id);
+
+                                            }
                                         }}>
                                             ویرایش
                                     </ButtonEdit>
@@ -281,6 +347,7 @@ function TabListProducts() {
                         <div 
                             className='border border-grayTitle rounded-2xl p-4' 
                             key={item?.id}
+                            ref={index === displayCount - 1 ? lastElementRef : null}
                         >
                             <div className='flex gap-4'>
                                 <img 
@@ -295,7 +362,7 @@ function TabListProducts() {
                                 <div className='w-full grid gap-1'>
                                     <div className='flex justify-between items-center'>
                                         <Title>دسته بندی :</Title>
-                                        <Text>{item?.category_name}</Text>
+                                        <Text>{item?.category_name ? item?.category_name : 'ندارد'}</Text>
                                     </div>
                                     <div className='flex justify-between items-center'>
                                         <Title>کد محصول :</Title>
@@ -303,11 +370,14 @@ function TabListProducts() {
                                     </div>
                                     <div className='flex justify-between items-center'>
                                         <Title>محصول :</Title>
-                                        <Text>{item?.name}</Text>
+                                        <Text className={`truncate w-max max-w-[150px]`}>{item?.name}</Text>
                                     </div>
                                     <div className='flex justify-between items-center'>
                                         <Title>قیمت :</Title>
-                                        <Text>{item?.price?.toLocaleString('fa-IR')} تومان</Text>
+                                        <Text className={`flex items-center`}>
+                                            {item?.price?.toLocaleString('fa-IR')} 
+                                            <img src={Rial}/>
+                                        </Text>
                                     </div>
                                 </div>
                             </div>
@@ -380,6 +450,8 @@ function TabListProducts() {
                 }}
             />
 
+
+            {/* ویرایش محصول */}
             <GeneralModal
                 open={openEdit}
                 handleClose={(e) => {
@@ -399,166 +471,212 @@ function TabListProducts() {
                     e.preventDefault();
                     setOpenEdit(false);
                     setErrors({});
+                    setSelectedParentId('')
                 }}
                 sx={{
-                    width: '500px', 
+                    width: 'max-content', 
                     '@media (max-width: 600px)': { width: '92%' },
                 }}
                 >
-                <div className='grid grid-cols-2 max-[550px]:grid-cols-1 gap-4'>
-                    {/* آپلودر + خطا */}
-                    <div>
-                    <Uploader
-                        textOne={`عکس محصول را انتخاب کنید`}
-                        selectedFile={selectedFile}
-                        onFileSelect={(file) => {
-                        setSelectedFile(file);
-                        if (errors.image) { const { image, ...rest } = errors; setErrors(rest); }
-                        }}
-                        preview={selectedItem?.image || preview}
-                        setPreview={setPreview}
-                        className={`h-[155px] min-h-9 max-h-[155px] ${errors.image ? "border border-red-500" : ""}`}
-                    />
-                    {errors?.image && <p className="text-red-500 text-xs mt-1">{errors?.image}</p>}
+                <div className='grid grid-cols-2 gap-4 max-[480px]:grid-cols-1 max-[480px]:h-[600px] max-[480px]:overflow-y-auto'>
+                    <div className='grid grid-cols-1 gap-4'>
+                        {/* آپلودر + خطا */}
+                        <div>
+                            <Uploader
+                                textOne={`عکس محصول را انتخاب کنید`}
+                                selectedFile={selectedFile}
+                                onFileSelect={(file) => {
+                                setSelectedFile(file);
+                                if (errors.image) { const { image, ...rest } = errors; setErrors(rest); }
+                                }}
+                                preview={selectedItem?.image || preview}
+                                setPreview={setPreview}
+                                className={`h-[209px] min-h-9 max-h-full ${errors.image ? "border border-red-500" : ""}`}
+                            />
+                            {errors?.image && <p className="text-red-500 text-xs mt-1">{errors?.image}</p>}
+                        </div>
+
+                        {/* توضیحات + خطا */}
+                        <div>
+                            <textarea
+                                value={descriptionEdit}
+                                onChange={(e) => {
+                                setDescriptionEdit(e.target.value);
+                                if (errors?.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
+                                }}
+                                className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[209px] ${errors?.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
+                                placeholder='توضیحات'
+                            />
+                            {errors?.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors?.descriptionEdit}</p>}
+                        </div>
                     </div>
 
-                    {/* توضیحات + خطا */}
                     <div>
-                    <textarea
-                        value={descriptionEdit}
-                        onChange={(e) => {
-                        setDescriptionEdit(e.target.value);
-                        if (errors?.descriptionEdit) { const { descriptionEdit, ...rest } = errors; setErrors(rest); }
-                        }}
-                        className={`border rounded-xl p-2 font-sans resize-none text-xs outline-none placeholder:text-gray-400 w-full h-[155px] ${errors?.descriptionEdit ? "border-red-500" : "border-gray-300"}`}
-                        placeholder='توضیحات'
-                    />
-                    {errors?.descriptionEdit && <p className="text-red-500 text-xs mt-1">{errors?.descriptionEdit}</p>}
-                    </div>
-                </div>
+                        <div className='grid grid-cols-2 text-right gap-2 max-[480px]:grid-cols-1'>
+                            {/* نام محصول + خطا */}
+                            <div>
+                                <Text>نام محصول</Text>
+                                <Input
+                                    value={nameEditProduct}
+                                    onChange={(e) => {
+                                    setNameEditProduct(e.target.value);
+                                    if (errors?.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                                    }}
+                                    className={`w-full mt-2 bg-transparent border ${errors?.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
+                                    placeholder="نام محصول"
+                                />
+                                {errors?.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.nameEditProduct}</p>}
+                            </div>
+                            <div>
+                                <Text>نام عربی</Text>
+                                <Input
+                                    value={omNameProduct}
+                                    onChange={(e) => {
+                                    setOmNameProduct(e.target.value);
+                                    if (errors.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
+                                    }}
+                                    className={`w-full mt-2 bg-transparent border ${errors?.omNameProduct ? "border-red-500" : "border-gray-300"}`}
+                                    placeholder="نام عربی محصول"
+                                />
+                                {errors?.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors?.omNameProduct}</p>}
+                            </div>
 
-                <div className='grid grid-cols-2 text-right mt-4 gap-2'>
-                    {/* نام محصول + خطا */}
-                    <div>
-                        <Text>نام محصول</Text>
-                        <Input
-                            value={nameEditProduct}
+                        </div>
+
+                        {/* قیمت + خطا */}
+                        <div className='grid grid-cols-2 mt-4 gap-2 text-right max-[480px]:grid-cols-1'>
+                            <div>
+                                <Text>قیمت</Text>
+                                <div>
+                                    <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
+                                    <Input
+                                        inputMode='numeric'
+                                        value={priceEditProduct?.toLocaleString('fa-IR')}
+                                        placeholder='۳۰۰۰۰'
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            if (errors?.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
+                                        }}
+                                        className={`w-full mt-2 text-left bg-transparent border ${errors?.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
+                                    />
+                                </div>
+                                {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.priceEditProduct}</p>}
+                            </div>
+                            <div className='text-right'>
+                                <Text className={`mb-2`}>کد محصول</Text>
+                                <Input
+                                    value={sku}
+                                    onChange={(e) => {
+                                        setSku(e.target.value);
+                                    }}
+                                    className={`w-full bg-transparent border ${errors.omNameProduct ? "border border-red-500" : "border-gray-300"}`}
+                                    placeholder={`کد محصول را وارد کنید`}
+                                />
+                            </div>
+                        </div>
+
+                        <div className='mt-4 gap-2'>
+                            {/* دسته‌بندی + خطا (با FormControl) */}
+                           
+                            <Text className='text-right'>تخفیف</Text>
+                            <Input
+                                inputMode='numeric'
+                                value={offerEdit}
+                                onChange={(e) => setOfferEdit(e.target.value)}
+                                className='w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300'
+                                placeholder='درصد تخفیف'
+                            />
+                        </div>
+
+                        <div className='mt-4'>
+                            <Text className='text-right mb-2'> دسته بندی اصلی</Text>
+                            <FormControl className='w-full' error={Boolean(errors.selectorCategory)}>
+                                <Select
+                                    className='!outline-none !rounded-lg text-right w-full'
+                                    value={selectedParentId}
+                                    onChange={(e) => {
+                                        setSelectedParentId(e.target.value)
+                                        setSelectedSubCategoryId('')
+                                    }}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
+                                    >
+                                    <MenuItem value="" className='!py-3'>
+                                        <Text className='text-gray-400'>
+                                        انتخاب کنید
+                                        </Text>
+                                    </MenuItem>
+                                    {mainCategoriesOrder.map(item => (
+                                        <MenuItem className='!font-sans !text-[12px]' key={item.id} value={item.id}>
+                                            <Text>{item.name}</Text>
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.selectorCategory && <Text>{errors.selectorCategory}</Text>}
+                            </FormControl>
+                        </div>
+
+                        <div className='mt-4'>
+                            <Text className='text-right mb-2'>زیر دسته بندی</Text>
+                            <FormControl className='w-full' >
+                                <Select
+                                    className='!outline-none !rounded-lg text-right w-full'
+                                    value={selectedSubCategoryId}
+                                    onChange={(e) => setSelectedSubCategoryId(e.target.value)}
+                                    // displayEmpty
+                                    // inputProps={{ 'aria-label': 'Without label' }}
+                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
+                                    >
+                                    <MenuItem value="" className='!py-3'>
+                                        <Text className='text-gray-400'>
+                                        انتخاب کنید
+                                        </Text>
+                                    </MenuItem>
+                                    {parentCategories
+                                        ?.filter(sub => sub.parent === selectedParentId) // فقط زیرمجموعه‌های parent انتخاب‌شده
+                                        ?.map(sub => (
+                                            <MenuItem key={sub.id} value={sub.id}>
+                                                <Text>{sub.name}</Text>
+                                            </MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.selectorCategory && <Text>{errors.selectorCategory}</Text>}
+                            </FormControl>
+                        </div>
+                       
+
+                        {/* وضعیت محصول + خطا */}
+                        {/* <Text className='mt-4 text-right mb-2'>وضعیت محصول</Text>
+                        <FormControl className='w-full mb-4' error={Boolean(errors.selectorState)}>
+                            <Select
+                            className='!outline-none text-right !rounded-lg w-full'
+                            value={selectorState}
                             onChange={(e) => {
-                            setNameEditProduct(e.target.value);
-                            if (errors?.nameEditProduct) { const { nameEditProduct, ...rest } = errors; setErrors(rest); }
+                                setSelectorState(e.target.value);
+                                if (errors.selectorState) { const { selectorState, ...rest } = errors; setErrors(rest); }
                             }}
-                            className={`w-full mt-2 bg-transparent border ${errors?.nameEditProduct ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="نام محصول"
-                        />
-                        {errors?.nameEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.nameEditProduct}</p>}
-                    </div>
-                    <div>
-                        <Text>نام عربی</Text>
-                        <Input
-                            value={omNameProduct}
-                            onChange={(e) => {
-                            setOmNameProduct(e.target.value);
-                            if (errors.omNameProduct) { const { omNameProduct, ...rest } = errors; setErrors(rest); }
-                            }}
-                            className={`w-full mt-2 bg-transparent border ${errors?.omNameProduct ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="نام عربی محصول"
-                        />
-                        {errors?.omNameProduct && <p className="text-red-500 text-xs mt-1">{errors?.omNameProduct}</p>}
-                    </div>
-
-                </div>
-
-                {/* قیمت + خطا */}
-                <div className='mt-4 text-right'>
-                    <Text>قیمت</Text>
-                    <div>
-                        <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
-                        <Input
-                        inputMode='numeric'
-                        value={priceEditProduct?.toLocaleString('fa-IR')}
-                        placeholder='۳۰۰۰۰'
-                        onChange={(e) => {
-                            handleChange(e);
-                            if (errors?.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
-                        }}
-                        className={`w-full mt-2 text-left bg-transparent border ${errors?.priceEditProduct ? "border-red-500" : "border-gray-300"}`}
-                        />
-                    </div>
-                    {errors.priceEditProduct && <p className="text-red-500 text-xs mt-1">{errors?.priceEditProduct}</p>}
-                </div>
-
-                <div className='mt-4 grid grid-cols-2 gap-2'>
-                    {/* دسته‌بندی + خطا (با FormControl) */}
-                    <div>
-                    <Text className='text-right mb-2'>دسته بندی</Text>
-                    <FormControl className='w-full' error={Boolean(errors.selectorCategory)}>
-                        <Select
-                        className='!outline-none !rounded-lg text-right w-full'
-                        value={selectorCategory}
-                        onChange={(e) => {
-                            setSelectorCategory(e.target.value);
-                            if (errors.selectorCategory) { const { selectorCategory, ...rest } = errors; setErrors(rest); }
-                        }}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
-                        >
-                        <MenuItem value="" className='!py-3'>
-                            <Text className='text-gray-400'>
-                             انتخاب کنید
-                            </Text>
-                        </MenuItem>
-                        {dataCategory?.data?.map((item) => (
-                            <MenuItem key={item.id} value={String(item.id)}>
-                                <Text>{item.name}</Text>
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                            >
+                            <MenuItem value="">
+                                <Text className='text-gray-400'>
+                                {selectedItem?.exist === true ? 'فعال'
+                                    : selectedItem?.exist === false ? 'غیر فعال'
+                                    : 'وضعیت نامشخص'}
+                                </Text>
                             </MenuItem>
-                        ))}
-                        </Select>
-                        {errors.selectorCategory && <Text>{errors.selectorCategory}</Text>}
-                    </FormControl>
+                            {stateProduct?.map((item, index) => (
+                                <MenuItem key={index} value={item.value}>
+                                <Text>{item.label}</Text>
+                                </MenuItem>
+                            ))}
+                            </Select>
+                            {errors.selectorState && <Text>{errors.selectorState}</Text>}
+                        </FormControl> */}
                     </div>
 
-                    {/* تخفیف (اختیاری) */}
-                    <div>
-                    <Text className='text-right'>تخفیف</Text>
-                    <Input
-                        inputMode='numeric'
-                        value={offerEdit}
-                        onChange={(e) => setOfferEdit(e.target.value)}
-                        className='w-full mt-2 h-[47px] text-left bg-transparent border border-gray-300'
-                        placeholder='درصد تخفیف'
-                    />
-                    </div>
                 </div>
-
-                {/* وضعیت محصول + خطا */}
-                <Text className='mt-4 text-right mb-2'>وضعیت محصول</Text>
-                <FormControl className='w-full mb-4' error={Boolean(errors.selectorState)}>
-                    <Select
-                    className='!outline-none text-right !rounded-lg w-full'
-                    value={selectorState}
-                    onChange={(e) => {
-                        setSelectorState(e.target.value);
-                        if (errors.selectorState) { const { selectorState, ...rest } = errors; setErrors(rest); }
-                    }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    >
-                    <MenuItem value="">
-                        <Text className='text-gray-400'>
-                        {selectedItem?.exist === true ? 'فعال'
-                            : selectedItem?.exist === false ? 'غیر فعال'
-                            : 'وضعیت نامشخص'}
-                        </Text>
-                    </MenuItem>
-                    {stateProduct?.map((item, index) => (
-                        <MenuItem key={index} value={item.value}>
-                        <Text>{item.label}</Text>
-                        </MenuItem>
-                    ))}
-                    </Select>
-                    {errors.selectorState && <Text>{errors.selectorState}</Text>}
-                </FormControl>
             </GeneralModal>
 
         </div>

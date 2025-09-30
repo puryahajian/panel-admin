@@ -12,7 +12,7 @@ function useCreateProduct() {
 
             const formData = new FormData();
             if (nameProduct) formData.append('name', nameProduct);
-            if (priceProduct) formData.append('price', convertPriceToNumber(priceProduct));
+            if (priceProduct) formData.append('price', priceProduct);
             if (unitName) formData.append('unit_name', unitName);
             if (getIdSubCategory) formData.append('category', getIdSubCategory);
             if (bgProduct) formData.append('image', bgProduct);

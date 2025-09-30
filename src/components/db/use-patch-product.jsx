@@ -14,14 +14,10 @@ function usePatchProduct() {
 
             if (nameEditProduct) formData.append('name', nameEditProduct);
 
-            const rawPrice = priceEditProduct?.toString().replace(/,/g, '');
-            const price = parseInt(rawPrice, 10);
+            // const rawPrice = priceEditProduct?.toString().replace(/,/g, '');
+            // const price = parseInt(rawPrice, 10);
 
-            if (!isNaN(price)) {
-                formData.append('price', price);
-            } else if (priceEditProduct) {
-                formData.append('price', priceEditProduct);
-            }
+            if (priceEditProduct) formData.append('price', priceEditProduct);
 
             if (selectedSubCategoryId) formData.append('category', selectedSubCategoryId);
 

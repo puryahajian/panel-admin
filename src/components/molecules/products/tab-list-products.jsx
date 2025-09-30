@@ -32,7 +32,7 @@ function TabListProducts() {
         : Array.isArray(data?.data)
         ? data.data 
         : [];
-        console.log(prosuctList)
+        // console.log(prosuctList)
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
 
@@ -102,7 +102,7 @@ function TabListProducts() {
         () => parentCategories?.filter(item => item?.order !== 0) || [],
         [parentCategories]
     );
-    console.log(mainCategoriesOrder)
+    // console.log(mainCategoriesOrder)
 
     const stateProduct = [
         { label: 'فعال', value: 'true' },
@@ -122,16 +122,16 @@ function TabListProducts() {
         });
     };
 
-    const formatNumber = (value) => {
-        const numericValue = value.replace(/,/g, '');
-        return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
+    // const formatNumber = (value) => {
+    //     const numericValue = value.replace(/,/g, '');
+    //     return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // };
 
-    const handleChange = (e) => {
-        const rawValue = e.target.value.replace(/,/g, '');
-        if (!/^\d*$/.test(rawValue)) return;
-        setPriceEditProduct(formatNumber(rawValue));
-    };
+    // const handleChange = (e) => {
+    //     const rawValue = e.target.value.replace(/,/g, '');
+    //     if (!/^\d*$/.test(rawValue)) return;
+    //     setPriceEditProduct(formatNumber(rawValue));
+    // };
 
     const validateFormEdit = () => {
         let newErrors = {};
@@ -147,30 +147,38 @@ function TabListProducts() {
         return Object.keys(newErrors).length === 0;
     };
 
-       const loadMore = () => {
-            if (isLoading) return;
-            setIsLoading(true);
-            setTimeout(() => {
-                setDisplayCount((prev) => prev + 10);
-                setIsLoading(false);
-            }, 400);
-        };
-    
-        // Intersection observer for infinite scroll
-        const observer = useRef();
-        const sentinelRef = useCallback(node => {
-            if (isLoadinglist) return
-            if (observer.current) observer.current.disconnect()
+    const loadMore = () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        setTimeout(() => {
+            setDisplayCount((prev) => prev + 10);
+            setIsLoading(false);
+        }, 400);
+    };
 
-            observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && displayCount < prosuctList.length) {
-                loadMore()
-            }
-            })
+    // Intersection observer for infinite scroll
+    const observer = useRef();
+    const sentinelRef = useCallback(node => {
+        if (isLoadinglist) return
+        if (observer.current) observer.current.disconnect()
 
-            if (node) observer.current.observe(node)
-        }, [isLoadinglist, displayCount, prosuctList.length])
+        observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && displayCount < prosuctList.length) {
+            loadMore()
+        }
+        })
 
+        if (node) observer.current.observe(node)
+    }, [isLoadinglist, displayCount, prosuctList.length])
+
+
+    // format om
+    const formattedPrice = (price) => {
+        return new Intl.NumberFormat('en-OM', {
+            minimumFractionDigits: 0, // حذف صفرهای اضافی بعد از اعشار
+            maximumFractionDigits: 3, // در صورت وجود اعشار تا 3 رقم
+        }).format(price);
+    };
     return (
         <div className='mt-0 px-4 max-[1024px]:mt-[24px]'>
             <div className='flex items-center max-[992px]:hidden'>
@@ -206,7 +214,7 @@ function TabListProducts() {
                                     <div className='grid gap-2'>
                                         <Text>{item?.name}</Text>
                                         <Text className={`flex items-center`}>
-                                            {item?.price?.toLocaleString('fa-IR')} 
+                                            {item?.price} 
                                             <img src={Rial} alt="ریال" loading="lazy" />
                                         </Text>
                                     </div>
@@ -322,7 +330,7 @@ function TabListProducts() {
                                     <div className='flex justify-between items-center'>
                                         <Title>قیمت :</Title>
                                         <Text className={`flex items-center`}>
-                                            {item?.price?.toLocaleString('fa-IR')} 
+                                            {item?.price} 
                                             <img src={Rial}/>
                                         </Text>
                                     </div>
@@ -503,11 +511,10 @@ function TabListProducts() {
                                 <div>
                                     <img src={Rial} className='mt-5 mr-2 absolute font-sans text-xs'/>
                                     <Input
-                                        inputMode='numeric'
-                                        value={priceEditProduct?.toLocaleString('fa-IR')}
-                                        placeholder='۳۰۰۰۰'
+                                        value={priceEditProduct}
+                                        placeholder="۱,۵"
                                         onChange={(e) => {
-                                            handleChange(e);
+                                            setPriceEditProduct(e.target.value);
                                             if (errors?.priceEditProduct) { const { priceEditProduct, ...rest } = errors; setErrors(rest); }
                                         }}
                                         className={`w-full mt-2 text-left bg-transparent border ${errors?.priceEditProduct ? "border-red-500" : "border-gray-300"}`}

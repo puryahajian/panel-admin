@@ -21,6 +21,7 @@ import useGetAllCategory from '../../db/use-get-all-category';
 import Rial from '../../../assets/image/Frame.png'
 import useGetParentCategory from '../../db/use-get-parent-category';
 import useGetCategory from '../../db/use-get-category';
+import { NumericFormat } from 'react-number-format';
 
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 // import clsx from 'clsx'
@@ -51,13 +52,11 @@ function Products() {
     const [getIdSubCategory, setGetIdSubCategory] = useState('');
     const [subCategories, setSubCategories] = useState([]);
     const { data: parentCategories } = useGetCategory();
-    // console.log(parentCategories)
     const { data: parentSubCategories } = useGetParentCategory(selectedParentId);
     const { data: subSubCategories } = useGetParentCategory(selectedSubCategoryId);
 
 
     const [priority, setPriority] = useState();
-    // const { data: dataCategory } = useGetAllCategory();
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
@@ -96,7 +95,7 @@ function Products() {
     }, [selectedParentId, selectedSubCategoryId]);
 
     const mainCategoriesOrder = useMemo(
-        () => parentCategories?.results?.filter(item => item?.order !== 0) ,
+        () => parentCategories?.filter(item => item?.order !== 0) ,
         [parentCategories]
     );
 
@@ -137,24 +136,18 @@ function Products() {
                 sku,
                 getIdSubCategory
             },
-            // {
-            //     onSuccess: (data) => {
-            //         console.log(data)
-            //     }
-            // }
+            {
+                // onSuccess: (data) => {
+                //     console.log(data)
+                // },
+                // onError: (err) => {
+                //     console.log(err)
+
+                // }
+            }
         )
     }
-
-    const formatNumber = (value) => {
-        const numericValue = value.replace(/,/g, ''); // حذف ویرگول‌های قبلی
-        return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // افزودن ویرگول سه‌رقمی
-    };
-
-    const handleChange = (e) => {
-        const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
-        if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
-        setPriceProduct(formatNumber(rawValue));
-    };
+    
 
     const resetForm = () => {
         setBgProduct(null);
@@ -165,7 +158,10 @@ function Products() {
         setPriceProduct('');
         setUnitName('');
         setOffer('');
+        setSku('')
         setSelectorCategory(null);
+        setSelectedParentId(null);
+        setGetIdSubCategory(null);
     };
 
     const validateForm = () => {
@@ -352,9 +348,13 @@ function Products() {
                                         <img src={Rial} className='mt-3 mr-2 absolute font-sans text-xs' />
                                         <Input
                                             value={priceProduct}
-                                            onChange={handleChange}
-                                            className={`w-full text-left ${errors.priceProduct ? "border border-red-500" : ""}`}
-                                            placeholder={`۳,۰۰۰`}
+                                            onChange={(e) => {
+                                                setPriceProduct(e.target.value);
+                                            }}
+                                            className={`w-full bg-bgInput text-left border font-sans text-[16px] rounded-lg outline-none px-3 py-2 ${
+                                                errors?.priceProduct ? 'border-red-500' : ''
+                                            }`}
+                                            placeholder="۱,۵"
                                         />
                                     </div>
                                     {errors.priceProduct && (

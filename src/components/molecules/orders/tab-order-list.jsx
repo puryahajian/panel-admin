@@ -12,6 +12,7 @@ import Rial from '../../../assets/image/Frame.png'
 
 function TabOrderList() {
   const { data } = useGetAllOrder();
+  // console.log(data)
   const [ openModal, setOpenModal ] = useState(false); 
   const [ getData, setGetData ] = useState(''); 
 
@@ -29,7 +30,7 @@ function TabOrderList() {
   };
    
   return (
-    <div className='mt-4 max-[1024px]:mt-32 px-4'>
+    <div className='mt-0 max-[1024px]:mt-4 px-4'>
         <div className={`flex my-4 max-[1024px]:hidden ${data?.results?.map((item) => item?.state !== 8 && 'hidden')}`}>
           <Title>ردیف</Title>
           <div className='grid grid-cols-6 w-full'>
@@ -41,13 +42,13 @@ function TabOrderList() {
             <Title className={`text-left ml-8`}>وضعیت سفارش</Title>
           </div>
         </div>
-
-        {data?.count === 0 || data?.results?.every((item) => item?.state !== 8) ? (
+{/* 
+        {data?.results?.every((item) => item?.state !== 8) ? (
           <div className="text-center py-8 text-gray-500">
             لیست خالی
           </div>
-        ) : null}
-        
+        )}
+         */}
         <div className='grid gap-2'>
           {data?.results?.map((item, index) => (
             <ListOrders
@@ -57,8 +58,8 @@ function TabOrderList() {
               }}
               classOrderer={`pr-1`}
               classDate={``}
-              className={item?.state !== 8 && 'hidden'}
-              classNameResponse={item?.state !== 8 && 'hidden'}
+              className={item?.state !== 8 ? 'hidden' : ''}
+              classNameResponse={item?.state !== 8 ? 'hidden' : 'max-[680px]:block'}
 
               momber={index + 1}
               order={item?.items?.length === 0 ? 'نا مشخص' : item?.items?.filter(it => it?.product?.name)?.map(it => it.product.name)?.join(', ')}
@@ -68,7 +69,6 @@ function TabOrderList() {
               date={<DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/>}
               orderStatus={
                 <>
-                  {/* state */}
                   {statusMap[item?.state] || 'نامشخص'}
                 </> 
               }

@@ -102,7 +102,7 @@ function ListDiscount() {
     }
 
     return (
-        <>
+        <div className='mx-4'>
         {data?.results?.map((item, index) => (
             <React.Fragment key={item?.id}>
             <div className="mt-4 flex gap-4 border p-2 rounded-2xl items-center max-[992px]:hidden px-4">
@@ -342,7 +342,7 @@ function ListDiscount() {
         >
            
         </GeneralModal>
-        </>
+        </div>
     );
 }
 

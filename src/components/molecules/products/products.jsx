@@ -51,6 +51,7 @@ function Products() {
     const [getIdSubCategory, setGetIdSubCategory] = useState('');
     const [subCategories, setSubCategories] = useState([]);
     const { data: parentCategories } = useGetCategory();
+    // console.log(parentCategories)
     const { data: parentSubCategories } = useGetParentCategory(selectedParentId);
     const { data: subSubCategories } = useGetParentCategory(selectedSubCategoryId);
 
@@ -95,7 +96,7 @@ function Products() {
     }, [selectedParentId, selectedSubCategoryId]);
 
     const mainCategoriesOrder = useMemo(
-        () => parentCategories?.filter(item => item?.order !== 0) || [],
+        () => parentCategories?.results?.filter(item => item?.order !== 0) ,
         [parentCategories]
     );
 
@@ -451,7 +452,7 @@ function Products() {
                                         <MenuItem value="">
                                             <Text>دسته بندی اصلی را انتخاب کنید</Text>
                                         </MenuItem>
-                                        {mainCategoriesOrder.map(item => (
+                                        {mainCategoriesOrder?.map(item => (
                                             <MenuItem className='!font-sans !text-[12px]' key={item.id} value={item.id}>
                                                 {item.name}
                                             </MenuItem>

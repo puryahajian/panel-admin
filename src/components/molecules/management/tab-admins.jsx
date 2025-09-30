@@ -42,7 +42,7 @@ function TabAdmins({className}) {
 
     return (
         <div className={className}>
-            <div className='flex py-4 max-[990px]:hidden'>
+            <div className={`flex py-4 max-[990px]:hidden ${data?.length === 0 ? 'hidden' : ''}`}>
                 <Text>ردیف</Text>
                 <div className='grid grid-cols-8 w-full mr-6'>
                     <Text className={`col-span-2 pr-2`}>نام</Text>
@@ -119,7 +119,7 @@ function TabAdmins({className}) {
             </div>
 
             <div className='flex justify-center mt-4'>
-                {data?.length === 0 && <Text>دسته بندی موجود نیست</Text>}
+                {data?.length === 0 && <Text>ادمین موجود نیست</Text>}
             </div>
 
             {/* delete admin */}

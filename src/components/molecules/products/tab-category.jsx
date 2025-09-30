@@ -9,11 +9,14 @@ import usePatchCategory from '../../db/use-patch-category';
 import useDeleteCategory from '../../db/use-delete-category';
 import { toast } from 'react-toastify';
 import DefaultCategory from '../../../assets/image/47abcc97c2763336a579eb7937d9c6bf.jpg'
+import Loading from '../../atoms/loading';
+import useGetCategory from '../../db/use-get-category';
 
 function TabCategory() {
     const [open, setOpen] = useState(false);
-    const { data } = useGetAllCategory();
-    // console.log(data)
+    const { data, isLoading:isLoadingCategory } = useGetCategory();
+    const categories = data;
+    console.log(categories)
     const { mutate } = usePatchCategory();
     const { mutate: mutateDeleteCategory } = useDeleteCategory()
     const [openEditCategory, setOpenEditCategory] = useState(false);
@@ -57,34 +60,39 @@ function TabCategory() {
         )
     }
 
-    // Lazy loading 
+    // Lazy loading function
     const loadMore = () => {
         if (isLoading) return;
-        
         setIsLoading(true);
         setTimeout(() => {
-            setDisplayCount(prev => prev + 10);
+            setDisplayCount((prev) => prev + 10);
             setIsLoading(false);
         }, 400);
     };
 
-    // مدیریت lazy loading
-    const observerRef = React.useRef();
-    const lastElementRef = React.useCallback(node => {
-        if (isLoading) return;
-        if (observerRef.current) observerRef.current.disconnect();
-        observerRef.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && displayCount < (data?.data?.length || 0)) {
-                loadMore();
-            }
-        });
-        if (node) observerRef.current.observe(node);
-    }, [isLoading, displayCount, data?.data?.length]);
+    // Intersection observer for infinite scroll
+    const observer = useRef();
+    const lastElementRef = useCallback(
+        (node) => {
+            if (isLoading) return;
+            if (observer.current) observer.current.disconnect();
+            observer.current = new IntersectionObserver((entries) => {
+                if (
+                    entries[0].isIntersecting &&
+                    displayCount < categories.length
+                ) {
+                    loadMore();
+                }
+            });
+            if (node) observer.current.observe(node);
+        },
+        [isLoading, displayCount, categories.length]
+    );
 
     return (
         <div className='px-4'>
             <div className='grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 mt-6 max-[1024px]:mt-[0px]'>
-                {data?.data?.slice(0, displayCount).map((item, index) => (
+                {data?.slice(0, displayCount).map((item, index) => (
                     <div 
                         className='border border-grayTitle text-center grid gap-4 p-4 rounded-2xl' 
                         key={item?.id}
@@ -217,6 +225,10 @@ function TabCategory() {
 
             <div className='flex justify-center mt-4'>
                 {data?.data?.length === 0 && <Text>دسته بندی موجود نیست</Text>}
+            </div>
+
+            <div className='flex justify-center mt-6 items-center'>
+                {isLoadingCategory ? <Loading/> : ''}
             </div>
         </div>
     )

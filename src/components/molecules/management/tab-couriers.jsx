@@ -152,7 +152,7 @@ function TabCouriers({className}) {
             </div>
 
             <div className='flex justify-center mt-4'>
-                {data?.count === 0 && <Text>دسته بندی موجود نیست</Text>}
+                {data?.count === 0 && <Text>پیک موجود نیست</Text>}
             </div>
 
             {/* delete couriers */}

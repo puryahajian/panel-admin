@@ -8,7 +8,7 @@ function usePatchProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idEdit, omNameProduct,selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState }) => {
+        mutationFn: async ({ idEdit, omNameProduct,selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState, sku }) => {
             
             const formData = new FormData();
 
@@ -30,7 +30,7 @@ function usePatchProduct() {
             } else if (inState !== '') {
                 formData.append('exist', inState);
             }           
-
+            if (sku) formData.append('sku', sku);
             if (selectedFile) formData.append('image', selectedFile);
             if (omNameProduct) formData.append('om_name', omNameProduct);
     

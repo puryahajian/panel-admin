@@ -24,16 +24,23 @@ import useGetCategory from '../../db/use-get-category'
 
 function TabListProducts() {
     const { mutate } = useDeleteProduct();
-    const { data } = useGetAllProducts();
-    // console.log(data)
+    const { data, isLoading:isLoadingProduct } = useGetAllProducts();
+    const prosuctList = Array.isArray(data) 
+    ? data 
+    : Array.isArray(data) 
+        ? data 
+        : Array.isArray(data?.data)
+        ? data.data 
+        : [];
+        console.log(prosuctList)
     const { data: dataCategory } = useGetProductCategory();
     const { mutate: mutatePatchProduct, isLoading } = usePatchProduct();
+
     const [selectIdProduct, setSelectIdProduct] = useState(null);
     const selectedItem = Array.isArray(data?.data)
         ? data?.data?.find((it) => it?.id === selectIdProduct)
         : null;
-        // console.log(selectedItem)
-    
+
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState('');
@@ -44,30 +51,26 @@ function TabListProducts() {
     const [priceEditProduct, setPriceEditProduct] = useState(selectedItem?.price);
     const [descriptionEdit, setDescriptionEdit] = useState(selectedItem?.details);
     const [offerEdit, setOfferEdit] = useState(selectedItem?.discount_percentage);
-
     const [selectedParentId, setSelectedParentId] = useState('')
     const [selectedSubCategoryId, setSelectedSubCategoryId] = useState('')
     const [subCategories, setSubCategories] = useState([])
     const { data: parentCategories } = useGetCategory();
     const { data: subCategoriesData } = useGetParentCategory(selectedParentId)
-    
     const [omNameProduct, setOmNameProduct] = useState();
     const [sku, setSku] = useState(selectedItem?.sku);
-    
     const [idEdit, setIdEdit] = useState();
     const [inState, setInState] = useState(false);
-    const [ selectedFile, setSelectedFile ] = useState('');
+    const [selectedFile, setSelectedFile] = useState('');
     const [preview, setPreview] = useState('');
     const [errors, setErrors] = useState({});
 
     // Lazy loading state
     const [displayCount, setDisplayCount] = useState(20);
-    const [isLoadingLoder, setIsLoading] = useState(false);
+    const [isLoadinglist, setIsLoading] = useState(false);
+    
 
-
-   useEffect(() => {
+    useEffect(() => {
         if (selectedItem) {
-            // console.log(selectedItem)
             setNameEditProduct(selectedItem?.name || '');
             setPriceEditProduct(selectedItem?.price || '');
             setOmNameProduct(selectedItem?.om_name || '');
@@ -75,145 +78,98 @@ function TabListProducts() {
             setOfferEdit(selectedItem?.discount_percentage || '');
             setSku(selectedItem?.sku || '');
             setSelectorCategory(selectedItem?.category || ''); 
-            setSelectorState(
-                selectedItem?.exist !== undefined
-                    ? String(selectedItem?.exist) 
-                    : ''
-            );
+            setSelectorState(selectedItem?.exist !== undefined ? String(selectedItem?.exist) : '');
             setPreview(selectedItem?.image || null);
         }
     }, [selectedItem]);
 
     useEffect(() => {
-        if (getParentId) {
-            setSelectedParentId(getParentId)
-        }
+        if (getParentId) setSelectedParentId(getParentId);
     }, [getParentId]);
 
     useEffect(() => {
-        if (subCategoriesData?.results) {
-        setSubCategories(subCategoriesData.results)
-        } else {
-        setSubCategories([])
-        }
-    }, [subCategoriesData])
-    
+        if (subCategoriesData?.results) setSubCategories(subCategoriesData.results);
+        else setSubCategories([]);
+    }, [subCategoriesData]);
+
     useEffect(() => {
-        if (selectedSubCategoryId) {
-        setSelectorCategory(selectedSubCategoryId)
-        } else if (selectedParentId) {
-        setSelectorCategory(selectedParentId)
-        } else {
-        setSelectorCategory('')
-        }
-    }, [selectedParentId, selectedSubCategoryId, setSelectorCategory])
+        if (selectedSubCategoryId) setSelectorCategory(selectedSubCategoryId);
+        else if (selectedParentId) setSelectorCategory(selectedParentId);
+        else setSelectorCategory('');
+    }, [selectedParentId, selectedSubCategoryId]);
 
     const mainCategoriesOrder = useMemo(
         () => parentCategories?.filter(item => item?.order !== 0) || [],
         [parentCategories]
     );
-        
+    console.log(mainCategoriesOrder)
+
     const stateProduct = [
         { label: 'فعال', value: 'true' },
         { label: 'غیرفعال', value: 'false' }
-    ]
+    ];
 
     const handleDeleteProduct = () => {
-        mutate(
-            { 
-                selectedItemId 
-            }, 
-            {
-            onSuccess: (data) => {
-                setOpen(false);
-            },
-        });
+        mutate({ selectedItemId }, { onSuccess: () => setOpen(false) });
     };
-    
+
     const handleEditProduct = (idEdit, currentExist) => {
-        console.log(selectedSubCategoryId)
         const newValue = !currentExist;
         setInState(newValue);
 
-        mutatePatchProduct(
-            { 
-                idEdit, selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue, omNameProduct
-            },    
-        );
-
-    }
+        mutatePatchProduct({ 
+            idEdit, selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState: newValue, omNameProduct, sku
+        });
+    };
 
     const formatNumber = (value) => {
-        const numericValue = value.replace(/,/g, ''); // حذف ویرگول‌های قبلی
-        return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // افزودن ویرگول سه‌رقمی
+        const numericValue = value.replace(/,/g, '');
+        return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
-
-    // Lazy loading 
-    const loadMore = () => {
-        if (isLoadingLoder) return;
-        
-        setIsLoading(true);
-        setTimeout(() => {
-            setDisplayCount(prev => prev + 10);
-            setIsLoading(false);
-        }, 400);
-    };
-
-    // مدیریت lazy loading
-    const observerRef = React.useRef();
-    const lastElementRef = React.useCallback(node => {
-        if (isLoadingLoder) return;
-        if (observerRef.current) observerRef.current.disconnect();
-        observerRef.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && displayCount < (data?.data?.length || 0)) {
-                loadMore();
-            }
-        });
-        if (node) observerRef.current.observe(node);
-    }, [isLoadingLoder, displayCount, data?.data?.length]);
 
     const handleChange = (e) => {
-        const rawValue = e.target.value.replace(/,/g, ''); // فقط عدد خام
-        if (!/^\d*$/.test(rawValue)) return; // فقط اعداد مجاز باشن
+        const rawValue = e.target.value.replace(/,/g, '');
+        if (!/^\d*$/.test(rawValue)) return;
         setPriceEditProduct(formatNumber(rawValue));
     };
 
-    // مدیریت ارور ها
     const validateFormEdit = () => {
         let newErrors = {};
-
-        if (!selectedFile && !selectedItem?.image) {
-            newErrors.image = "تصویر محصول الزامی است";
-        }
-        if (!nameEditProduct || nameEditProduct === "") {
-            newErrors.nameEditProduct = "نام محصول الزامی است";
-        }
-        if (!priceEditProduct || priceEditProduct === "") {
-            newErrors.priceEditProduct = "قیمت الزامی است";
-        }
-        if (!selectorCategory) {
-            newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
-        }
-        if (!descriptionEdit || descriptionEdit === "") {
-            newErrors.descriptionEdit = "توضیحات الزامی است";
-        }
-        if (!selectorState) {
-            newErrors.selectorState = "انتخاب وضعیت الزامی است";
-        }
+        if (!selectedFile && !selectedItem?.image) newErrors.image = "تصویر محصول الزامی است";
+        if (!sku) newErrors.sku = "کد محصول الزامی";
+        if (!nameEditProduct) newErrors.nameEditProduct = "نام محصول الزامی است";
+        if (!priceEditProduct) newErrors.priceEditProduct = "قیمت الزامی است";
+        if (!selectorCategory) newErrors.selectorCategory = "انتخاب دسته‌بندی الزامی است";
+        if (!descriptionEdit) newErrors.descriptionEdit = "توضیحات الزامی است";
+        if (!selectorState) newErrors.selectorState = "انتخاب وضعیت الزامی است";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleParentChange = (e) => {
-        const selectedId = e.target.value;
-        setSelectedParentId(selectedId);
-        setSelectedSubCategoryId(''); 
-    };
+       const loadMore = () => {
+            if (isLoading) return;
+            setIsLoading(true);
+            setTimeout(() => {
+                setDisplayCount((prev) => prev + 10);
+                setIsLoading(false);
+            }, 400);
+        };
+    
+        // Intersection observer for infinite scroll
+        const observer = useRef();
+        const sentinelRef = useCallback(node => {
+            if (isLoadinglist) return
+            if (observer.current) observer.current.disconnect()
 
-    // const handleSubCategoryChange = (e) => {
-    //     setSelectedSubCategoryId(e.target.value);
-    // };
+            observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && displayCount < prosuctList.length) {
+                loadMore()
+            }
+            })
+
+            if (node) observer.current.observe(node)
+        }, [isLoadinglist, displayCount, prosuctList.length])
 
     return (
         <div className='mt-0 px-4 max-[1024px]:mt-[24px]'>
@@ -228,13 +184,12 @@ function TabListProducts() {
                 </div>
             </div>
 
-            <div className='grid gap-2'>
-                {Array.isArray(data?.data) && data.data?.length > 0 ? (
-                    data?.data?.slice(0, displayCount).map((item, index) => (
+            <div className='grid gap-4'>
+            {prosuctList.slice(0, displayCount).map((item, index) => {
+                    return (
                         <div 
                             className='flex items-center border border-grayTitle rounded-2xl max-[992px]:hidden' 
                             key={item?.id}
-                            ref={index === displayCount - 1 ? lastElementRef : null}
                         >
                             <div className='px-8'>{index + 1}</div>
                             <div className='grid grid-cols-8 items-center p-4 pr-0 w-full'>
@@ -250,7 +205,10 @@ function TabListProducts() {
                                     />
                                     <div className='grid gap-2'>
                                         <Text>{item?.name}</Text>
-                                        <Text className={`flex items-center`}>{item?.price?.toLocaleString('fa-IR')} <img src={Rial} alt="ریال" loading="lazy" /></Text>
+                                        <Text className={`flex items-center`}>
+                                            {item?.price?.toLocaleString('fa-IR')} 
+                                            <img src={Rial} alt="ریال" loading="lazy" />
+                                        </Text>
                                     </div>
                                 </div>
 
@@ -258,22 +216,23 @@ function TabListProducts() {
 
                                 <div className='flex items-center justify-between gap-2'>
                                     <Text 
-                                        className={`truncate w-28 cursor-pointer rounded mr-7`} 
+                                        className={`truncate text-left w-28 cursor-pointer rounded mr-7`} 
                                         onClick={() => {
                                             navigator.clipboard.writeText(item?.sku);
-                                            toast.success('کپی شد')
-                                            // می‌توانید یک toast یا پیام موفقیت نمایش دهید
+                                            toast.success('کپی شد');
                                         }}
                                         title="کلیک برای کپی کردن"
                                     >
-                                        {item?.sku === null || "" ? "ندارد" : item?.sku}{item?.sku === "" && "ندارد"}
+                                        {item?.sku || "ندارد"}
                                     </Text>
                                     <Tooltip title="کپی کد محصول" placement="top">
-                                        <ContentCopyIcon onClick={() => {
-                                            navigator.clipboard.writeText(item?.sku);
-                                            toast.success('کپی شد')
-                                            // می‌توانید یک toast یا پیام موفقیت نمایش دهید
-                                        }} className='!text-sm cursor-pointer'/>
+                                        <ContentCopyIcon 
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(item?.sku);
+                                                toast.success('کپی شد');
+                                            }} 
+                                            className='!text-sm cursor-pointer'
+                                        />
                                     </Tooltip>
                                 </div>
 
@@ -282,31 +241,28 @@ function TabListProducts() {
                                 <div className='col-span-2 flex justify-end gap-4'>
                                     <ButtonExisting
                                         onClick={() => handleEditProduct(item.id, item.exist)}
-                                        className={`${item?.exist === true ? '' : 'bg-red-500 border-transparent'}`}
+                                        className={`${item?.exist ? '' : 'bg-red-500 border-transparent'}`}
                                     >
-                                        {item?.exist === true ? 'فعال' : 'غیر فعال'}
+                                        {item?.exist ? 'فعال' : 'غیر فعال'}
                                     </ButtonExisting>
 
                                     <ButtonEdit onClick={() => {
-                                            setIdEdit(item);
-                                            setOpenEdit(true);
-                                            setSelectIdProduct(item?.id);
-                                            const category = dataCategory?.data?.find(cat => cat.id === item?.category);
-                                            if (category) {
-                                                const parentId = category?.parent;
-                                                setGetParentId(parentId);
+                                        setIdEdit(item);
+                                        setOpenEdit(true);
+                                        setSelectIdProduct(item?.id);
 
-                                                const mainCat = mainCategoriesOrder?.find(cat => cat.id === parentId);
-                                                if (mainCat) {
-                                                    setSelectedParentId(mainCat.id);  // فعال کردن دسته‌بندی اصلی
-                                                }
+                                        const category = dataCategory?.data?.find(cat => cat.id === item?.category);
+                                        if (category) {
+                                            const parentId = category?.parent;
+                                            setGetParentId(parentId);
 
-                                                // همچنین زیر دسته‌بندی را ست کن (در صورت وجود)
-                                                setSelectedSubCategoryId(category.id);
+                                            const mainCat = mainCategoriesOrder?.find(cat => cat.id === parentId);
+                                            if (mainCat) setSelectedParentId(mainCat.id);
 
-                                            }
-                                        }}>
-                                            ویرایش
+                                            setSelectedSubCategoryId(category.id);
+                                        }
+                                    }}>
+                                        ویرایش
                                     </ButtonEdit>
                                 </div>
 
@@ -320,35 +276,25 @@ function TabListProducts() {
                                 </div>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    ''
-                )}
-
-                {data?.count === 0 && (
-                    <div className='flex justify-center mt-4'>
-                        <Text>محصول موجود نیست</Text>
-                    </div>
-                )}
-
-            
-               
+                    );
+                })}
             </div>
-            {/* Loading indicator */}
-            {isLoadingLoder && (
-                <div className='flex justify-center mt-4'>
+
+            <div ref={sentinelRef} style={{ height: 1 }}></div>
+
+            {isLoadinglist && (
+                <div className='flex justify-center py-4 max-[992px]:hidden'>
                     <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500'></div>
                 </div>
             )}
 
             {/* size tablet & mobile */}
             <div className='gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))] hidden max-[992px]:grid max-[990px]:mb-14'>
-                {Array.isArray(data?.data) && data.data.length > 0 ? (
-                    data.data.slice(0, displayCount).map((item, index) => (
+                {prosuctList.slice(0, displayCount).map((item, index) => {
+                    return (
                         <div 
                             className='border border-grayTitle rounded-2xl p-4' 
                             key={item?.id}
-                            ref={index === displayCount - 1 ? lastElementRef : null}
                         >
                             <div className='flex gap-4'>
                                 <img 
@@ -394,6 +340,16 @@ function TabListProducts() {
                                     setIdEdit(item)
                                     setOpenEdit(true)
                                     setSelectIdProduct(item?.id)
+                                        const category = dataCategory?.data?.find(cat => cat.id === item?.category);
+                                        if (category) {
+                                            const parentId = category?.parent;
+                                            setGetParentId(parentId);
+
+                                            const mainCat = mainCategoriesOrder?.find(cat => cat.id === parentId);
+                                            if (mainCat) setSelectedParentId(mainCat.id);
+
+                                            setSelectedSubCategoryId(category.id);
+                                        }
                                     }}>
                                         ویرایش
                                 </ButtonEdit>
@@ -408,10 +364,8 @@ function TabListProducts() {
                                 </button>
                             </div>
                         </div>
-                       ))
-                ) : (
-                    ''
-                )}
+                    );
+                })}
 
                 {data?.count === 0 && (
                     <div className='flex justify-center mt-4'>
@@ -421,9 +375,7 @@ function TabListProducts() {
 
             </div>
 
-            {/* <div className='flex justify-center mt-4'>
-                {data?.length === 0 && <Text>محصول موجود نیست</Text>}
-            </div> */}
+            <div ref={sentinelRef} style={{ height: 1 }}></div>
 
             <GeneralModal
                 open={open && selectedItemId !== null}
@@ -570,7 +522,7 @@ function TabListProducts() {
                                     onChange={(e) => {
                                         setSku(e.target.value);
                                     }}
-                                    className={`w-full bg-transparent border ${errors.omNameProduct ? "border border-red-500" : "border-gray-300"}`}
+                                    className={`w-full bg-transparent border ${errors.sku ? "border border-red-500" : "border-gray-300"}`}
                                     placeholder={`کد محصول را وارد کنید`}
                                 />
                             </div>
@@ -680,6 +632,9 @@ function TabListProducts() {
                 </div>
             </GeneralModal>
 
+            <div className='flex justify-center mt-6 items-center'>
+                {isLoadingProduct ? <Loading/> : ''}
+            </div>
         </div>
     )
 }

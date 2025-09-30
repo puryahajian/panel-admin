@@ -34,7 +34,7 @@ function ListOrders({momber,order,orderCode,price,orderer,date,orderStatus, clas
                 </ul>
             </div>
 
-            <div className={`border p-4 hidden max-[1024px]:block rounded-xl ${classNameResponse}`} onClick={onClick}>
+            <div className={`border p-4 hidden rounded-xl ${classNameResponse}`} onClick={onClick}>
                 <div className='flex justify-between items-center'>
                     <Title>سفارش دهنده</Title>
                     <Text>{orderer}</Text>

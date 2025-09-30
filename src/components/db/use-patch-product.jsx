@@ -27,7 +27,9 @@ function usePatchProduct() {
             productArz,
             productErtefa,
             isCheckedNon,
-            stockNumber
+            stockNumber,
+            unitWeigth,
+            offerEdit
         }) => {
             
             const formData = new FormData();
@@ -73,6 +75,8 @@ function usePatchProduct() {
             if (isCheckedAmazon) formData.append('amazon', isCheckedAmazon);
             if (isCheckedNon) formData.append('non', isCheckedNon);
             if (stockNumber) formData.append('stock', stockNumber);
+            if (unitWeigth) formData.append('unit_weight', unitWeigth);
+            if (offerEdit) formData.append('discount_percentage', offerEdit);
 
             const res = await interceptor.patch(`product/admin/api/v1/products/${idEdit}/`, formData);
             return res.data;

@@ -247,7 +247,7 @@ function Products() {
         () => parentCategories?.filter(item => item?.order !== 0) || [],
         [parentCategories]
     );
-    console.log(mainCategoriesOrder)
+    // console.log(mainCategoriesOrder)
 
 
     return (
@@ -308,10 +308,10 @@ function Products() {
                 //     handleCreateProduct();
                 // }}
                 classBtn={`hidden`}
-                // onClose={(e) => {
-                //     e.preventDefault()
-                //     setOpen(false)}
-                // }
+                onClose={(e) => {
+                    e.preventDefault()
+                    setOpen(false)}
+                }
                 sx={{
                     width: 'max-content',
                     maxWidth: '900px', 
@@ -494,62 +494,7 @@ function Products() {
                         </div>
                     </div>
                     <div>
-                        <div>
-                            <Text className='text-right mb-2'> دسته بندی اصلی</Text>
-                            <FormControl className='w-full'>
-                                <Select
-                                    className='!outline-none !rounded-lg text-right w-full'
-                                    value={selectedParentId}
-                                    onChange={(e) => {
-                                        setSelectedParentId(e.target.value)
-                                        setSelectedSubCategoryId('')
-                                    }}
-                                    displayEmpty
-                                    inputProps={{ 'aria-label': 'Without label' }}
-                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
-                                    >
-                                    <MenuItem value="" className='!py-3'>
-                                        <Text className='text-gray-400'>
-                                        انتخاب کنید
-                                        </Text>
-                                    </MenuItem>
-                                    {mainCategoriesOrder.map(item => (
-                                        <MenuItem className='!font-sans !text-[12px]' key={item.id} value={item.id}>
-                                            <Text>{item.name}</Text>
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-
-                        <div className='mt-7'>
-                            <Text className='text-right mb-2'>زیر دسته بندی</Text>
-                            <FormControl className='w-full' >
-                                <Select
-                                    className='!outline-none !rounded-lg text-right w-full'
-                                    value={selectedSubCategoryId}
-                                    onChange={(e) => setSelectedSubCategoryId(e.target.value)}
-                                    // displayEmpty
-                                    // inputProps={{ 'aria-label': 'Without label' }}
-                                    sx={{ '& .MuiSelect-select': { padding: '11.5px 14px' } }}
-                                    >
-                                    <MenuItem value="" className='!py-3'>
-                                        <Text className='text-gray-400'>
-                                        انتخاب کنید
-                                        </Text>
-                                    </MenuItem>
-                                    {parentCategories
-                                        ?.filter(sub => sub.parent === selectedParentId) // فقط زیرمجموعه‌های parent انتخاب‌شده
-                                        ?.map(sub => (
-                                            <MenuItem key={sub.id} value={sub.id}>
-                                                <Text>{sub.name}</Text>
-                                            </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border border-gray-300 h-[280px] w-full font-sans rounded-xl p-2 mt-7 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
+                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className='border border-gray-300 h-full w-full font-sans rounded-xl p-2 resize-none text-xs outline-none placeholder:text-gray-400' placeholder='توضیحات'/>
 
                     </div>
 

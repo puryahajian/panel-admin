@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const interceptor = axios.create({
-  baseURL: 'https://api.nowdesign.ir/',
+  baseURL: 'https://nbzarchi.ir/',
 });
 
 let isRefreshing = false;

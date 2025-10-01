@@ -9,7 +9,7 @@ function useGetTicketPage() {
     const { data, error, isLoading } = useQuery({
         queryKey: ['getTicketSingel'],
         queryFn: async () => {
-          const response = await interceptor.get(`ticket/api/v1/tickets/${id}/`);
+          const response = await interceptor.get(`tickets/api/v1/ticket/${id}/`);
           return response.data;
         },
     });

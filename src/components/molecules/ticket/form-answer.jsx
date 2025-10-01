@@ -8,7 +8,7 @@ import Loading from '../../atoms/loading';
 function FormAnswer() {
     const { mutate, isPending } = useCreateTicketMessage();
     const [selectedFile, setSelectedFile] = useState(null);
-    const [message, setMessage] = useState();
+    const [message, setMessage] = useState('');
     
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -35,7 +35,7 @@ function FormAnswer() {
     }
 
     return (
-        <div className='max-w-[800px] m-auto mt-6 shadow-lg p-6 max-[680px]:max-w-full'>
+        <div className='max-w-[800px] m-auto mt-6 shadow-lg p-6 max-[680px]:max-w-full mb-4'>
             <Text>ارسال پاسخ</Text>
             <Text className={`!text-xs !text-gray-500 mt-2`}>برای ارسال پاسخ به این تیکت، از فرم زیر استفاده کنید.</Text>
             <form action="">

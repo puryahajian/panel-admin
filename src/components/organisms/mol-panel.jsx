@@ -18,6 +18,7 @@ import useGetProfile from '../db/use-get-profile';
 import Title from '../atoms/title';
 import InputNumberic from '../atoms/input-numberic';
 import usePatchProfile from '../db/use-patch-profile';
+import TabTickets from '../molecules/management/tab-tickets';
 
 function TabPanel({ children, step, index }) {
     return (
@@ -139,10 +140,10 @@ function MolPanel() {
                 <TabPanel step={step} index={0}>
                     <Products/>
                 </TabPanel>
-                {/* <TabPanel step={step} index={3}>
-                    <Management/>
+                <TabPanel step={step} index={1}>
+                    <TabTickets/>
                 </TabPanel>
-                <TabPanel step={step} index={4}>
+                {/*<TabPanel step={step} index={4}>
                     <Setting/>
                 </TabPanel>
                 <TabPanel step={step} index={5}>

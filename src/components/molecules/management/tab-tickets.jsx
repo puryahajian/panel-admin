@@ -21,7 +21,6 @@ function TabManagement({ children, step, index }) {
     return (
         <div
             role="tabpanel"
-            className='mt-4'
             hidden={step !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
@@ -34,12 +33,13 @@ function TabManagement({ children, step, index }) {
 
 function TabTickets() {
     const priority = [
-        {name: 'معمولی', id: 1},
+        {name: 'عادی', id: 1},
         {name: 'مهم', id: 2},
         {name: 'بسیار مهم', id: 3},
     ]
 
     const { data } = useGetAllTickets()
+    // console.log(data)
     const { data: dataSection } = useGetAllSection();
     const { mutate } = useCreateTicket();
     const [step, setStep] = useState(0);
@@ -69,11 +69,11 @@ function TabTickets() {
     }
     
     return (
-        <div className='mt-4'>
+        <div>
             {/* tab tickets */}
             <TabManagement step={step} index={0}>
                 <div className='flex justify-between items-center gap-2'>
-                    <Text className={`max-[600px]:text-xs`}>تمامِ تیکت‌هایی که برای واحد امور مشتریان دلیوری ارسال کرده‌اید، در این صفحه لیست شده‌اند:</Text>
+                    <Text className={`max-[600px]:text-xs`}>تمامِ تیکت‌هایی که برای واحد امور مشتریان ایرانی شاپ ارسال کرده‌اید، در این صفحه لیست شده‌اند:</Text>
 
                     <ButtonGeneral className={`text-xs w-[150px] max-[600px]:text-xs max-[600px]:px-1 max-[600px]:w-[220px]`} onClick={() => setStep(1)}>ارسال تیکت جدید</ButtonGeneral>
                 </div>
@@ -89,19 +89,19 @@ function TabTickets() {
                 </div>
 
                 {/* list */}
-                {data?.results.map((item) => (
-                    <div className='grid grid-cols-10 py-3 rounded-lg border-b relative max-[680px]:hidden' key={item?.id}>
-                        <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === 1 && 'hidden'}`}></div>
+                {data?.map((item) => (
+                    <div className={`grid grid-cols-10 py-3 mt-2 rounded-lg border-b relative max-[680px]:hidden ${item?.is_resolved === false && 'cursor-not-allowed'}`} key={item?.id}  onClick={() => navigate(`/tickets/${item?.id}`)}>
+                        <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg  ${item?.is_resolved === false && 'hidden'}`}></div>
                         <div>
                             <DraftsIcon className='!mr-8'/>
                         </div>
                         <Text className={`col-span-2 truncate w-28`}>{item?.id}</Text>
-                        <Text className={`col-span-2 cursor-pointer`} onClick={() => navigate(`/tickets/${item?.id}`)}>{item?.title}</Text>
-                        <Text className={`col-span-3`}><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.updated_at}/></Text>
+                        <Text className={`col-span-2 cursor-pointer`}>{item?.title}</Text>
+                        <Text className={`col-span-3`}><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
                         <Text className={`col-span-2`}>
-                            {item?.state === 1 && 'باز'}
-                            {item?.state === 2 && 'درحال بررسی'}
-                            {item?.state === 3 && 'بسته'}
+                            {item?.is_resolved === false && 'باز'}
+                            {/* {item?.state === 2 && 'درحال بررسی'} */}
+                            {item?.is_resolved === true && 'بسته'}
                         </Text>
                         {/* <div className='flex gap-2'>
                             <img src={happy} alt="" />
@@ -111,11 +111,11 @@ function TabTickets() {
                 ))}
 
                 {/*  */}
-                <div className=' mt-4 max-[680px]:grid max-[680px]:gap-4'>
-                    {data?.results.map((item) => (
+                <div className='hidden mt-4 max-[680px]:grid max-[680px]:gap-4'>
+                    {data?.map((item) => (
                         <>
-                        <div className='grid gap-2 relative border rounded-lg p-3' onClick={() => navigate(`/tickets/${item?.id}`)}>
-                            <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg cursor-not-allowed ${item?.state === 1 && 'hidden'}`}></div>
+                        <div className={`grid gap-2 relative border rounded-lg p-3 ${item?.is_resolved === false && 'cursor-not-allowed'}`} onClick={() => navigate(`/tickets/${item?.id}`)}>
+                            <div className={`bg-slate-200 opacity-45 absolute w-full h-full rounded-lg ${item?.is_resolved === false && 'hidden'}`}></div>
                             <div className='flex justify-between items-center'>
                                 <Title>شناسه</Title>
                                 <Text className={`truncate w-28`}>{item?.id}</Text>
@@ -126,14 +126,14 @@ function TabTickets() {
                             </div>
                             <div className='flex justify-between items-center'>
                                 <Title>تاریخ و ساعت</Title>
-                                <Text><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.updated_at}/></Text>
+                                <Text><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
                             </div>
                             <div className='flex justify-between items-center'>
                                 <Title>وضعیت</Title>
                                 <Text>
-                                    {item?.state === 1 && 'باز'}
-                                    {item?.state === 2 && 'درحال بررسی'}
-                                    {item?.state === 3 && 'بسته'}
+                                    {item?.is_resolved === false && 'باز'}
+                                    {/* {item?.state === 2 && 'درحال بررسی'} */}
+                                    {item?.is_resolved === true && 'بسته'}
                                 </Text>                       
                             </div>
                         </div>
@@ -159,7 +159,7 @@ function TabTickets() {
                         <Input value={titleForm} onChange={(e) => setTitleForm(e.target.value)} className={`w-full bg-transparent border placeholder:text-gray-400`} placeholder={`عنوان تیکت`}/>
 
                         <div className='grid grid-cols-2 max-[630px]:grid-cols-1 items-center my-4'>
-                            <FormControl sx={{ minWidth: 120 }} className='w-full !outline-none'>
+                            {/* <FormControl sx={{ minWidth: 120 }} className='w-full !outline-none'>
                                 <Select
                                     className='!outline-none !text-gray-400'
                                     value={selectorCategory}
@@ -180,7 +180,7 @@ function TabTickets() {
                                             </MenuItem>
                                         ))}
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
 
                             <div className='flex justify-center items-center gap-3 max-[630px]:mt-4'>
                                 <Text>اولویت بندی</Text>

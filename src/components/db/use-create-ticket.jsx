@@ -16,12 +16,12 @@ function useCreateTicket() {
                 description: detail
             })
 
-            const res = await interceptor.post(`ticket/api/v1/tickets/`, data);
+            const res = await interceptor.post(`tickets/api/v1/tickets/`, data);
             return res.data;
         },
         onSuccess: (data) => {
-            console.log(data)
-            queryClient.invalidateQueries('createTicket');
+            // console.log(data)
+            queryClient.removeQueries('createTicket');
         },
     });
 }

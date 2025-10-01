@@ -6,9 +6,11 @@ import HeaderTicket from './header-ticket'
 import FormAnswer from './form-answer'
 import useGetTicketPage from '../../db/use-get-ticket-page'
 import Img from '../../atoms/img'
+import DateShamsi from '../date-shamsi'
 
 function Tickets() {
     const { data } = useGetTicketPage();
+    // console.log(data)
     return (
         <div className=' h-full max-[830px]:mx-4'>
             <div className='max-w-[800px] m-auto mt-6'>
@@ -20,27 +22,31 @@ function Tickets() {
                     <>
                         <div className='bg-gray-100 flex items-center gap-6 mt-6 p-4 rounded-lg'>
                             <img src={IconUser} className='w-14 h-14 rounded-full' alt="" />
+                            <div className='grid gap-2'>
+                                <Text><DateShamsi hour={`2-digit`} minute={`2-digit`} date={data?.ticket?.created_at}/></Text>
+                                <Text>موضوع : {data?.ticket?.title}</Text>
+                            </div>
                         </div>
                         <div className='flex items-center gap-6 mt-6 p-4'>
-                            <Text className={`mr-14`}>{data?.description}</Text>
+                            <Text>{data?.ticket?.description}</Text>
                         </div>
                     </>
                 )}
 
-                {data?.messages.map((item, index) => (
+                {data?.responses.map((item, index) => (
                     <div key={index}>
-                        {item?.is_user ? (
+                        {item?.sender === 1 ? (
                             <>
                                 <div className='bg-gray-100 flex items-center gap-6 mt-6 p-4 rounded-lg'>
                                     <img src={IconUser} className='w-14 h-14 rounded-full' alt="" />
                                     <div className='grid gap-1'>
-                                        <Text>نام یوزر</Text>
-                                        <Text className='!text-xs !text-gray-500'>02 اردیبهشت 1404، 16:34:48</Text>
+                                        <Text> یوزر</Text>
+                                        <Text className='!text-xs !text-gray-500'><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
                                     </div>
                                 </div>
                                 <div className='flex items-center gap-6 mt-6 p-4'>
-                                    <Img src={item.file} href={item.file} />
-                                    <Text>{item?.text}</Text>
+                                    {item?.file && <Img src={item.file} href={item.file} />}
+                                    <Text>{item?.response_text}</Text>
                                 </div>
                             </>
                         ) : (
@@ -48,12 +54,12 @@ function Tickets() {
                                 <div className='bg-gray-100 flex justify-end items-center gap-6 mt-6 p-4 rounded-lg'>
                                     <div className='grid gap-1 text-left'>
                                         <Text>ادمین</Text>
-                                        <Text className='!text-xs !text-gray-500'>02 اردیبهشت 1404، 16:34:48</Text>
+                                        <Text className='!text-xs !text-gray-500'><DateShamsi hour={`2-digit`} minute={`2-digit`} date={item?.created_at}/></Text>
                                     </div>
                                     <img src={IconUser} className='w-14 h-14 rounded-full' alt="" />
                                 </div>
                                 <div className='flex justify-end items-center gap-6 mt-6 p-4'>
-                                    <Text>{item?.text}</Text>
+                                    <Text>{item?.response_text}</Text>
                                     <Img src={item.file} href={item.file}/>
                                 </div>
                             </>

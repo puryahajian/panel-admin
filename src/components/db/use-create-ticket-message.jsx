@@ -5,22 +5,26 @@ import { useParams } from 'react-router-dom';
 
 function useCreateTicketMessage() {
     const queryClient = useQueryClient();
-    const { id } = useParams();
+    // const { id } = useParams();
 
 
     return useMutation({
         mutationFn: async ({ selectedFile, message,}) => {
 
             const formData = new FormData();
-            formData.append('text', message || '');
-            formData.append('file', selectedFile || '');
+            formData.append('response_text', message || '');
+            formData.append('response_images', selectedFile || '');
 
-            const res = await interceptor.post(`ticket/api/v1/tickets/${id}/messages/`, formData);
+            const res = await interceptor.post(`tickets/api/v1/ticket/1/`, formData);
             return res.data;
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries('createTicketMessage');
+            // console.log(data)
+            queryClient.removeQueries('getTicketSingel');
         },
+        onError: (err) => {
+            // console.log(err)
+        }
     });
 }
 

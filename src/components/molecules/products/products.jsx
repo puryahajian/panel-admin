@@ -60,6 +60,13 @@ function Products() {
     const [openAddProduct, setOpenAddProduct] = useState(false);
     const [ selectedCategory, setSelectedCategory ] = useState();
     const [ bgProduct, setBgProduct ] = useState();
+    const [ bgMoreImg1, setBgMoreImg1 ] = useState();
+    const [previewBgMoreImg1, setPreviewBgMoreImg1] = useState();
+    const [ bgMoreImg2, setBgMoreImg2 ] = useState();
+    const [previewBgMoreImg2, setPreviewBgMoreImg2] = useState();
+    const [ bgMoreImg3, setBgMoreImg3 ] = useState();
+    const [previewBgMoreImg3, setPreviewBgMoreImg3] = useState();
+
     const [preview, setPreview] = useState();
     const [previewProduct, setPreviewProduct] = useState();
     const [nameProduct, setNameProduct] = useState();
@@ -75,7 +82,10 @@ function Products() {
     const [nameCategory, setNameCategory] = useState('');
     const [nameCategoryPersian, setNameCategoryPersian] = useState();
     const [errors, setErrors] = useState({});
-
+    const [lengthh, setLengthh] = useState('');
+    const [widthh, setWidthh] = useState('');
+    const [heightt, setHeightt] = useState('');
+    const [weightt, setWeightt] = useState('');
 
     useEffect(() => {
         let combined = [];
@@ -121,7 +131,8 @@ function Products() {
     }
 
     const handleCreateProduct = () => {
-        // console.log(gregorianBirthDay)
+    
+
         mutateCreatedProduct(
             {
                 bgProduct,
@@ -134,16 +145,24 @@ function Products() {
                 description, 
                 gregorianBirthDay,
                 sku,
-                getIdSubCategory
+                getIdSubCategory,
+                lengthh,
+                widthh,
+                heightt,
+                weightt,
+                bgMoreImg1,
+                bgMoreImg2,
+                bgMoreImg3
+
             },
             {
-                // onSuccess: (data) => {
-                //     console.log(data)
-                // },
-                // onError: (err) => {
-                //     console.log(err)
+                onSuccess: (data) => {
+                    console.log(data)
+                },
+                onError: (err) => {
+                    console.log(err)
 
-                // }
+                }
             }
         )
     }
@@ -253,7 +272,7 @@ function Products() {
                     resetForm();
                     setErrors({});
                 }}
-                classBtn={`mt-4`}
+                // classBtn={`hidden`}
                 onClose={(e) => {
                     e.preventDefault();
                     setOpen(false);
@@ -261,6 +280,7 @@ function Products() {
                     setErrors({});
                 }}
                 sx={{
+                    maxWidth: '800px',
                     width: 'max-content', 
                     '@media (max-width: 600px)': {
                     width: '92%',
@@ -268,7 +288,7 @@ function Products() {
                 }}
                 >
                     <div className='text-right grid grid-cols-2 gap-4 max-[480px]:grid-cols-1 max-[480px]:h-[600px] max-[480px]:overflow-y-auto'>
-                        <div className='grid grid-cols-1 max-[1037px]:grid-cols-1 gap-4'>
+                        <div className='grid grid-rows-3 max-[1037px]:grid-cols-1 gap-4'>
                             {/* Uploader + پیام خطا */}
                             <div>
                                 <Uploader
@@ -280,11 +300,47 @@ function Products() {
                                     }}
                                     preview={previewProduct}
                                     setPreview={setPreviewProduct}
-                                    className={`h-[200px] ${errors.bgProduct ? "!border !border-red-500" : ""}`}
+                                    className={`h-full min-h-full ${errors.bgProduct ? "!border !border-red-500" : ""}`}
                                 />
                                 {errors.bgProduct && (
                                     <Text className="text-red-500 text-xs mt-1">{errors.bgProduct}</Text>
                                 )}
+                            </div>
+
+                            <div className='grid grid-cols-3 items-center gap-4'>
+                                <Uploader
+                                    // textOne={` 1تصویر`}
+                                    selectedFile={bgMoreImg1}
+                                    onFileSelect={(file) => {
+                                        setBgMoreImg1(file);
+                                        // setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                    }}
+                                    preview={previewBgMoreImg1}
+                                    setPreview={setPreviewBgMoreImg1}
+                                    className={`h-[110px] min-h-[110px]`}
+                                />
+                                <Uploader
+                                    // textOne={`تصویر محصول را آپلود کنید`}
+                                    selectedFile={bgMoreImg2}
+                                    onFileSelect={(file) => {
+                                        setBgMoreImg2(file);
+                                        // setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                    }}
+                                    preview={previewBgMoreImg2}
+                                    setPreview={setPreviewBgMoreImg2}
+                                    className={`h-[110px] min-h-[110px]`}
+                                />
+                                <Uploader
+                                    // textOne={`تصویر محصول را آپلود کنید`}
+                                    selectedFile={bgMoreImg3}
+                                    onFileSelect={(file) => {
+                                        setBgMoreImg3(file);
+                                        // setErrors(prev => ({ ...prev, bgProduct: undefined }));
+                                    }}
+                                    preview={previewBgMoreImg3}
+                                    setPreview={setPreviewBgMoreImg3}
+                                    className={`h-[110px] min-h-[110px]`}
+                                />
                             </div>
 
                             {/* توضیحات + پیام خطا */}
@@ -295,7 +351,7 @@ function Products() {
                                         setDescription(e.target.value);
                                         if (errors.description) setErrors(prev => ({ ...prev, description: undefined }));
                                     }}
-                                    className={`border bg-bgInput font-sans rounded-xl p-2 resize-none text-[12px] max-[680px]:text-[16px] outline-none placeholder:text-gray-400 w-full h-[200px] ${errors.description ? "border-red-500" : ""}`}
+                                    className={`border bg-bgInput font-sans rounded-xl p-2 resize-none text-[12px] max-[680px]:text-[16px] outline-none placeholder:text-gray-400 w-full h-full ${errors.description ? "border-red-500" : ""}`}
                                     placeholder='توضیحات'
                                 />
                                 {errors.description && (
@@ -407,7 +463,58 @@ function Products() {
                                     placeholder={`20%`}
                                     />
                                 </div>
+
                             </div>
+
+                            <div className="grid grid-cols-4 max-[480px]:grid-cols-3 mt-4 gap-4">
+                                {/* طول */}
+                                <div className="relative">
+                                    <Text className="absolute right-2 top-3">cm</Text>
+                                    <Input
+                                    value={lengthh}
+                                    onChange={(e) => setLengthh(e.target.value)}
+                                    className="text-left w-full"
+                                    inputMode="numeric"
+                                    placeholder="طول"
+                                    />
+                                </div>
+
+                                {/* عرض */}
+                                <div className="relative">
+                                    <Text className="absolute right-2 top-3">cm</Text>
+                                    <Input
+                                    value={widthh}
+                                    onChange={(e) => setWidthh(e.target.value)}
+                                    className="text-left w-full"
+                                    inputMode="numeric"
+                                    placeholder="عرض"
+                                    />
+                                </div>
+
+                                {/* ارتفاع */}
+                                <div className="relative">
+                                    <Text className="absolute right-2 top-3">cm</Text>
+                                    <Input
+                                    value={heightt}
+                                    onChange={(e) => setHeightt(e.target.value)}
+                                    className="text-left w-full"
+                                    inputMode="numeric"
+                                    placeholder="ارتفاع"
+                                    />
+                                </div>
+
+                                {/* وزن */}
+                                <div className="relative max-[480px]:col-span-3">
+                                    <Text className="absolute right-2 top-3">gr</Text>
+                                    <Input
+                                    value={weightt}
+                                    onChange={(e) => setWeightt(e.target.value)}
+                                    className="text-left w-full"
+                                    inputMode="numeric"
+                                    placeholder="وزن"
+                                    />
+                                </div>
+                                </div>
 
 
                             <div className='text-right'>

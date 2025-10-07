@@ -14,14 +14,14 @@ function usePostLogin() {
             });
 
             const res = await interceptor.post(`account/mobile/api/v1/login/`, data);
-            console.log(res)
+            // console.log(res)
             return res.data;
         },
         onSuccess: (data) => {
-            console.log(data)
+            // console.log(data)
         },
         onError: (err) => {
-            console.log(err.massage)
+            // console.log(err.massage)
         }
     });
 

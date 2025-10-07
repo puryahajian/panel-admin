@@ -3,7 +3,7 @@ import '../../App.css';
 import iconImage from '../../assets/image/Huge-icon.png';
 import Title from '../atoms/title';
 
-function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview }) {
+function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, preview, setPreview, classDelete,onClick }) {
     const [localPreview, setLocalPreview] = useState('');
 
     const handleFileChange = (event) => {
@@ -41,6 +41,16 @@ function Uploader({ textOne, textTwo, className, selectedFile, onFileSelect, pre
                     <Title>{textTwo}</Title>
                 </div>
             )}
+
+            {/* {(localPreview || preview) && (
+                <div
+                    className={`absolute top-2 left-2 bg-gray-800 bg-opacity-45 rounded-full px-1 w-7 h-7 flex justify-center items-center cursor-pointer hover:bg-opacity-100 transition ${classDelete}`}
+                    onClick={onClick}
+                >
+                    <span className="text-white text-xs font-bold">✕</span>
+                </div>
+            )} */}
+
             <input
                 id="video-upload"
                 type="file"

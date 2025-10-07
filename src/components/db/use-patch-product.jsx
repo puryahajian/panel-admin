@@ -8,19 +8,13 @@ function usePatchProduct() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ idEdit, omNameProduct,selectedSubCategoryId, selectorState, nameEditProduct, priceEditProduct, selectedFile, inState, sku }) => {
+        mutationFn: async ({ idEdit,lengthh,widthh,heightt,weightt, omNameProduct,selectedSubCategoryId, selectorState, nameEditProduct,descriptionEdit, priceEditProduct, selectedFile, inState, sku ,itemImages}) => {
             
             const formData = new FormData();
 
             if (nameEditProduct) formData.append('name', nameEditProduct);
-
-            // const rawPrice = priceEditProduct?.toString().replace(/,/g, '');
-            // const price = parseInt(rawPrice, 10);
-
             if (priceEditProduct) formData.append('price', priceEditProduct);
-
             if (selectedSubCategoryId) formData.append('category', selectedSubCategoryId);
-
             if (selectorState !== '') {
                 formData.append('exist', selectorState);
             } else if (inState !== '') {
@@ -29,6 +23,11 @@ function usePatchProduct() {
             if (sku) formData.append('sku', sku);
             if (selectedFile) formData.append('image', selectedFile);
             if (omNameProduct) formData.append('om_name', omNameProduct);
+            if (descriptionEdit) formData.append('details', descriptionEdit);
+            if (lengthh) formData.append('length', lengthh);
+            if (widthh) formData.append('width', widthh);
+            if (heightt) formData.append('height', heightt);
+            if (weightt) formData.append('weight', weightt);
     
             const res = await interceptor.patch(`product/admin/api/v1/products/${idEdit}/`, formData);
             return res.data;
@@ -38,7 +37,7 @@ function usePatchProduct() {
             queryClient.removeQueries('allProduct');
         },
         onError: (err) => {
-            console.log(err)
+            // console.log(err)
         }
         
     });
